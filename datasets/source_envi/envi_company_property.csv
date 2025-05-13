@@ -1,9 +1,9 @@
 cp_id,company_id,cp_name,cp_type
-CR-PSC-001,PSC,Grass Cutter,Equipment
-CR-PSC-002,PSC,Generator Sets,Equipment
-CR-PSC-003,PSC,DMAX,Vehicle
-CR-PSC-004,PSC,MUX,Vehicle
-CR-PSC-005,PSC,MULTICAB,Vehicle
-CR-PSC-006,PSC,ELF TRUCK,Vehicle
-CR-PSC-007,PSC,WATER TRUCK (4l),Vehicle
-CR-PSC-008,PSC,WATER TRUCK (6l),Vehicle
+CP-PSC-001,PSC,Grass Cutter,Equipment
+CP-PSC-002,PSC,Generator Sets,Equipment
+CP-PSC-003,PSC,DMAX,Vehicle
+CP-PSC-004,PSC,MUX,Vehicle
+CP-PSC-005,PSC,MULTICAB,Vehicle
+CP-PSC-006,PSC,ELF TRUCK,Vehicle
+CP-PSC-007,PSC,WATER TRUCK (4l),Vehicle
+CP-PSC-008,PSC,WATER TRUCK (6l),Vehicle

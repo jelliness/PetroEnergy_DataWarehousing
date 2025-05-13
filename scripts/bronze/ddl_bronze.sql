@@ -67,7 +67,7 @@ CREATE TABLE bronze.envi_company_info (
 -- envi_company_property
 DROP TABLE IF EXISTS bronze.envi_company_property;
 CREATE TABLE bronze.envi_company_property (
-    cp_id      VARCHAR(30),       -- Example: CR-PSC-001
+    cp_id      VARCHAR(30),       -- Example: CP-PSC-001
     company_id VARCHAR(20),       -- Referenced to company_info.
     cp_name    VARCHAR(100),
     cp_type    VARCHAR(50)        -- Example values: Equipment, Vehicle
@@ -98,10 +98,11 @@ DROP TABLE IF EXISTS bronze.envi_diesel_consumption;
 CREATE TABLE bronze.envi_diesel_consumption (
     dc_id                VARCHAR(30),          -- Example: DC-PSC-2024-006
     company_id           VARCHAR(20),          -- Referenced to company info.
-    cp_id                VARCHAR(30),          -- Referemced to envi_company_property.
+    cp_id                VARCHAR(30),          -- Referenced to envi_company_property.
     unit_of_measurement  VARCHAR(20),
     consumption          DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
-    date                 DATE
+    date                 DATE,
+	month			     VARCHAR(15)
 );
 
 -- envi_electric_consumption
