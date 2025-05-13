@@ -26,14 +26,14 @@ This document outlines the naming conventions used for schemas, tables, views, c
 ### **Bronze Rules**
 - All names must start with the source system name, and table names must match their original names without renaming.
 - **`<sourcesystem>_<entity>`**  
-  - `<sourcesystem>`: Name of the source system (e.g., `envi`, `econ`, `csr`).  
+  - `<sourcesystem>`: Name of the source system (e.g., `envi`, `csv`,`csr`,`hr`,`econ`,`corp`).  
   - `<entity>`: Exact table name from the source system.  
   - Example: `envi_water_withdrawal` → Water withdrawal from the ENVI dataset.
 
 ### **Silver Rules**
 - All names must start with the source system name, and table names must match their original names without renaming.
 - **`<sourcesystem>_<entity>`**  
-  - `<sourcesystem>`: Name of the source system (e.g., `envi`, `econ`, `csr`).  
+  - `<sourcesystem>`: Name of the source system (e.g., `envi`, `csv`,`csr`,`hr`,`econ`,`corp`).  
   - `<entity>`: Exact table name from the source system.  
   - Example: `envi_water_withdrawal` → Water withdrawal from the ENVI dataset.
 
