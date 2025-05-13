@@ -3,88 +3,170 @@
 DDL Script: Create Bronze Tables
 ===============================================================================
 Script Purpose:
-    This script creates tables in the 'bronze' schema, dropping existing tables 
-    if they already exist.
-	  Run this script to re-define the DDL structure of 'bronze' Tables
+    This script creates foundational tables in the 'bronze' schema for 
+    environmental data management. It first drops existing versions of the 
+    tables to avoid conflicts, then recreates them with the defined structure.
+
+    The tables included are:
+    
+    1. envi_company_info
+       - Stores company-level information including name, site details, and location.
+
+    2. envi_company_property
+       - Stores properties owned by companies (e.g., equipment or vehicles) 
+         with a link to their corresponding company.
+
+    3. envi_natural_sources
+       - Stores natural water sources (e.g., rivers, wells) linked to companies.
+
+    4. envi_water_withdrawal
+       - Tracks monthly water withdrawal volumes by company and location.
+
+    5. envi_diesel_consumption
+       - Logs diesel consumption per company property, with measurements 
+         and dates.
+
+	6. envi_elec_cons
+       - Records electricity consumption data by company or property over time.
+
+    7. envi_pow_gen
+       - Logs electricity generated internally by the company or its equipment.
+
+    8. envi_nonhaz_waste
+       - Tracks disposal amounts of non-hazardous waste by type and destination.
+
+	9. envi_haz_waste
+       - Tracks disposal amounts of hazardous waste by type and destination.
+	   
+    10. envi_activity
+       - Monitors and records the environmental actions and initiatives undertaken by each company.
+	   
+    11. envi_act_output
+       - Summarizes the outcomes and results of environmental activities conducted by each company.
+
+    These tables are prepared for eventual normalization through foreign keys 
+    and are part of the initial data ingestion (bronze layer) in the data pipeline.
 ===============================================================================
 */
 
-IF OBJECT_ID('bronze.crm_cust_info', 'U') IS NOT NULL
-    DROP TABLE bronze.crm_cust_info;
-GO
+-- Drop and recreate tables in the 'bronze' schema
 
-CREATE TABLE bronze.crm_cust_info (
-    cst_id              INT,
-    cst_key             NVARCHAR(50),
-    cst_firstname       NVARCHAR(50),
-    cst_lastname        NVARCHAR(50),
-    cst_marital_status  NVARCHAR(50),
-    cst_gndr            NVARCHAR(50),
-    cst_create_date     DATE
+-- envi_company_info
+DROP TABLE IF EXISTS bronze.envi_company_info;
+CREATE TABLE bronze.envi_company_info (
+    company_id     VARCHAR(20),       -- Example: PSC, MGI, RGEC
+    company_name   VARCHAR(255),
+    resources      TEXT,
+    site_name      VARCHAR(255),
+    site_address   TEXT,
+    city_town      VARCHAR(100),
+    province       VARCHAR(100),
+    zip            VARCHAR(10)
 );
-GO
 
-IF OBJECT_ID('bronze.crm_prd_info', 'U') IS NOT NULL
-    DROP TABLE bronze.crm_prd_info;
-GO
-
-CREATE TABLE bronze.crm_prd_info (
-    prd_id       INT,
-    prd_key      NVARCHAR(50),
-    prd_nm       NVARCHAR(50),
-    prd_cost     INT,
-    prd_line     NVARCHAR(50),
-    prd_start_dt DATETIME,
-    prd_end_dt   DATETIME
+-- envi_company_property
+DROP TABLE IF EXISTS bronze.envi_company_property;
+CREATE TABLE bronze.envi_company_property (
+    cp_id      VARCHAR(30),       -- Example: CR-PSC-001
+    company_id VARCHAR(20),       -- Referenced to company_info.
+    cp_name    VARCHAR(100),
+    cp_type    VARCHAR(50)        -- Example values: Equipment, Vehicle
 );
-GO
 
-IF OBJECT_ID('bronze.crm_sales_details', 'U') IS NOT NULL
-    DROP TABLE bronze.crm_sales_details;
-GO
-
-CREATE TABLE bronze.crm_sales_details (
-    sls_ord_num  NVARCHAR(50),
-    sls_prd_key  NVARCHAR(50),
-    sls_cust_id  INT,
-    sls_order_dt INT,
-    sls_ship_dt  INT,
-    sls_due_dt   INT,
-    sls_sales    INT,
-    sls_quantity INT,
-    sls_price    INT
+-- envi_natural_sources
+DROP TABLE IF EXISTS bronze.envi_natural_sources;
+CREATE TABLE bronze.envi_natural_sources (
+    ns_id      VARCHAR(30),       -- Example: NS-PSC-001
+    company_id VARCHAR(20),       -- Referenced to company_info.
+    ns_name    VARCHAR(100)
 );
-GO
 
-IF OBJECT_ID('bronze.erp_loc_a101', 'U') IS NOT NULL
-    DROP TABLE bronze.erp_loc_a101;
-GO
-
-CREATE TABLE bronze.erp_loc_a101 (
-    cid    NVARCHAR(50),
-    cntry  NVARCHAR(50)
+-- envi_water_withdrawal
+DROP TABLE IF EXISTS bronze.envi_water_withdrawal;
+CREATE TABLE bronze.envi_water_withdrawal (
+    ww_id                 VARCHAR(30),         -- Example: WW-PSC-2022-002
+    company_id            VARCHAR(20),         -- Referenced to company_info.
+    year                  SMALLINT,
+    month                 VARCHAR(20),
+    ns_id                 VARCHAR(30),         -- Referenced to natural sources.
+    volume                DOUBLE PRECISION,    -- Allows decimal values (e.g., 123.456)
+    unit_of_measurement   VARCHAR(20)
 );
-GO
 
-IF OBJECT_ID('bronze.erp_cust_az12', 'U') IS NOT NULL
-    DROP TABLE bronze.erp_cust_az12;
-GO
-
-CREATE TABLE bronze.erp_cust_az12 (
-    cid    NVARCHAR(50),
-    bdate  DATE,
-    gen    NVARCHAR(50)
+-- envi_diesel_consumption
+DROP TABLE IF EXISTS bronze.envi_diesel_consumption;
+CREATE TABLE bronze.envi_diesel_consumption (
+    dc_id                VARCHAR(30),          -- Example: DC-PSC-2024-006
+    company_id           VARCHAR(20),          -- Referenced to company info.
+    cp_id                VARCHAR(30),          -- Referemced to envi_company_property.
+    unit_of_measurement  VARCHAR(20),
+    consumption          DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
+    date                 DATE
 );
-GO
 
-IF OBJECT_ID('bronze.erp_px_cat_g1v2', 'U') IS NOT NULL
-    DROP TABLE bronze.erp_px_cat_g1v2;
-GO
-
-CREATE TABLE bronze.erp_px_cat_g1v2 (
-    id           NVARCHAR(50),
-    cat          NVARCHAR(50),
-    subcat       NVARCHAR(50),
-    maintenance  NVARCHAR(50)
+-- envi_electric_consumption
+DROP TABLE IF EXISTS bronze.envi_electric_consumption;
+CREATE TABLE bronze.envi_electric_consumption (
+    ec_id					VARCHAR(30),           -- Example: EC-PSC-2023-001
+    company_id			 	VARCHAR(20),      -- Referenced to company_info.
+    unit_of_measurement	 	VARCHAR(20),
+    consumption 		 	DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
+    quarter           	 	VARCHAR(5),
+    year               	 	INT
 );
-GO
+
+-- envi_power_generation
+DROP TABLE IF EXISTS bronze.envi_power_generation;
+CREATE TABLE bronze.envi_power_generation (
+    pg_id 					VARCHAR(30),          -- Example: PG-PSC-2023-001
+    company_id 				VARCHAR(20),     -- Referenced to company_info.
+    unit_of_measurement 	VARCHAR(20),
+    generation 				DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
+    quarter 				VARCHAR(5),
+    year INT
+);
+
+-- envi_non_hazard_waste
+DROP TABLE IF EXISTS bronze.envi_non_hazard_waste;
+CREATE TABLE bronze.envi_non_hazard_waste (
+    nhw_id 					VARCHAR(30),           -- Example: NHW-PSC-2024-001
+    company_id 				VARCHAR(20),       -- Referenced to company_info.
+    waste_source 			VARCHAR(50),     -- Example: Staff House, Security, Utility
+    metrics 				VARCHAR(20),
+    unit_of_measurement 	VARCHAR(20),
+    waste 					DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
+    month 					VARCHAR(15),
+    year 					INT
+);
+
+-- envi_hazard_waste
+DROP TABLE IF EXISTS bronze.envi_hazard_waste;
+CREATE TABLE bronze.envi_hazard_waste (
+    hw_id 					VARCHAR(30),          		-- Example: NHW-PSC-2024-001
+    company_id 				VARCHAR(20),      		-- Referenced to company_info.
+    metrics 				VARCHAR(20),
+    unit_of_measurement 	VARCHAR(20),
+    waste 					DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
+    quarter 				VARCHAR(2),  		 		-- Example: 'Q1', 'Q2', 'Q3', 'Q4'
+    year 					INT
+);
+
+-- envi_activity
+DROP TABLE IF EXISTS bronze.envi_activity;
+CREATE TABLE bronze.envi_activity (
+    envi_act_id 			VARCHAR(30),           -- Example: NHW-PSC-2024-001
+	metrics 				VARCHAR(20),
+    company_id 				VARCHAR(20),       	   -- Referenced to company_info.
+    envi_act_name 			TEXT
+);
+
+-- envi_act_output
+DROP TABLE IF EXISTS bronze.envi_activity_output;
+CREATE TABLE bronze.envi_activity_output (
+    nhw_id 					VARCHAR(30),           		-- Example: NHW-PSC-2024-001
+    company_id 				VARCHAR(20),       		-- Referenced to company_info.
+    envi_act 				VARCHAR(20),
+    unit_of_measurement 	VARCHAR(20),
+    act_output 				INT,
+    year INT
+);
