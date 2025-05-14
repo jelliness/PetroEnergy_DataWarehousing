@@ -932,7 +932,7 @@ SELECT
     COUNT(*) AS duplicate_count
 FROM silver.envi_hazard_waste
 GROUP BY 
-    company_id, waste_source, metrics, unit_of_measurement, waste, month, year
+    company_id, metrics, unit_of_measurement, waste, quarter, year
 HAVING COUNT(*) > 1; 
 
 -- Check for unwanted whitespaces in all columns
@@ -1037,6 +1037,14 @@ FROM silver.envi_activity
 GROUP BY ea_id
 HAVING COUNT(*) > 1;
 
+SELECT 
+    metrics,company_id,envi_act_name,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_activity
+GROUP BY 
+    metrics,company_id,envi_act_name
+HAVING COUNT(*) > 1; 
+
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
 SELECT 
@@ -1120,6 +1128,14 @@ SELECT
 FROM silver.envi_activity_output
 GROUP BY eao_id
 HAVING COUNT(*) > 1;
+
+SELECT 
+   company_id,ea_id,act_output,year,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_activity_output
+GROUP BY 
+   company_id,ea_id,act_output,year
+HAVING COUNT(*) > 1; 
 
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
