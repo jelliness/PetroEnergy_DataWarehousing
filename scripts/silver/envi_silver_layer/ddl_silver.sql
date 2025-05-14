@@ -103,11 +103,11 @@ CREATE TABLE silver.envi_non_hazard_waste (
 -- envi_hazard_waste
 DROP TABLE IF EXISTS silver.envi_hazard_waste;
 CREATE TABLE silver.envi_hazard_waste (
-    hw_id 					VARCHAR(30),          		-- Example: NHW-PSC-2024-001
-    company_id 				VARCHAR(20),      		-- Referenced to company_info.
+    hw_id 					VARCHAR(30),          		-- Example: HW-PSC-2023-001
+    company_id 				VARCHAR(20),      		    -- Referenced to company_info.
     metrics 				VARCHAR(20),
     unit_of_measurement 	VARCHAR(20),
-    waste 					DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
+    waste 					DOUBLE PRECISION,           -- Allows decimal values (e.g., 234.789)
     quarter 				VARCHAR(2),  		 		-- Example: 'Q1', 'Q2', 'Q3', 'Q4'
     year 					INT
 );
@@ -115,18 +115,18 @@ CREATE TABLE silver.envi_hazard_waste (
 -- envi_activity
 DROP TABLE IF EXISTS silver.envi_activity;
 CREATE TABLE silver.envi_activity (
-    envi_act_id 			VARCHAR(30),           -- Example: NHW-PSC-2024-001
+    ea_id 			        VARCHAR(30),            -- Example: EA_PSC_001
 	metrics 				VARCHAR(20),
-    company_id 				VARCHAR(20),       	   -- Referenced to company_info.
+    company_id 				VARCHAR(20),       	    -- Referenced to company_info.
     envi_act_name 			TEXT
 );
 
 -- envi_act_output
 DROP TABLE IF EXISTS silver.envi_activity_output;
 CREATE TABLE silver.envi_activity_output (
-    nhw_id 					VARCHAR(30),           		-- Example: NHW-PSC-2024-001
-    company_id 				VARCHAR(20),       		-- Referenced to company_info.
-    envi_act 				VARCHAR(20),
+    eao_id 					VARCHAR(30),           		-- Example: EAO-PSC-2018-001
+    company_id 				VARCHAR(20),       		    -- Referenced to company_info.
+    ea_id 				    VARCHAR(30),                -- Referenced to envi_activity.
     unit_of_measurement 	VARCHAR(20),
     act_output 				INT,
     year INT
