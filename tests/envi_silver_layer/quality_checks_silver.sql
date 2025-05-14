@@ -53,6 +53,15 @@ FROM silver.envi_company_info
 GROUP BY company_id
 HAVING COUNT(*) > 1;
 
+SELECT 
+    company_name,resources,site_name,site_address,city_town,province,zip,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_company_info
+GROUP BY 
+    company_name,resources,site_name,site_address,city_town,province,zip
+HAVING COUNT(*) > 1; 
+ 
+
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
 SELECT 
@@ -138,6 +147,18 @@ FROM silver.envi_company_property
 GROUP BY cp_id
 HAVING COUNT(*) > 1;
 
+SELECT 
+    company_id, 
+    cp_name, 
+    cp_type,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_company_property
+GROUP BY 
+    company_id, 
+    cp_name, 
+    cp_type
+HAVING COUNT(*) > 1; 
+
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
 SELECT 
@@ -207,6 +228,14 @@ SELECT
 FROM silver.envi_natural_sources
 GROUP BY ns_id
 HAVING COUNT(*) > 1;
+
+SELECT 
+	company_id,ns_name,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_natural_sources
+GROUP BY 
+	company_id,ns_name
+HAVING COUNT(*) > 1; 
 
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
@@ -291,6 +320,14 @@ SELECT
 FROM silver.envi_water_withdrawal
 GROUP BY ww_id
 HAVING COUNT(*) > 1;
+
+SELECT 
+    company_id,year,month,ns_id,volume,unit_of_measurement,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_water_withdrawal
+GROUP BY 
+    company_id,year,month,ns_id,volume,unit_of_measurement
+HAVING COUNT(*) > 1; 
 
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
@@ -410,6 +447,14 @@ FROM silver.envi_diesel_consumption
 GROUP BY dc_id
 HAVING COUNT(*) > 1;
 
+SELECT 
+    company_id,cp_id,unit_of_measurement,consumption,date,month,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_diesel_consumption
+GROUP BY 
+    company_id,cp_id,unit_of_measurement,consumption,date,month
+HAVING COUNT(*) > 1; 
+
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
 SELECT 
@@ -517,6 +562,14 @@ FROM silver.envi_electric_consumption
 GROUP BY ec_id
 HAVING COUNT(*) > 1;
 
+SELECT 
+    company_id, unit_of_measurement, consumption, quarter, year,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_electric_consumption
+GROUP BY 
+    company_id, unit_of_measurement, consumption, quarter, year
+HAVING COUNT(*) > 1; 
+
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
 SELECT 
@@ -618,6 +671,14 @@ SELECT
 FROM silver.envi_power_generation
 GROUP BY pg_id
 HAVING COUNT(*) > 1;
+
+SELECT 
+    company_id, unit_of_measurement, generation, quarter, year,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_power_generation
+GROUP BY 
+    company_id, unit_of_measurement, generation, quarter, year
+HAVING COUNT(*) > 1; 
 
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
@@ -730,6 +791,14 @@ SELECT
 FROM silver.envi_non_hazard_waste
 GROUP BY nhw_id
 HAVING COUNT(*) > 1;
+
+SELECT 
+    company_id, waste_source, metrics, unit_of_measurement, waste, month, year,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_non_hazard_waste
+GROUP BY 
+    company_id, waste_source, metrics, unit_of_measurement, waste, month, year
+HAVING COUNT(*) > 1; 
 
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
@@ -857,6 +926,14 @@ SELECT
 FROM silver.envi_hazard_waste
 GROUP BY hw_id
 HAVING COUNT(*) > 1;
+
+SELECT 
+    company_id, metrics, unit_of_measurement, waste, quarter, year,
+    COUNT(*) AS duplicate_count
+FROM silver.envi_hazard_waste
+GROUP BY 
+    company_id, waste_source, metrics, unit_of_measurement, waste, month, year
+HAVING COUNT(*) > 1; 
 
 -- Check for unwanted whitespaces in all columns
 -- Expectation: No Results
