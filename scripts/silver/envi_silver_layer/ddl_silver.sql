@@ -11,47 +11,47 @@ Script Purpose:
 
 -- Drop and recreate tables in the 'silver' schema
 
--- envi_company_info
-DROP TABLE IF EXISTS silver.envi_company_info;
-CREATE TABLE silver.envi_company_info (
-    company_id     VARCHAR(20),       -- Example: PSC, MGI, RGEC
-    company_name   VARCHAR(255),
-    resources      TEXT,
-    site_name      VARCHAR(255),
-    site_address   TEXT,
-    city_town      VARCHAR(100),
-    province       VARCHAR(100),
-    zip            VARCHAR(10)
-);
+    -- envi_company_info
+    DROP TABLE IF EXISTS silver.envi_company_info;
+    CREATE TABLE silver.envi_company_info (
+        company_id     VARCHAR(20),       -- Example: PSC, MGI, RGEC
+        company_name   VARCHAR(255),
+        resources      TEXT,
+        site_name      VARCHAR(255),
+        site_address   TEXT,
+        city_town      VARCHAR(100),
+        province       VARCHAR(100),
+        zip            VARCHAR(10)
+    );
 
--- envi_company_property
-DROP TABLE IF EXISTS silver.envi_company_property;
-CREATE TABLE silver.envi_company_property (
-    cp_id      VARCHAR(30),       -- Example: CP-PSC-001
-    company_id VARCHAR(20),       -- Referenced to company_info.
-    cp_name    VARCHAR(100),
-    cp_type    VARCHAR(50)        -- Example values: Equipment, Vehicle
-);
+    -- envi_company_property
+    DROP TABLE IF EXISTS silver.envi_company_property;
+    CREATE TABLE silver.envi_company_property (
+        cp_id      VARCHAR(30),       -- Example: CP-PSC-001
+        company_id VARCHAR(20),       -- Referenced to company_info.
+        cp_name    VARCHAR(100),
+        cp_type    VARCHAR(50)        -- Example values: Equipment, Vehicle
+    );
 
--- envi_natural_sources
-DROP TABLE IF EXISTS silver.envi_natural_sources;
-CREATE TABLE silver.envi_natural_sources (
-    ns_id      VARCHAR(30),       -- Example: NS-PSC-001
-    company_id VARCHAR(20),       -- Referenced to company_info.
-    ns_name    VARCHAR(100)
-);
+    -- envi_natural_sources
+    DROP TABLE IF EXISTS silver.envi_natural_sources;
+    CREATE TABLE silver.envi_natural_sources (
+        ns_id      VARCHAR(30),       -- Example: NS-PSC-001
+        company_id VARCHAR(20),       -- Referenced to company_info.
+        ns_name    VARCHAR(100)
+    );
 
--- envi_water_withdrawal
-DROP TABLE IF EXISTS silver.envi_water_withdrawal;
-CREATE TABLE silver.envi_water_withdrawal (
-    ww_id                 VARCHAR(30),         -- Example: WW-PSC-2022-002
-    company_id            VARCHAR(20),         -- Referenced to company_info.
-    year                  SMALLINT,
-    month                 VARCHAR(20),
-    ns_id                 VARCHAR(30),         -- Referenced to natural sources.
-    volume                DOUBLE PRECISION,    -- Allows decimal values (e.g., 123.456)
-    unit_of_measurement   VARCHAR(20)
-);
+    -- envi_water_withdrawal
+    DROP TABLE IF EXISTS silver.envi_water_withdrawal;
+    CREATE TABLE silver.envi_water_withdrawal (
+        ww_id                 VARCHAR(30),         -- Example: WW-PSC-2022-002
+        company_id            VARCHAR(20),         -- Referenced to company_info.
+        year                  SMALLINT,
+        month                 VARCHAR(20),
+        ns_id                 VARCHAR(30),         -- Referenced to natural sources.
+        volume                DOUBLE PRECISION,    -- Allows decimal values (e.g., 123.456)
+        unit_of_measurement   VARCHAR(20)
+    );
 
 -- envi_diesel_consumption
 DROP TABLE IF EXISTS silver.envi_diesel_consumption;

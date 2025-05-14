@@ -1,253 +1,351 @@
 /*
 ===============================================================================
-Stored Procedure: Load Silver Layer (Bronze -> Silver)
+Stored Procedure: Insert Trimmed Data from Bronze to Silver
 ===============================================================================
 Script Purpose:
-    This stored procedure performs the ETL (Extract, Transform, Load) process to 
-    populate the 'silver' schema tables from the 'bronze' schema.
-	Actions Performed:
-		- Truncates Silver tables.
-		- Inserts transformed and cleansed data from Bronze into Silver tables.
-		
-Parameters:
-    None. 
-	  This stored procedure does not accept any parameters or return any values.
-
-Usage Example:
-    EXEC Silver.load_silver;
+    This procedure transfers data from bronze tables to silver tables,
+    trimming string values and handling data transformation.
+    
+    The procedure follows the standard ETL pattern with detailed logging
+    of execution times and error handling.
 ===============================================================================
 */
 
-CREATE OR ALTER PROCEDURE silver.load_silver AS
+-- Create schema if not exists
+CREATE SCHEMA IF NOT EXISTS silver;
+
+-- Create or replace the master procedure
+CREATE OR REPLACE PROCEDURE silver.load_silver()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    start_time TIMESTAMP;
+    end_time TIMESTAMP;
+    batch_start_time TIMESTAMP;
+    batch_end_time TIMESTAMP;
 BEGIN
-    DECLARE @start_time DATETIME, @end_time DATETIME, @batch_start_time DATETIME, @batch_end_time DATETIME; 
-    BEGIN TRY
-        SET @batch_start_time = GETDATE();
-        PRINT '================================================';
-        PRINT 'Loading Silver Layer';
-        PRINT '================================================';
+    batch_start_time := CLOCK_TIMESTAMP();
+    RAISE NOTICE '================================================';
+    RAISE NOTICE 'Loading Silver Layer';
+    RAISE NOTICE '================================================';
+    
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading Environmental Tables';
+    RAISE NOTICE '------------------------------------------------';
+    
+    BEGIN
 
-		PRINT '------------------------------------------------';
-		PRINT 'Loading CRM Tables';
-		PRINT '------------------------------------------------';
+        -- Loading silver.envi_company_info
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_company_info';
+        TRUNCATE TABLE silver.envi_company_info;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_company_info';
+        INSERT INTO silver.envi_company_info (
+            company_id,
+            company_name,
+            resources,
+            site_name,
+            site_address,
+            city_town,
+            province,
+            zip
+        )
+        SELECT
+            TRIM(company_id),
+            TRIM(company_name),
+            TRIM(resources),
+            TRIM(site_name),
+            TRIM(site_address),
+            TRIM(city_town),
+            TRIM(province),
+            TRIM(zip)
+        FROM bronze.envi_company_info;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_company_property
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_company_property';
+        TRUNCATE TABLE silver.envi_company_property;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_company_property';
+        INSERT INTO silver.envi_company_property (
+            cp_id,
+            company_id,
+            cp_name,
+            cp_type
+        )
+        SELECT
+            TRIM(cp_id),
+            TRIM(company_id),
+            TRIM(cp_name),
+			TRIM(cp_type)
+        FROM bronze.envi_company_property;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_natural_sources
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_natural_sources';
+        TRUNCATE TABLE silver.envi_natural_sources;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_natural_sources';
+        INSERT INTO silver.envi_natural_sources (
+            ns_id,
+            company_id,
+            ns_name
+        )
+        SELECT
+            TRIM(ns_id),
+            TRIM(company_id),
+            TRIM(ns_name)
+        FROM bronze.envi_natural_sources;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_water_withdrawal
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_water_withdrawal';
+        TRUNCATE TABLE silver.envi_water_withdrawal;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_water_withdrawal';
+        INSERT INTO silver.envi_water_withdrawal (
+            ww_id,
+            company_id,
+            year,
+            month,
+            ns_id,
+            volume,
+            unit_of_measurement
+        )
+        SELECT
+            TRIM(ww_id),
+            TRIM(company_id),
+            year,
+            month,
+            TRIM(ns_id),
+            CASE
+                WHEN volume < 0 THEN 0  -- Handle negative values
+                ELSE volume
+            END AS volume,
+            TRIM(unit_of_measurement)
+        FROM bronze.envi_water_withdrawal;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_diesel_consumption
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_diesel_consumption';
+        TRUNCATE TABLE silver.envi_diesel_consumption;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_diesel_consumption';
+        INSERT INTO silver.envi_diesel_consumption (
+            dc_id,
+            company_id,
+            cp_id,
+            unit_of_measurement,
+            consumption,
+            date,
+            month
+        )
+        SELECT
+            TRIM(dc_id),
+            TRIM(company_id),
+            TRIM(cp_id),
+            TRIM(unit_of_measurement),
+            CASE
+                WHEN consumption < 0 THEN 0  -- Handle negative values
+                ELSE consumption
+            END AS consumption,
+            date,
+            month
+        FROM bronze.envi_diesel_consumption;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_electric_consumption
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_electric_consumption';
+        TRUNCATE TABLE silver.envi_electric_consumption;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_electric_consumption';
+        INSERT INTO silver.envi_electric_consumption (
+            ec_id,
+            company_id,
+            unit_of_measurement,
+            consumption,
+            quarter,
+            year
+        )
+        SELECT
+            TRIM(ec_id),
+            TRIM(company_id),
+            TRIM(unit_of_measurement),
+            CASE
+                WHEN consumption < 0 THEN 0  -- Handle negative values
+                ELSE consumption
+            END AS consumption,
+            TRIM(quarter),
+            year
+        FROM bronze.envi_electric_consumption;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_power_generation
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_power_generation';
+        TRUNCATE TABLE silver.envi_power_generation;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_power_generation';
+        INSERT INTO silver.envi_power_generation (
+            pg_id,
+            company_id,
+            unit_of_measurement,
+            generation,
+            quarter,
+            year
+        )
+        SELECT
+            TRIM(pg_id),
+            TRIM(company_id),
+            TRIM(unit_of_measurement),
+            CASE
+                WHEN generation < 0 THEN 0  -- Handle negative values
+                ELSE generation
+            END AS generation,
+            TRIM(Quarter),
+            year
+        FROM bronze.envi_power_generation;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_non_hazard_waste
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_non_hazard_waste';
+        TRUNCATE TABLE silver.envi_non_hazard_waste;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_non_hazard_waste';
+        INSERT INTO silver.envi_non_hazard_waste (
+            nhw_id,
+            company_id,
+            waste_source,
+            metrics,
+            unit_of_measurement,
+            waste,
+            month,
+            year
+        )
+        SELECT
+            TRIM(nhw_id),
+            TRIM(company_id),
+            TRIM(waste_source),
+            TRIM(metrics),
+            TRIM(unit_of_measurement),
+            CASE
+                WHEN waste < 0 THEN 0  -- Handle negative values
+                ELSE waste
+            END AS waste,
+            month,
+            year
+        FROM bronze.envi_non_hazard_waste;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_hazard_waste
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_hazard_waste';
+        TRUNCATE TABLE silver.envi_hazard_waste;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_hazard_waste';
+        INSERT INTO silver.envi_hazard_waste (
+            hw_id,
+            company_id,
+            metrics,
+            unit_of_measurement,
+            waste,
+            quarter,
+            year
+        )
+        SELECT
+            TRIM(hw_id),
+            TRIM(company_id),
+            TRIM(metrics),
+            TRIM(unit_of_measurement),
+            CASE
+                WHEN waste < 0 THEN 0  -- Handle negative values
+                ELSE waste
+            END AS waste,
+            TRIM(quarter),
+            year
+        FROM bronze.envi_hazard_waste;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_activity
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_activity';
+        TRUNCATE TABLE silver.envi_activity;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_activity';
+        INSERT INTO silver.envi_activity (
+            ea_id,
+            metrics,
+            company_id,
+            envi_act_name
+        )
+        SELECT
+            TRIM(ea_id),
+            TRIM(metrics),
+            TRIM(company_id),
+            TRIM(envi_act_name)
+        FROM bronze.envi_activity;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        -- Loading silver.envi_activity_output
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Truncating Table: silver.envi_activity_output';
+        TRUNCATE TABLE silver.envi_activity_output;
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_activity_output';
+        INSERT INTO silver.envi_activity_output (
+            eao_id,
+            company_id,
+            ea_id,
+            unit_of_measurement,
+            act_output,
+            year
+        )
+        SELECT
+            TRIM(eao_id),
+            TRIM(company_id),
+            TRIM(ea_id),
+            TRIM(unit_of_measurement),
+            CASE
+                WHEN act_output < 0 THEN 0  -- Handle negative values
+                ELSE act_output
+            END AS act_output,
+            year
+        FROM bronze.envi_activity_output;
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+        
+        batch_end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '==========================================';
+        RAISE NOTICE 'Loading Silver Layer is Completed';
+        RAISE NOTICE '   - Total Load Duration: % seconds', EXTRACT(EPOCH FROM (batch_end_time - batch_start_time));
+        RAISE NOTICE '==========================================';
+        
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE '==========================================';
+            RAISE NOTICE 'ERROR OCCURRED DURING LOADING SILVER LAYER';
+            RAISE NOTICE 'Error Message: %', SQLERRM;
+            RAISE NOTICE 'Error Code: %', SQLSTATE;
+            RAISE NOTICE '==========================================';
+    END;
+END;
+$$;
 
-		-- Loading silver.crm_cust_info
-        SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.crm_cust_info';
-		TRUNCATE TABLE silver.crm_cust_info;
-		PRINT '>> Inserting Data Into: silver.crm_cust_info';
-		INSERT INTO silver.crm_cust_info (
-			cst_id, 
-			cst_key, 
-			cst_firstname, 
-			cst_lastname, 
-			cst_marital_status, 
-			cst_gndr,
-			cst_create_date
-		)
-		SELECT
-			cst_id,
-			cst_key,
-			TRIM(cst_firstname) AS cst_firstname,
-			TRIM(cst_lastname) AS cst_lastname,
-			CASE 
-				WHEN UPPER(TRIM(cst_marital_status)) = 'S' THEN 'Single'
-				WHEN UPPER(TRIM(cst_marital_status)) = 'M' THEN 'Married'
-				ELSE 'n/a'
-			END AS cst_marital_status, -- Normalize marital status values to readable format
-			CASE 
-				WHEN UPPER(TRIM(cst_gndr)) = 'F' THEN 'Female'
-				WHEN UPPER(TRIM(cst_gndr)) = 'M' THEN 'Male'
-				ELSE 'n/a'
-			END AS cst_gndr, -- Normalize gender values to readable format
-			cst_create_date
-		FROM (
-			SELECT
-				*,
-				ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
-			FROM bronze.crm_cust_info
-			WHERE cst_id IS NOT NULL
-		) t
-		WHERE flag_last = 1; -- Select the most recent record per customer
-		SET @end_time = GETDATE();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
-        PRINT '>> -------------';
-
-		-- Loading silver.crm_prd_info
-        SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.crm_prd_info';
-		TRUNCATE TABLE silver.crm_prd_info;
-		PRINT '>> Inserting Data Into: silver.crm_prd_info';
-		INSERT INTO silver.crm_prd_info (
-			prd_id,
-			cat_id,
-			prd_key,
-			prd_nm,
-			prd_cost,
-			prd_line,
-			prd_start_dt,
-			prd_end_dt
-		)
-		SELECT
-			prd_id,
-			REPLACE(SUBSTRING(prd_key, 1, 5), '-', '_') AS cat_id, -- Extract category ID
-			SUBSTRING(prd_key, 7, LEN(prd_key)) AS prd_key,        -- Extract product key
-			prd_nm,
-			ISNULL(prd_cost, 0) AS prd_cost,
-			CASE 
-				WHEN UPPER(TRIM(prd_line)) = 'M' THEN 'Mountain'
-				WHEN UPPER(TRIM(prd_line)) = 'R' THEN 'Road'
-				WHEN UPPER(TRIM(prd_line)) = 'S' THEN 'Other Sales'
-				WHEN UPPER(TRIM(prd_line)) = 'T' THEN 'Touring'
-				ELSE 'n/a'
-			END AS prd_line, -- Map product line codes to descriptive values
-			CAST(prd_start_dt AS DATE) AS prd_start_dt,
-			CAST(
-				LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt) - 1 
-				AS DATE
-			) AS prd_end_dt -- Calculate end date as one day before the next start date
-		FROM bronze.crm_prd_info;
-        SET @end_time = GETDATE();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
-        PRINT '>> -------------';
-
-        -- Loading crm_sales_details
-        SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.crm_sales_details';
-		TRUNCATE TABLE silver.crm_sales_details;
-		PRINT '>> Inserting Data Into: silver.crm_sales_details';
-		INSERT INTO silver.crm_sales_details (
-			sls_ord_num,
-			sls_prd_key,
-			sls_cust_id,
-			sls_order_dt,
-			sls_ship_dt,
-			sls_due_dt,
-			sls_sales,
-			sls_quantity,
-			sls_price
-		)
-		SELECT 
-			sls_ord_num,
-			sls_prd_key,
-			sls_cust_id,
-			CASE 
-				WHEN sls_order_dt = 0 OR LEN(sls_order_dt) != 8 THEN NULL
-				ELSE CAST(CAST(sls_order_dt AS VARCHAR) AS DATE)
-			END AS sls_order_dt,
-			CASE 
-				WHEN sls_ship_dt = 0 OR LEN(sls_ship_dt) != 8 THEN NULL
-				ELSE CAST(CAST(sls_ship_dt AS VARCHAR) AS DATE)
-			END AS sls_ship_dt,
-			CASE 
-				WHEN sls_due_dt = 0 OR LEN(sls_due_dt) != 8 THEN NULL
-				ELSE CAST(CAST(sls_due_dt AS VARCHAR) AS DATE)
-			END AS sls_due_dt,
-			CASE 
-				WHEN sls_sales IS NULL OR sls_sales <= 0 OR sls_sales != sls_quantity * ABS(sls_price) 
-					THEN sls_quantity * ABS(sls_price)
-				ELSE sls_sales
-			END AS sls_sales, -- Recalculate sales if original value is missing or incorrect
-			sls_quantity,
-			CASE 
-				WHEN sls_price IS NULL OR sls_price <= 0 
-					THEN sls_sales / NULLIF(sls_quantity, 0)
-				ELSE sls_price  -- Derive price if original value is invalid
-			END AS sls_price
-		FROM bronze.crm_sales_details;
-        SET @end_time = GETDATE();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
-        PRINT '>> -------------';
-
-        -- Loading erp_cust_az12
-        SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.erp_cust_az12';
-		TRUNCATE TABLE silver.erp_cust_az12;
-		PRINT '>> Inserting Data Into: silver.erp_cust_az12';
-		INSERT INTO silver.erp_cust_az12 (
-			cid,
-			bdate,
-			gen
-		)
-		SELECT
-			CASE
-				WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid, 4, LEN(cid)) -- Remove 'NAS' prefix if present
-				ELSE cid
-			END AS cid, 
-			CASE
-				WHEN bdate > GETDATE() THEN NULL
-				ELSE bdate
-			END AS bdate, -- Set future birthdates to NULL
-			CASE
-				WHEN UPPER(TRIM(gen)) IN ('F', 'FEMALE') THEN 'Female'
-				WHEN UPPER(TRIM(gen)) IN ('M', 'MALE') THEN 'Male'
-				ELSE 'n/a'
-			END AS gen -- Normalize gender values and handle unknown cases
-		FROM bronze.erp_cust_az12;
-	    SET @end_time = GETDATE();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
-        PRINT '>> -------------';
-
-		PRINT '------------------------------------------------';
-		PRINT 'Loading ERP Tables';
-		PRINT '------------------------------------------------';
-
-        -- Loading erp_loc_a101
-        SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.erp_loc_a101';
-		TRUNCATE TABLE silver.erp_loc_a101;
-		PRINT '>> Inserting Data Into: silver.erp_loc_a101';
-		INSERT INTO silver.erp_loc_a101 (
-			cid,
-			cntry
-		)
-		SELECT
-			REPLACE(cid, '-', '') AS cid, 
-			CASE
-				WHEN TRIM(cntry) = 'DE' THEN 'Germany'
-				WHEN TRIM(cntry) IN ('US', 'USA') THEN 'United States'
-				WHEN TRIM(cntry) = '' OR cntry IS NULL THEN 'n/a'
-				ELSE TRIM(cntry)
-			END AS cntry -- Normalize and Handle missing or blank country codes
-		FROM bronze.erp_loc_a101;
-	    SET @end_time = GETDATE();
-        PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
-        PRINT '>> -------------';
-		
-		-- Loading erp_px_cat_g1v2
-		SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.erp_px_cat_g1v2';
-		TRUNCATE TABLE silver.erp_px_cat_g1v2;
-		PRINT '>> Inserting Data Into: silver.erp_px_cat_g1v2';
-		INSERT INTO silver.erp_px_cat_g1v2 (
-			id,
-			cat,
-			subcat,
-			maintenance
-		)
-		SELECT
-			id,
-			cat,
-			subcat,
-			maintenance
-		FROM bronze.erp_px_cat_g1v2;
-		SET @end_time = GETDATE();
-		PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
-        PRINT '>> -------------';
-
-		SET @batch_end_time = GETDATE();
-		PRINT '=========================================='
-		PRINT 'Loading Silver Layer is Completed';
-        PRINT '   - Total Load Duration: ' + CAST(DATEDIFF(SECOND, @batch_start_time, @batch_end_time) AS NVARCHAR) + ' seconds';
-		PRINT '=========================================='
-		
-	END TRY
-	BEGIN CATCH
-		PRINT '=========================================='
-		PRINT 'ERROR OCCURED DURING LOADING BRONZE LAYER'
-		PRINT 'Error Message' + ERROR_MESSAGE();
-		PRINT 'Error Message' + CAST (ERROR_NUMBER() AS NVARCHAR);
-		PRINT 'Error Message' + CAST (ERROR_STATE() AS NVARCHAR);
-		PRINT '=========================================='
-	END CATCH
-END
+CALL silver.load_silver()
