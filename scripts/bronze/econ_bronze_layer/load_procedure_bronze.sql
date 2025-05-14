@@ -16,7 +16,7 @@ DECLARE
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
 BEGIN
-    local_file_path := 'C:\Users\Rafael\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_econ';  -- Adjust path
+    local_file_path := 'datasets\source_econ';  -- Adjust path
     batch_start_time := CURRENT_TIMESTAMP;
 
     RAISE NOTICE '================================';
