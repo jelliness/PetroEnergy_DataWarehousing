@@ -167,7 +167,6 @@ CREATE TABLE bronze.envi_activity_output (
     eao_id 					VARCHAR(30),           		-- Example: EAO-PSC-2018-001
     company_id 				VARCHAR(20),       		    -- Referenced to company_info.
     ea_id 				    VARCHAR(30),                -- Referenced to envi_activity.
-    unit_of_measurement 	VARCHAR(20),
     act_output 				INT,
     year INT
 );

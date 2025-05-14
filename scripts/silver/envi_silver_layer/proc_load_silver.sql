@@ -312,7 +312,6 @@ BEGIN
             eao_id,
             company_id,
             ea_id,
-            unit_of_measurement,
             act_output,
             year
         )
@@ -320,7 +319,6 @@ BEGIN
             TRIM(eao_id),
             TRIM(company_id),
             TRIM(ea_id),
-            TRIM(unit_of_measurement),
             CASE
                 WHEN act_output < 0 THEN 0  -- Handle negative values
                 ELSE act_output

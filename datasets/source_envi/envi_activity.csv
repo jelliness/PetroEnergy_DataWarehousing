@@ -1,10 +1,10 @@
 ﻿ea_id,metrics,company_id,envi_act_name
-EA_PSC_001,,PSEC,Clean up drives
-EA_PSC_002,No. of trees planted,PSEC,Tree Planting Activities
-EA_PSC_003,,PSEC,Greenhouse project: planting cash crops
-EA_PSC_004,,PSEC,Fishpond project
-EA_PSC_005,,PSEC,Backyard vegrable garden competition
-EA_PSC_006,,PSEC,"""Teach Them Young"" Program: students were given christmas gift and a tree for them to plant"
+EA_PSC_001,,PSC,Clean up drives
+EA_PSC_002,No. of trees planted,PSC,Tree Planting Activities
+EA_PSC_003,,PSC,Greenhouse project: planting cash crops
+EA_PSC_004,,PSC,Fishpond project
+EA_PSC_005,,PSC,Backyard vegrable garden competition
+EA_PSC_006,,PSC,"""Teach Them Young"" Program: students were given christmas gift and a tree for them to plant"
 EA_MGI_001,,MGI,Waste To Ecobrick Project-Year 3
 EA_MGI_002,,MGI,Monitoring of Ambient and Water Quality
 EA_MGI_003,,MGI,Waste Management

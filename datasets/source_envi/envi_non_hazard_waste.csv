@@ -1,6 +1,6 @@
 ﻿NON_HAZARDOUS_WASTE_ID (PK),COMPANY ID (FK),WASTE_SOURCE,METRICS,UNIT_OF_MEASUREMENT,WASTE,MONTH,YEAR
 NHW-PSC-2024-001,PSC,Staff House,Residual,Kilogram,93,January,2024
-NHW-PSC-2024-002,PSC,Staff House,Residual,Kilogram,87,Febuary,2024
+NHW-PSC-2024-002,PSC,Staff House,Residual,Kilogram,87,February,2024
 NHW-PSC-2024-003,PSC,Staff House,Residual,Kilogram,124,March,2024
 NHW-PSC-2024-004,PSC,Staff House,Residual,Kilogram,90,April,2024
 NHW-PSC-2024-005,PSC,Staff House,Residual,Kilogram,93,May,2024
@@ -12,7 +12,7 @@ NHW-PSC-2024-010,PSC,Staff House,Residual,Kilogram,77.5,October,2024
 NHW-PSC-2024-011,PSC,Staff House,Residual,Kilogram,62,November,2024
 NHW-PSC-2024-012,PSC,Staff House,Residual,Kilogram,120,December,2024
 NHW-PSC-2024-013,PSC,Security,Residual,Kilogram,62,January,2024
-NHW-PSC-2024-014,PSC,Security,Residual,Kilogram,29,Febuary,2024
+NHW-PSC-2024-014,PSC,Security,Residual,Kilogram,29,February,2024
 NHW-PSC-2024-015,PSC,Security,Residual,Kilogram,46.5,March,2024
 NHW-PSC-2024-016,PSC,Security,Residual,Kilogram,45,April,2024
 NHW-PSC-2024-017,PSC,Security,Residual,Kilogram,46.5,May,2024
@@ -24,7 +24,7 @@ NHW-PSC-2024-022,PSC,Security,Residual,Kilogram,60,October,2024
 NHW-PSC-2024-023,PSC,Security,Residual,Kilogram,77.5,November,2024
 NHW-PSC-2024-024,PSC,Security,Residual,Kilogram,90,December,2024
 NHW-PSC-2024-025,PSC,Utility,Residual,Kilogram,93,January,2024
-NHW-PSC-2024-026,PSC,Utility,Residual,Kilogram,87,Febuary,2024
+NHW-PSC-2024-026,PSC,Utility,Residual,Kilogram,87,February,2024
 NHW-PSC-2024-027,PSC,Utility,Residual,Kilogram,93,March,2024
 NHW-PSC-2024-028,PSC,Utility,Residual,Kilogram,90,April,2024
 NHW-PSC-2024-029,PSC,Utility,Residual,Kilogram,93,May,2024
