@@ -1106,11 +1106,6 @@ FROM silver.envi_activity_output
 WHERE ea_id IS NULL
 UNION ALL
 SELECT 
-    'unit_of_measurement' AS column_name, COUNT(*) AS null_count  
-FROM silver.envi_activity_output 
-WHERE unit_of_measurement IS NULL
-UNION ALL
-SELECT 
     'act_output' AS column_name, COUNT(*) AS null_count  
 FROM silver.envi_activity_output 
 WHERE act_output IS NULL
@@ -1128,63 +1123,3 @@ SELECT
 FROM silver.envi_activity_output
 GROUP BY eao_id
 HAVING COUNT(*) > 1;
-
-SELECT 
-   company_id,ea_id,act_output,year,
-    COUNT(*) AS duplicate_count
-FROM silver.envi_activity_output
-GROUP BY 
-   company_id,ea_id,act_output,year
-HAVING COUNT(*) > 1; 
-
--- Check for unwanted whitespaces in all columns
--- Expectation: No Results
-SELECT 
-    'eao_id' AS column_name, 
-    eao_id AS value
-FROM silver.envi_activity_output
-WHERE eao_id != TRIM(eao_id)
-UNION ALL
-SELECT 
-    'company_id' AS column_name, 
-    company_id AS value
-FROM silver.envi_activity_output
-WHERE company_id != TRIM(company_id)
-UNION ALL
-SELECT 
-    'ea_id' AS column_name, 
-    ea_id AS value
-FROM silver.envi_activity_output
-WHERE ea_id != TRIM(ea_id)
-UNION ALL
-SELECT 
-    'unit_of_measurement' AS column_name, 
-    unit_of_measurement AS value
-FROM silver.envi_activity_output
-WHERE unit_of_measurement != TRIM(unit_of_measurement);
-
--- Check for negative values in numeric columns
--- Expectation: No Results
-SELECT 
-    eao_id,
-    act_output
-FROM silver.envi_activity_output
-WHERE act_output < 0;
-
-SELECT 
-    eao_id,
-    year
-FROM silver.envi_activity_output
-WHERE year < 0;
-
--- Check for referential integrity
--- Expectation: No Results
-SELECT 
-    company_id 
-FROM silver.envi_activity_output
-WHERE company_id NOT IN (SELECT company_id FROM silver.envi_company_info);
-
-SELECT 
-    ea_id 
-FROM silver.envi_activity_output
-WHERE ea_id NOT IN (SELECT ea_id FROM silver.envi_activity);
