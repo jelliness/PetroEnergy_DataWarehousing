@@ -13,11 +13,13 @@ CREATE OR REPLACE PROCEDURE bronze.load_bronze()
 LANGUAGE plpgsql
 AS $$
 DECLARE
+	local_file_path TEXT;
     start_time TIMESTAMP;
     end_time TIMESTAMP;
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
 BEGIN
+	local_file_path :=  'C:\Users\kane5\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_envi';		-- Change this according to your folder's file path 
 	batch_start_time := CURRENT_TIMESTAMP; -- Start time for the batch operation
 	RAISE NOTICE '================================';
 	RAISE NOTICE 'Loading Bronze Layer Data...';
@@ -35,10 +37,11 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_company_info; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_company_info...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_company_info
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_company_info.csv'
-	DELIMITER ',' CSV HEADER;
-	
+	EXECUTE format(
+	    'COPY bronze.envi_company_info FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_company_info.csv'
+	);
+		
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
 	RAISE NOTICE '-----------------';
@@ -55,9 +58,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_company_property; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_company_property...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_company_property
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_company_property.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_company_property FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_company_property.csv'
+	);
 	
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -75,9 +79,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_natural_sources; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_natural_sources...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_natural_sources
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_natural_sources.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_natural_sources FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_natural_sources.csv'
+	);
 	
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -95,9 +100,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_water_withdrawal; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_water_withdrawal...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_water_withdrawal
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_water_withdrawal.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_water_withdrawal FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_water_withdrawal.csv'
+	);
 	
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -115,9 +121,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_diesel_consumption; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_diesel_consumption...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_diesel_consumption
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_diesel_consumption.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_diesel_consumption FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_diesel_consumption.csv'
+	);
 	
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -135,9 +142,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_electric_consumption; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_electric_consumption...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_electric_consumption
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_electric_consumption.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_electric_consumption FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_electric_consumption.csv'
+	);
 	
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -155,9 +163,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_power_generation; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_power_generation...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_power_generation    
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_power_generation.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_power_generation FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_power_generation.csv'
+	);
 
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -175,9 +184,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_non_hazard_waste; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_non_hazard_waste...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_non_hazard_waste    
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_non_hazard_waste.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_non_hazard_waste FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_non_hazard_waste.csv'
+	);
 
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -195,9 +205,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_hazard_waste; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_hazard_waste...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_hazard_waste    
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_hazard_waste.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_hazard_waste FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_hazard_waste.csv'
+	);
 
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -215,9 +226,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_activity; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_activity...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_activity    
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_activity.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_activity FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_activity.csv'
+	);
 
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -235,9 +247,10 @@ BEGIN
 	TRUNCATE TABLE bronze.envi_activity_output; -- Clear the table before inserting new data
 	RAISE NOTICE '>> Bulk inserting data into bronze.envi_activity_output...'; 
 	-- Bulk insert data from CSV files into the bronze layer tables
-	COPY bronze.envi_activity_output    
-	FROM 'C:\Users\acct\Documents\GitHub Repos\PetroEnergy_DataWarehousing\datasets\source_envi\envi_activity_output.csv'
-	DELIMITER ',' CSV HEADER;
+	EXECUTE format(
+	    'COPY bronze.envi_activity_output FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_activity_output.csv'
+	);
 
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
