@@ -16,11 +16,33 @@ CREATE TABLE bronze.csr_company (
     resources VARCHAR(20)
 );
 
-DROP TABLE IF EXISTS bronze.csr_accomplishments;
-CREATE TABLE bronze.csr_accomplishments (
-    ac_id VARCHAR(20),
+DROP TABLE IF EXISTS bronze.csr_programs;
+CREATE TABLE bronze.csr_programs (
+	program_id VARCHAR(20),
+	program_name VARCHAR(20)
+);
+
+DROP TABLE IF EXISTS bronze.csr_projects;
+CREATE TABLE bronze.csr_projects (
+	project_id VARCHAR(20),
+	program_id VARCHAR(20),
+	project_name VARCHAR(50),
+	project_metrics VARCHAR(100)
+);
+
+DROP TABLE IF EXISTS bronze.csr_per_company;
+CREATE TABLE bronze.csr_per_company (
+	inv_id VARCHAR(20),
+	company_id VARCHAR(20),
+	program_id VARCHAR(20),
+	program_investment NUMERIC
+);
+
+DROP TABLE IF EXISTS bronze.csr_activity;
+CREATE TABLE bronze.csr_activity (
+    csr_id VARCHAR(20),
     company_id VARCHAR(20),
+	project_id VARCHAR(20),
     ac_year VARCHAR(4),
-    csr_program VARCHAR(100),
     csr_report NUMERIC
 );
