@@ -1,41 +1,117 @@
-CREATE OR REPLACE PROCEDURE ref.load_company_main()
+CREATE OR REPLACE PROCEDURE bronze.load_hr_bronze()
 LANGUAGE plpgsql
 AS $$
 DECLARE
     start_time TIMESTAMP;
     end_time TIMESTAMP;
+    batch_start_time TIMESTAMP;
+    batch_end_time TIMESTAMP;
 BEGIN
+    batch_start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '================================';
+    RAISE NOTICE 'Loading HR Bronze Layer Data...';
+    RAISE NOTICE '================================';
+
+    -- hr_demographics
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading HR Demographics Data...';
+    RAISE NOTICE '------------------------------------------------';
+
     start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '================================';
-    RAISE NOTICE 'Creating company_main table...';
-    RAISE NOTICE '================================';
+    RAISE NOTICE '>> Truncating table: bronze.hr_demographics...';
+    TRUNCATE TABLE bronze.hr_demographics;
+    RAISE NOTICE '>> Bulk inserting data into bronze.hr_demographics...';
 
-    -- Drop existing table if exists
-    RAISE NOTICE '>> Dropping existing table: ref.company_main (if exists)...';
-    EXECUTE 'DROP TABLE IF EXISTS ref.company_main CASCADE';
-
-    -- Create new table
-    RAISE NOTICE '>> Creating new table: ref.company_main...';
-    EXECUTE '
-        CREATE TABLE ref.company_main (
-            company_id VARCHAR(20) PRIMARY KEY,
-            company_name VARCHAR(255) NOT NULL,
-            parent_company_id VARCHAR(20) REFERENCES ref.company_main(company_id) ON DELETE SET NULL,
-            address TEXT
-        )
-    ';
+    COPY bronze.hr_demographics
+    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_demographics.csv'  -- Temporary Path. Create a path
+    DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Table created successfully.';
-    RAISE NOTICE '>> Operation Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+    -- hr_parental_leave
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading HR Parental Leave Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.hr_parental_leave...';
+    TRUNCATE TABLE bronze.hr_parental_leave;
+    RAISE NOTICE '>> Bulk inserting data into bronze.hr_parental_leave...';
+
+    COPY bronze.hr_parental_leave
+    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_parental_leave.csv'  -- Temporary Path. Create a path
+    DELIMITER ',' CSV HEADER;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+    -- hr_tenure
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading HR Tenure Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.hr_tenure...';
+    TRUNCATE TABLE bronze.hr_tenure;
+    RAISE NOTICE '>> Bulk inserting data into bronze.hr_tenure...';
+
+    COPY bronze.hr_tenure
+    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_tenure.csv'  -- Temporary Path. Create a path
+    DELIMITER ',' CSV HEADER;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+    -- hr_training
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading HR Training Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.hr_training...';
+    TRUNCATE TABLE bronze.hr_training;
+    RAISE NOTICE '>> Bulk inserting data into bronze.hr_training...';
+
+    COPY bronze.hr_training
+    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_training.csv'  -- Temporary Path. Create a path
+    DELIMITER ',' CSV HEADER;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+    -- hr_safety
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading HR Safety Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.hr_safety...';
+    TRUNCATE TABLE bronze.hr_safety;
+    RAISE NOTICE '>> Bulk inserting data into bronze.hr_safety...';
+
+    COPY bronze.hr_safety
+    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_safety.csv'  -- Temporary Path. Create a path
+    DELIMITER ',' CSV HEADER;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+    batch_end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '================================';
-    RAISE NOTICE 'company_main table creation completed.';
+    RAISE NOTICE 'Loading HR Bronze Layer is Completed';
+    RAISE NOTICE '     - Total Load Duration: % seconds', EXTRACT(EPOCH FROM batch_end_time - batch_start_time);
     RAISE NOTICE '================================';
 
 EXCEPTION
     WHEN OTHERS THEN
         RAISE NOTICE '================================';
-        RAISE NOTICE 'Error occurred during table creation: %', SQLERRM;
+        RAISE NOTICE 'Error occurred while loading data: %', SQLERRM;
         RAISE NOTICE '================================';
 END;
 $$;
