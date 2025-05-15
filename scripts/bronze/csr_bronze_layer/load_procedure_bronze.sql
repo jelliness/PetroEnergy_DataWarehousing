@@ -9,7 +9,7 @@
 -- 4. The script also includes error handling to catch any errors that occur during the execution of the procedure.
 -- 5. The script prints the start and end time of each operation, as well as the total duration of the batch operation.
 
-CALL bronze.load_csr_bronze()
+CREATE OR REPLACE PROCEDURE bronze.load_csr_bronze()
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -17,64 +17,112 @@ DECLARE
     end_time TIMESTAMP;
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
-
 BEGIN
+    batch_start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '================================';
+    RAISE NOTICE 'Loading Bronze Layer Data...';
+    RAISE NOTICE '================================';
 
-batch_start_time := CURRENT_TIMESTAMP; -- Start time for the batch operation
-RAISE NOTICE '================================';
-RAISE NOTICE 'Loading Bronze Layer Data...';
-RAISE NOTICE '================================';
+    -- csr_company
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Company Information Data...';
+    RAISE NOTICE '------------------------------------------------';
 
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.csr_company...';
+    TRUNCATE TABLE bronze.csr_company;
+    RAISE NOTICE '>> Bulk inserting data into bronze.csr_company...';
 
-RAISE NOTICE '------------------------------------------------';
-RAISE NOTICE 'Loading CSR Company Information Data...';
-RAISE NOTICE '------------------------------------------------';
+    COPY bronze.csr_company
+    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_company.csv'
+    DELIMITER ',' CSV HEADER;
 
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
 
-start_time := CURRENT_TIMESTAMP; -- Start time for the operation
-RAISE NOTICE '>> Truncating table: bronze.csr_company...';
--- Truncate the existing tables in the bronze layer
-TRUNCATE TABLE bronze.csr_company; -- Clear the table before inserting new data
-RAISE NOTICE '>> Bulk inserting data into bronze.csr_company...'; 
--- Bulk insert data from CSV files into the bronze layer tables
-COPY bronze.csr_company
-FROM 'C:\Users\colec\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_company.csv'
-DELIMITER ',' CSV HEADER;
+    -- csr_programs
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Programs Data...';
+    RAISE NOTICE '------------------------------------------------';
 
-end_time := CURRENT_TIMESTAMP; -- End time for the operation
-RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-RAISE NOTICE '-----------------';
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.csr_programs...';
+    TRUNCATE TABLE bronze.csr_programs;
+    RAISE NOTICE '>> Bulk inserting data into bronze.csr_programs...';
 
+    COPY bronze.csr_programs
+    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_programs.csv'
+    DELIMITER ',' CSV HEADER;
 
-RAISE NOTICE '------------------------------------------------';
-RAISE NOTICE 'Loading CSR Accomplishments Data...';
-RAISE NOTICE '------------------------------------------------';
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
 
+    -- csr_projects
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Projects Data...';
+    RAISE NOTICE '------------------------------------------------';
 
-start_time := CURRENT_TIMESTAMP; -- Start time for the operation
-RAISE NOTICE '>> Truncating table: bronze.csr_accomplishments...';
--- Truncate the existing tables in the bronze layer
-TRUNCATE TABLE bronze.csr_accomplishments; -- Clear the table before inserting new data
-RAISE NOTICE '>> Bulk inserting data into bronze.csr_accomplishments...'; 
--- Bulk insert data from CSV files into the bronze layer tables
-COPY bronze.csr_accomplishments
-FROM 'C:\Users\colec\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_accomplishments.csv'
-DELIMITER ',' CSV HEADER;
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.csr_projects...';
+    TRUNCATE TABLE bronze.csr_projects;
+    RAISE NOTICE '>> Bulk inserting data into bronze.csr_projects...';
 
-end_time := CURRENT_TIMESTAMP; -- End time for the operation
-RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-RAISE NOTICE '-----------------';
+    COPY bronze.csr_projects
+    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_projects.csv'
+    DELIMITER ',' CSV HEADER;
 
-batch_end_time := CURRENT_TIMESTAMP; -- End time for the batch operation
-RAISE NOTICE '================================';
-RAISE NOTICE 'Loading CSR Bronze Layer is Completed';
-RAISE NOTICE '     - Total Load Duraton: % seconds', EXTRACT(EPOCH FROM batch_end_time - batch_start_time);
-RAISE NOTICE '================================';
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+    -- csr_per_company
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Per Company Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.csr_per_company...';
+    TRUNCATE TABLE bronze.csr_per_company;
+    RAISE NOTICE '>> Bulk inserting data into bronze.csr_per_company...';
+
+    COPY bronze.csr_per_company
+    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_per_company.csv'
+    DELIMITER ',' CSV HEADER;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+    -- csr_activity
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Activity Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.csr_activity...';
+    TRUNCATE TABLE bronze.csr_activity;
+    RAISE NOTICE '>> Bulk inserting data into bronze.csr_activity...';
+
+    COPY bronze.csr_activity
+    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_activity.csv'
+    DELIMITER ',' CSV HEADER;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+    batch_end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '================================';
+    RAISE NOTICE 'Loading CSR Bronze Layer is Completed';
+    RAISE NOTICE '     - Total Load Duration: % seconds', EXTRACT(EPOCH FROM batch_end_time - batch_start_time);
+    RAISE NOTICE '================================';
 
 EXCEPTION
-WHEN OTHERS THEN
-RAISE NOTICE '================================';
-RAISE NOTICE 'Error occurred while loading data: %', SQLERRM;
-RAISE NOTICE '================================';
+    WHEN OTHERS THEN
+        RAISE NOTICE '================================';
+        RAISE NOTICE 'Error occurred while loading data: %', SQLERRM;
+        RAISE NOTICE '================================';
 END;
 $$;
