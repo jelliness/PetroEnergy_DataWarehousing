@@ -14,11 +14,11 @@ CREATE SCHEMA IF NOT EXISTS bronze;
 DROP TABLE IF EXISTS bronze.hr_demographics;
 CREATE TABLE bronze.hr_demographics (
     employee_id VARCHAR(20),
-    company_id VARCHAR(8),
     gender VARCHAR(1),
     birthdate TIMESTAMP,
-    position_name VARCHAR(20),
-    p_np VARCHAR(3)
+    position_name VARCHAR(2),
+    p_np VARCHAR(2),
+	company_id VARCHAR(6)
 );
 
 DROP TABLE IF EXISTS bronze.hr_parental_leave;
