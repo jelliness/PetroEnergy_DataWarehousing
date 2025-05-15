@@ -18,7 +18,8 @@ CREATE TABLE bronze.econ_value (
     other_revenues NUMERIC,
     interest_income NUMERIC,
     share_in_net_income_of_associate NUMERIC,
-    miscellaneous_income NUMERIC
+    miscellaneous_income NUMERIC,
+    CONSTRAINT econ_value_pk PRIMARY KEY (year)
 );
 
 -- Drop and recreate table for economic expenditures
@@ -34,7 +35,8 @@ CREATE TABLE bronze.econ_expenditures (
     community_investments NUMERIC,
     depreciation NUMERIC,
     depletion NUMERIC,
-    others NUMERIC
+    others NUMERIC,
+    CONSTRAINT econ_expenditures_pk PRIMARY KEY (year, company_id, type)
 );
 
 -- Drop and recreate table for capital provider payments (detailed breakdown)
@@ -44,7 +46,8 @@ CREATE TABLE bronze.econ_capital_provider_payment (
     year SMALLINT,  -- Year of the expenditures
     interest NUMERIC,  -- Payments made to lenders
     dividends_to_nci NUMERIC,  -- Dividends to non-controlling interests
-    dividends_to_parent NUMERIC  -- Dividends to parent/holding company
+    dividends_to_parent NUMERIC,  -- Dividends to parent/holding company
+    CONSTRAINT econ_capital_provider_payment_pk PRIMARY KEY (year)
 );
 
 

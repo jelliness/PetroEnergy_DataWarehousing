@@ -29,7 +29,8 @@ CREATE TABLE silver.econ_value (
     ) STORED,
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT silver_econ_value_pk PRIMARY KEY (year)
 );
 
 -- Drop and recreate table for economic expenditures
@@ -52,7 +53,8 @@ CREATE TABLE silver.econ_expenditures (
     ) STORED,
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT silver_econ_expenditures_pk PRIMARY KEY (year, company_id, type)
 );
 
 -- Drop and recreate table for capital provider payments
@@ -70,6 +72,7 @@ CREATE TABLE silver.econ_capital_provider_payment (
     ) STORED,
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+<<<<<<< Updated upstream
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ); 
 
@@ -78,3 +81,8 @@ CREATE TABLE silver.econ_capital_provider_payment (
 ALTER TABLE silver.econ_value ADD CONSTRAINT econ_value_unique_year UNIQUE (year);
 ALTER TABLE silver.econ_expenditures ADD CONSTRAINT econ_expenditures_unique_key UNIQUE (year, company_id, type);
 ALTER TABLE silver.econ_capital_provider_payment ADD CONSTRAINT econ_capital_provider_payment_unique_year UNIQUE (year);
+=======
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT silver_econ_capital_provider_payment_pk PRIMARY KEY (year)
+); 
+>>>>>>> Stashed changes

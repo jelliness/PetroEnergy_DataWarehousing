@@ -15,7 +15,6 @@ DECLARE
     end_time TIMESTAMP;
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
-    temp_table_name TEXT;
 BEGIN
     local_file_path := 'C:\Users\Rafael\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_econ';
     batch_start_time := CURRENT_TIMESTAMP;
@@ -29,19 +28,16 @@ BEGIN
     ------------------------------------------------------------------
     start_time := CURRENT_TIMESTAMP;
     
-    -- Create temporary table for economic value
     CREATE TEMP TABLE temp_econ_value (LIKE bronze.econ_value);
     
-    -- Load CSV into temporary table
     EXECUTE format(
         'COPY temp_econ_value FROM %L DELIMITER '','' CSV HEADER',
         local_file_path || '\econ_value.csv'
     );
-
-    -- Upsert from temporary table to bronze
+    
     INSERT INTO bronze.econ_value
     SELECT * FROM temp_econ_value
-    ON CONFLICT (year)
+    ON CONFLICT (year) 
     DO UPDATE SET
         electricity_sales = EXCLUDED.electricity_sales,
         oil_revenues = EXCLUDED.oil_revenues,
@@ -49,7 +45,7 @@ BEGIN
         interest_income = EXCLUDED.interest_income,
         share_in_net_income_of_associate = EXCLUDED.share_in_net_income_of_associate,
         miscellaneous_income = EXCLUDED.miscellaneous_income;
-
+    
     DROP TABLE temp_econ_value;
     
     end_time := CURRENT_TIMESTAMP;
@@ -61,19 +57,16 @@ BEGIN
     ------------------------------------------------------------------
     start_time := CURRENT_TIMESTAMP;
     
-    -- Create temporary table for expenditures
     CREATE TEMP TABLE temp_econ_expenditures (LIKE bronze.econ_expenditures);
     
-    -- Load CSV into temporary table
     EXECUTE format(
         'COPY temp_econ_expenditures FROM %L DELIMITER '','' CSV HEADER',
         local_file_path || '\econ_expenditures.csv'
     );
-
-    -- Upsert from temporary table to bronze
+    
     INSERT INTO bronze.econ_expenditures
     SELECT * FROM temp_econ_expenditures
-    ON CONFLICT (year, company_id, type)
+    ON CONFLICT (year, company_id, type) 
     DO UPDATE SET
         government_payments = EXCLUDED.government_payments,
         supplier_spending_local = EXCLUDED.supplier_spending_local,
@@ -82,7 +75,7 @@ BEGIN
         depreciation = EXCLUDED.depreciation,
         depletion = EXCLUDED.depletion,
         others = EXCLUDED.others;
-
+    
     DROP TABLE temp_econ_expenditures;
     
     end_time := CURRENT_TIMESTAMP;
@@ -90,28 +83,25 @@ BEGIN
     RAISE NOTICE '-----------------';
 
     ------------------------------------------------------------------
-    RAISE NOTICE 'Loading Capital Provider Payment Data...';
+    RAISE NOTICE 'Loading Economic Capital Provider Payment Data...';
     ------------------------------------------------------------------
     start_time := CURRENT_TIMESTAMP;
     
-    -- Create temporary table for capital provider payments
     CREATE TEMP TABLE temp_econ_capital_provider_payment (LIKE bronze.econ_capital_provider_payment);
     
-    -- Load CSV into temporary table
     EXECUTE format(
         'COPY temp_econ_capital_provider_payment FROM %L DELIMITER '','' CSV HEADER',
         local_file_path || '\econ_capital_provider_payment.csv'
     );
-
-    -- Upsert from temporary table to bronze
+    
     INSERT INTO bronze.econ_capital_provider_payment
     SELECT * FROM temp_econ_capital_provider_payment
-    ON CONFLICT (year)
+    ON CONFLICT (year) 
     DO UPDATE SET
         interest = EXCLUDED.interest,
         dividends_to_nci = EXCLUDED.dividends_to_nci,
         dividends_to_parent = EXCLUDED.dividends_to_parent;
-
+    
     DROP TABLE temp_econ_capital_provider_payment;
     
     end_time := CURRENT_TIMESTAMP;
@@ -127,11 +117,6 @@ BEGIN
 
 EXCEPTION
     WHEN OTHERS THEN
-        -- Clean up temporary tables if they exist
-        DROP TABLE IF EXISTS temp_econ_value;
-        DROP TABLE IF EXISTS temp_econ_expenditures;
-        DROP TABLE IF EXISTS temp_econ_capital_provider_payment;
-        
         RAISE NOTICE '================================';
         RAISE NOTICE 'Error occurred while loading econ bronze data: %', SQLERRM;
         RAISE NOTICE '================================';

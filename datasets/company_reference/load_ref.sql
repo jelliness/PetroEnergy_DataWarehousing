@@ -1,41 +1,15 @@
-CREATE OR REPLACE PROCEDURE ref.load_company_main()
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    start_time TIMESTAMP;
-    end_time TIMESTAMP;
-BEGIN
-    start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '================================';
-    RAISE NOTICE 'Creating company_main table...';
-    RAISE NOTICE '================================';
+-- Truncate existing data
+TRUNCATE TABLE ref.company_main;
 
-    -- Drop existing table if exists
-    RAISE NOTICE '>> Dropping existing table: ref.company_main (if exists)...';
-    EXECUTE 'DROP TABLE IF EXISTS ref.company_main CASCADE';
-
-    -- Create new table
-    RAISE NOTICE '>> Creating new table: ref.company_main...';
-    EXECUTE '
-        CREATE TABLE ref.company_main (
-            company_id VARCHAR(20) PRIMARY KEY,
-            company_name VARCHAR(255) NOT NULL,
-            parent_company_id VARCHAR(20) REFERENCES ref.company_main(company_id) ON DELETE SET NULL,
-            address TEXT
-        )
-    ';
-
-    end_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Table created successfully.';
-    RAISE NOTICE '>> Operation Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-    RAISE NOTICE '================================';
-    RAISE NOTICE 'company_main table creation completed.';
-    RAISE NOTICE '================================';
-
-EXCEPTION
-    WHEN OTHERS THEN
-        RAISE NOTICE '================================';
-        RAISE NOTICE 'Error occurred during table creation: %', SQLERRM;
-        RAISE NOTICE '================================';
-END;
-$$;
+-- Insert company data
+INSERT INTO ref.company_main (company_id, company_name, parent_company_id, address) VALUES
+('PERC', 'PetroEnergy Resources Corp', NULL, NULL),
+('PGEC', 'PetroGreen Energy Corp', 'PERC', NULL),
+('PSC', 'PetroSolar Corp', 'PGEC', NULL),
+('PWEI', 'PetroWind Energy Inc.', 'PGEC', NULL),
+('MGI', 'Maibarara Geothermal Inc.', 'PGEC', NULL),
+('ESEC', 'EcoSolar Energy Corp', 'PGEC', NULL),
+('RGEC', 'Rizal Green Energy Corp', 'PGEC', NULL),
+('BEP_NL', 'Buhawind Energy Phillippines (Northern Luzon)', 'PGEC', NULL),
+('BEP_NM', 'Buhawind Energy Phillippines (Northern Mindoro)', 'PGEC', NULL),
+('BEP_EP', 'Buhawind Energy Phillippines (East Panay)', 'PGEC', NULL);

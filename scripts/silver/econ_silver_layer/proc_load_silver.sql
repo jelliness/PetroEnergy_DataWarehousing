@@ -26,6 +26,7 @@ BEGIN
         -- Loading silver.econ_value
         start_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Upserting Data Into: silver.econ_value';
+        
         INSERT INTO silver.econ_value (
             year,
             electricity_sales,
@@ -44,14 +45,14 @@ BEGIN
             GREATEST(COALESCE(share_in_net_income_of_associate, 0), 0),
             GREATEST(COALESCE(miscellaneous_income, 0), 0)
         FROM bronze.econ_value
-        ON CONFLICT (year)  -- Assuming year is unique
+        ON CONFLICT (year)
         DO UPDATE SET
-            electricity_sales = EXCLUDED.electricity_sales,
-            oil_revenues = EXCLUDED.oil_revenues,
-            other_revenues = EXCLUDED.other_revenues,
-            interest_income = EXCLUDED.interest_income,
-            share_in_net_income_of_associate = EXCLUDED.share_in_net_income_of_associate,
-            miscellaneous_income = EXCLUDED.miscellaneous_income,
+            electricity_sales = GREATEST(COALESCE(EXCLUDED.electricity_sales, 0), 0),
+            oil_revenues = GREATEST(COALESCE(EXCLUDED.oil_revenues, 0), 0),
+            other_revenues = GREATEST(COALESCE(EXCLUDED.other_revenues, 0), 0),
+            interest_income = GREATEST(COALESCE(EXCLUDED.interest_income, 0), 0),
+            share_in_net_income_of_associate = GREATEST(COALESCE(EXCLUDED.share_in_net_income_of_associate, 0), 0),
+            miscellaneous_income = GREATEST(COALESCE(EXCLUDED.miscellaneous_income, 0), 0),
             updated_at = CURRENT_TIMESTAMP;
 
         end_time := CLOCK_TIMESTAMP();
@@ -61,6 +62,7 @@ BEGIN
         -- Loading silver.econ_expenditures
         start_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Upserting Data Into: silver.econ_expenditures';
+        
         INSERT INTO silver.econ_expenditures (
             year,
             company_id,
@@ -85,15 +87,15 @@ BEGIN
             GREATEST(COALESCE(depletion, 0), 0),
             GREATEST(COALESCE(others, 0), 0)
         FROM bronze.econ_expenditures
-        ON CONFLICT (year, company_id, type)  -- Composite unique key
+        ON CONFLICT (year, company_id, type)
         DO UPDATE SET
-            government_payments = EXCLUDED.government_payments,
-            supplier_spending_local = EXCLUDED.supplier_spending_local,
-            supplier_spending_abroad = EXCLUDED.supplier_spending_abroad,
-            community_investments = EXCLUDED.community_investments,
-            depreciation = EXCLUDED.depreciation,
-            depletion = EXCLUDED.depletion,
-            others = EXCLUDED.others,
+            government_payments = GREATEST(COALESCE(EXCLUDED.government_payments, 0), 0),
+            supplier_spending_local = GREATEST(COALESCE(EXCLUDED.supplier_spending_local, 0), 0),
+            supplier_spending_abroad = GREATEST(COALESCE(EXCLUDED.supplier_spending_abroad, 0), 0),
+            community_investments = GREATEST(COALESCE(EXCLUDED.community_investments, 0), 0),
+            depreciation = GREATEST(COALESCE(EXCLUDED.depreciation, 0), 0),
+            depletion = GREATEST(COALESCE(EXCLUDED.depletion, 0), 0),
+            others = GREATEST(COALESCE(EXCLUDED.others, 0), 0),
             updated_at = CURRENT_TIMESTAMP;
 
         end_time := CLOCK_TIMESTAMP();
@@ -103,6 +105,7 @@ BEGIN
         -- Loading silver.econ_capital_provider_payment
         start_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Upserting Data Into: silver.econ_capital_provider_payment';
+        
         INSERT INTO silver.econ_capital_provider_payment (
             year,
             interest,
@@ -115,11 +118,11 @@ BEGIN
             GREATEST(COALESCE(dividends_to_nci, 0), 0),
             GREATEST(COALESCE(dividends_to_parent, 0), 0)
         FROM bronze.econ_capital_provider_payment
-        ON CONFLICT (year)  -- Assuming year is unique
+        ON CONFLICT (year)
         DO UPDATE SET
-            interest = EXCLUDED.interest,
-            dividends_to_nci = EXCLUDED.dividends_to_nci,
-            dividends_to_parent = EXCLUDED.dividends_to_parent,
+            interest = GREATEST(COALESCE(EXCLUDED.interest, 0), 0),
+            dividends_to_nci = GREATEST(COALESCE(EXCLUDED.dividends_to_nci, 0), 0),
+            dividends_to_parent = GREATEST(COALESCE(EXCLUDED.dividends_to_parent, 0), 0),
             updated_at = CURRENT_TIMESTAMP;
 
         end_time := CLOCK_TIMESTAMP();
