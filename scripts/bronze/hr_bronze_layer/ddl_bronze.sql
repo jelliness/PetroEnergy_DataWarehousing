@@ -18,13 +18,13 @@ CREATE TABLE bronze.hr_demographics (
     birthdate TIMESTAMP,
     position_name VARCHAR(2),
     p_np VARCHAR(2),
-	company_id VARCHAR(6)
+    company_id VARCHAR(6)
 );
 
 DROP TABLE IF EXISTS bronze.hr_parental_leave;
 CREATE TABLE bronze.hr_parental_leave (
     employee_id VARCHAR(20),
-    type_of_leave VARCHAR(8),
+    type_of_leave VARCHAR(10),
     date TIMESTAMP,
     days INT
 );
