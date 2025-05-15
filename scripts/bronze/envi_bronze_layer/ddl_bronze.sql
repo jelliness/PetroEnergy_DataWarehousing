@@ -51,19 +51,6 @@ Script Purpose:
 
 -- Drop and recreate tables in the 'bronze' schema
 
--- envi_company_info
-DROP TABLE IF EXISTS bronze.envi_company_info;
-CREATE TABLE bronze.envi_company_info (
-    company_id     VARCHAR(20),       -- Example: PSC, MGI, RGEC
-    company_name   VARCHAR(255),
-    resources      TEXT,
-    site_name      VARCHAR(255),
-    site_address   TEXT,
-    city_town      VARCHAR(100),
-    province       VARCHAR(100),
-    zip            VARCHAR(10)
-);
-
 -- envi_company_property
 DROP TABLE IF EXISTS bronze.envi_company_property;
 CREATE TABLE bronze.envi_company_property (
@@ -101,8 +88,7 @@ CREATE TABLE bronze.envi_diesel_consumption (
     cp_id                VARCHAR(30),          -- Referenced to envi_company_property.
     unit_of_measurement  VARCHAR(20),
     consumption          DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
-    date                 DATE,
-	month			     VARCHAR(15)
+    date                 DATE
 );
 
 -- envi_electric_consumption
@@ -114,17 +100,6 @@ CREATE TABLE bronze.envi_electric_consumption (
     consumption 		 	DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
     quarter           	 	VARCHAR(5),
     year               	 	INT
-);
-
--- envi_power_generation
-DROP TABLE IF EXISTS bronze.envi_power_generation;
-CREATE TABLE bronze.envi_power_generation (
-    pg_id 					VARCHAR(30),          -- Example: PG-PSC-2023-001
-    company_id 				VARCHAR(20),     -- Referenced to company_info.
-    unit_of_measurement 	VARCHAR(20),
-    generation 				DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
-    quarter 				VARCHAR(5),
-    year                    INT
 );
 
 -- envi_non_hazard_waste
@@ -153,12 +128,10 @@ CREATE TABLE bronze.envi_hazard_waste (
 );
 
 -- Adding constraints (UNIQUE)
-ALTER TABLE bronze.envi_company_info ADD CONSTRAINT unique_company_id UNIQUE (company_id);
 ALTER TABLE bronze.envi_company_property ADD CONSTRAINT unique_cp_id UNIQUE (cp_id);
 ALTER TABLE bronze.envi_natural_sources ADD CONSTRAINT unique_ns_id UNIQUE (ns_id);
 ALTER TABLE bronze.envi_water_withdrawal ADD CONSTRAINT unique_ww_id UNIQUE (ww_id);
 ALTER TABLE bronze.envi_diesel_consumption ADD CONSTRAINT unique_dc_id UNIQUE (dc_id);
 ALTER TABLE bronze.envi_electric_consumption ADD CONSTRAINT unique_ec_id UNIQUE (ec_id);
-ALTER TABLE bronze.envi_power_generation ADD CONSTRAINT unique_pg_id UNIQUE (pg_id);
 ALTER TABLE bronze.envi_non_hazard_waste ADD CONSTRAINT unique_nhw_id UNIQUE (nhw_id);
 ALTER TABLE bronze.envi_hazard_waste ADD CONSTRAINT unique_hw_id UNIQUE (hw_id);

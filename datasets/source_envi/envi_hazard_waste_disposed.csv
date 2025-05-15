@@ -1,0 +1,10 @@
+hwd_id,company_id,metrics,unit_of_measurement,waste_disposed,year
+HWD-PSC-2023-001,PSC,Battery,Kilogram,300,2023
+HWD-PSC-2023-002,PSC,Empty Containers,Kilogram,120,2023
+HWD-PSC-2023-003,PSC,Used Oil,Liter,140,2023
+HWD-PSC-2023-004,PSC,WEEE,Kilogram,4500,2023
+HWD-PSC-2021-001,PSC,Battery,Kilogram,1000,2024
+HWD-PSC-2021-002,PSC,Empty Containers,Kilogram,600,2024
+HWD-PSC-2021-003,PSC,Used Oil,Liter,320,2024
+HWD-PSC-2021-004,PSC,WEEE,Kilogram,4598,2024
+HWD-PSC-2021-005,PSC,BFL,Kilogram,50,2024

@@ -27,42 +27,6 @@ BEGIN
 
 
 	RAISE NOTICE '------------------------------------------------';
-	RAISE NOTICE 'Loading Company Information Data...';
-	RAISE NOTICE '------------------------------------------------';
-
-
-	start_time := CURRENT_TIMESTAMP; -- Start time for the operation
-	
-	-- Create temporary table for company information
-    CREATE TEMP TABLE temp_company_info (LIKE bronze.envi_company_info);
-	
-	-- Bulk insert data from CSV file into the temp table
-	EXECUTE format(
-	    'COPY temp_company_info FROM %L DELIMITER '','' CSV HEADER',
-	    local_file_path || '\envi_company_info.csv'
-	);
-
-	-- Upsert from temporary table to bronze
-    INSERT INTO bronze.envi_company_info
-    SELECT * FROM temp_company_info
-    ON CONFLICT (company_id)
-    DO UPDATE SET
-		company_name = EXCLUDED.company_name,
-		resources = EXCLUDED.resources,
-		site_name = EXCLUDED.site_name,
-		site_address = EXCLUDED.site_address,
-		city_town = EXCLUDED.city_town,
-		province = EXCLUDED.province,
-		zip = EXCLUDED.zip;
-
-    DROP TABLE temp_company_info;
-		
-	end_time := CURRENT_TIMESTAMP; -- End time for the operation
-	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-	RAISE NOTICE '-----------------';
-
-
-	RAISE NOTICE '------------------------------------------------';
 	RAISE NOTICE 'Loading Company Property Data...';
 	RAISE NOTICE '------------------------------------------------';
 
@@ -185,9 +149,8 @@ BEGIN
 		cp_id = EXCLUDED.cp_id,
 		unit_of_measurement = EXCLUDED.unit_of_measurement,
 		consumption = EXCLUDED.consumption,
-		date = EXCLUDED.date,
-		month = EXCLUDED.month;
-
+		date = EXCLUDED.date;
+		
 	DROP TABLE temp_diesel_consumption;	
 	
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
@@ -230,40 +193,6 @@ BEGIN
 
 
 	RAISE NOTICE '------------------------------------------------';
-	RAISE NOTICE 'Loading Power Generation Data...';
-	RAISE NOTICE '------------------------------------------------';
-
-
-	start_time := CURRENT_TIMESTAMP; -- Start time for the operation
-	
-	-- Create temporary table for naturlal sources
-	CREATE TEMP TABLE temp_power_generation (LIKE bronze.envi_power_generation);
-	
-	-- Load CSV into temporary table
-	EXECUTE format(
-	    'COPY temp_power_generation FROM %L DELIMITER '','' CSV HEADER',
-	    local_file_path || '\envi_power_generation.csv'
-	);
-
-	-- Upsert from temporary table to bronze
-    INSERT INTO bronze.envi_power_generation
-    SELECT * FROM temp_power_generation
-    ON CONFLICT (pg_id)
-    DO UPDATE SET
-		company_id = EXCLUDED.company_id,
-		unit_of_measurement = EXCLUDED.unit_of_measurement,
-		generation = EXCLUDED.generation,
-		quarter = EXCLUDED.quarter,	
-		year = EXCLUDED.year;
-
-	DROP TABLE temp_power_generation;
-
-	end_time := CURRENT_TIMESTAMP; -- End time for the operation
-	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-	RAISE NOTICE '-----------------';
-
-
-	RAISE NOTICE '------------------------------------------------';
 	RAISE NOTICE 'Loading Non-Hazardous Waste Data...';
 	RAISE NOTICE '------------------------------------------------';
 
@@ -300,34 +229,68 @@ BEGIN
 
 
     RAISE NOTICE '------------------------------------------------';
-	RAISE NOTICE 'Loading Hazardous Waste Data...';
+	RAISE NOTICE 'Loading Hazardous Waste Generated Data...';
 	RAISE NOTICE '------------------------------------------------';
 
 
 	start_time := CURRENT_TIMESTAMP; -- Start time for the operation
 	
 	-- Create temporary table for naturlal sources
-	CREATE TEMP TABLE temp_hazard_waste (LIKE bronze.envi_hazard_waste);
+	CREATE TEMP TABLE temp_hazard_waste_generated (LIKE bronze.envi_hazard_waste_generated);
 	
 	-- Load CSV into temporary table
 	EXECUTE format(
-	    'COPY temp_hazard_waste FROM %L DELIMITER '','' CSV HEADER',
-	    local_file_path || '\envi_hazard_waste.csv'
+	    'COPY temp_hazard_waste_generated FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_hazard_waste_generated.csv'
 	);
 
 	-- Upsert from temporary table to bronze
-    INSERT INTO bronze.envi_hazard_waste
-    SELECT * FROM temp_hazard_waste
-    ON CONFLICT (hw_id)
+    INSERT INTO bronze.envi_hazard_waste_generated
+    SELECT * FROM temp_hazard_waste_generated
+    ON CONFLICT (hwg_id)
     DO UPDATE SET
 		company_id = EXCLUDED.company_id,
 		metrics = EXCLUDED.metrics,
 		unit_of_measurement = EXCLUDED.unit_of_measurement,
-		waste = EXCLUDED.waste,
+		waste_generated = EXCLUDED.waste_generated,
 		quarter = EXCLUDED.quarter,
 		year = EXCLUDED.year;
 
-	DROP TABLE temp_hazard_waste;
+	DROP TABLE temp_hazard_waste_generated;
+
+	end_time := CURRENT_TIMESTAMP; -- End time for the operation
+	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+	RAISE NOTICE '-----------------';
+
+
+	RAISE NOTICE '------------------------------------------------';
+	RAISE NOTICE 'Loading Hazardous Waste Disposed Data...';
+	RAISE NOTICE '------------------------------------------------';
+
+
+	start_time := CURRENT_TIMESTAMP; -- Start time for the operation
+	
+	-- Create temporary table for naturlal sources
+	CREATE TEMP TABLE temp_hazard_waste_disposed (LIKE bronze.envi_hazard_waste_disposed);
+	
+	-- Load CSV into temporary table
+	EXECUTE format(
+	    'COPY temp_hazard_waste_disposed FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_hazard_waste_disposed.csv'
+	);
+
+	-- Upsert from temporary table to bronze
+    INSERT INTO bronze.envi_hazard_waste_disposed
+    SELECT * FROM temp_hazard_waste_disposed
+    ON CONFLICT (hwd_id)
+    DO UPDATE SET
+		company_id = EXCLUDED.company_id,
+		metrics = EXCLUDED.metrics,
+		unit_of_measurement = EXCLUDED.unit_of_measurement,
+		waste_disposed = EXCLUDED.waste_disposed,
+		year = EXCLUDED.year;
+
+	DROP TABLE temp_hazard_waste_disposed;
 
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
