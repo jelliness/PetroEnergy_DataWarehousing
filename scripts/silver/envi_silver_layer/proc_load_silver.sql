@@ -282,53 +282,6 @@ BEGIN
         RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
         RAISE NOTICE '>> -------------';
         
-        -- Loading silver.envi_activity
-        start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Truncating Table: silver.envi_activity';
-        TRUNCATE TABLE silver.envi_activity;
-        RAISE NOTICE '>> Inserting Data Into: silver.envi_activity';
-        INSERT INTO silver.envi_activity (
-            ea_id,
-            metrics,
-            company_id,
-            envi_act_name
-        )
-        SELECT
-            TRIM(ea_id),
-            TRIM(metrics),
-            TRIM(company_id),
-            TRIM(envi_act_name)
-        FROM bronze.envi_activity;
-        end_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-        RAISE NOTICE '>> -------------';
-        
-        -- Loading silver.envi_activity_output
-        start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Truncating Table: silver.envi_activity_output';
-        TRUNCATE TABLE silver.envi_activity_output;
-        RAISE NOTICE '>> Inserting Data Into: silver.envi_activity_output';
-        INSERT INTO silver.envi_activity_output (
-            eao_id,
-            company_id,
-            ea_id,
-            act_output,
-            year
-        )
-        SELECT
-            TRIM(eao_id),
-            TRIM(company_id),
-            TRIM(ea_id),
-            CASE
-                WHEN act_output < 0 THEN 0  -- Handle negative values
-                ELSE act_output
-            END AS act_output,
-            year
-        FROM bronze.envi_activity_output;
-        end_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-        RAISE NOTICE '>> -------------';
-        
         batch_end_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '==========================================';
         RAISE NOTICE 'Loading Silver Layer is Completed';
@@ -346,4 +299,4 @@ BEGIN
 END;
 $$;
 
-CALL silver.load_silver()
+CALL silver.load_envi_silver()
