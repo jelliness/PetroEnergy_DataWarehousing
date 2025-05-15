@@ -72,3 +72,9 @@ CREATE TABLE silver.econ_capital_provider_payment (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ); 
+
+
+-- alter 
+ALTER TABLE silver.econ_value ADD CONSTRAINT econ_value_unique_year UNIQUE (year);
+ALTER TABLE silver.econ_expenditures ADD CONSTRAINT econ_expenditures_unique_key UNIQUE (year, company_id, type);
+ALTER TABLE silver.econ_capital_provider_payment ADD CONSTRAINT econ_capital_provider_payment_unique_year UNIQUE (year);

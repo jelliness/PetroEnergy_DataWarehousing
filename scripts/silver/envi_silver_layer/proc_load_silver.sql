@@ -15,7 +15,7 @@ Script Purpose:
 CREATE SCHEMA IF NOT EXISTS silver;
 
 -- Create or replace the master procedure
-CREATE OR REPLACE PROCEDURE silver.load_silver()
+CREATE OR REPLACE PROCEDURE silver.load_envi_silver()
 LANGUAGE plpgsql
 AS $$
 DECLARE

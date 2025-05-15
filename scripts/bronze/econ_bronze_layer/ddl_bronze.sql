@@ -46,3 +46,9 @@ CREATE TABLE bronze.econ_capital_provider_payment (
     dividends_to_nci NUMERIC,  -- Dividends to non-controlling interests
     dividends_to_parent NUMERIC  -- Dividends to parent/holding company
 );
+
+
+-- Adding constraints (UNIQUE)
+ALTER TABLE bronze.econ_value ADD CONSTRAINT econ_value_unique_year UNIQUE (year);
+ALTER TABLE bronze.econ_expenditures ADD CONSTRAINT econ_expenditures_unique_key UNIQUE (year, company_id, type);
+ALTER TABLE bronze.econ_capital_provider_payment ADD CONSTRAINT econ_capital_provider_payment_unique_year UNIQUE (year);

@@ -15,20 +15,20 @@ BEGIN
     start_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Loading csv_company with UPSERT...';
 
-    DROP TABLE IF EXISTS temp.csv_company;
-    CREATE TEMP TABLE temp.csv_company (
+    DROP TABLE IF EXISTS csv_company;
+    CREATE TEMP TABLE csv_company (
         company_id TEXT,
         company_name TEXT,
         resources TEXT
     );
 
     EXECUTE format(
-        'COPY temp.csv_company FROM %L DELIMITER '','' CSV HEADER',
+        'COPY csv_company FROM %L DELIMITER '','' CSV HEADER',
         local_file_path || '/csv_company.csv'
     );
 
     INSERT INTO bronze.csv_company (company_id, company_name, resources)
-    SELECT company_id, company_name, resources FROM temp.csv_company
+    SELECT company_id, company_name, resources FROM csv_company
     ON CONFLICT (company_id) DO UPDATE
     SET
         company_name = EXCLUDED.company_name,
@@ -44,19 +44,19 @@ BEGIN
     start_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Loading csv_emission_factors with UPSERT...';
 
-    DROP TABLE IF EXISTS temp.csv_emission_factors;
-    CREATE TEMP TABLE temp.csv_emission_factors (
+    DROP TABLE IF EXISTS csv_emission_factors;
+    CREATE TEMP TABLE csv_emission_factors (
         generation_source TEXT,
         kg_co2_per_kwh TEXT
     );
 
     EXECUTE format(
-        'COPY temp.csv_emission_factors FROM %L DELIMITER '','' CSV HEADER',
+        'COPY csv_emission_factors FROM %L DELIMITER '','' CSV HEADER',
         local_file_path || '/csv_emission_factors.csv'
     );
 
     INSERT INTO bronze.csv_emission_factors (generation_source, kg_co2_per_kwh)
-    SELECT generation_source, kg_co2_per_kwh FROM temp.csv_emission_factors
+    SELECT generation_source, kg_co2_per_kwh FROM csv_emission_factors
     ON CONFLICT (generation_source) DO UPDATE
     SET
         kg_co2_per_kwh = EXCLUDED.kg_co2_per_kwh,
@@ -71,8 +71,8 @@ BEGIN
     start_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Loading csv_power_plants with UPSERT...';
 
-    DROP TABLE IF EXISTS temp.csv_power_plants;
-    CREATE TEMP TABLE temp.csv_power_plants (
+    DROP TABLE IF EXISTS csv_power_plants;
+    CREATE TEMP TABLE csv_power_plants (
         power_plant_id TEXT,
         company_id TEXT,
         site_name TEXT,
@@ -84,7 +84,7 @@ BEGIN
     );
 
     EXECUTE format(
-        'COPY temp.csv_power_plants FROM %L DELIMITER '','' CSV HEADER',
+        'COPY csv_power_plants FROM %L DELIMITER '','' CSV HEADER',
         local_file_path || '/csv_power_plants.csv'
     );
 
@@ -94,7 +94,7 @@ BEGIN
     )
     SELECT power_plant_id, company_id, site_name, site_address,
            city_town, province, country, zip
-    FROM temp.csv_power_plants
+    FROM csv_power_plants
     ON CONFLICT (power_plant_id) DO UPDATE
     SET
         company_id = EXCLUDED.company_id,
@@ -115,8 +115,8 @@ BEGIN
     start_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Loading csv_energy_records with UPSERT...';
 
-    DROP TABLE IF EXISTS temp.csv_energy_records;
-    CREATE TEMP TABLE temp.csv_energy_records (
+    DROP TABLE IF EXISTS csv_energy_records;
+    CREATE TEMP TABLE csv_energy_records (
         power_plant_id TEXT,
         datetime TEXT,
         energy_generated TEXT,
@@ -124,7 +124,7 @@ BEGIN
     );
 
     EXECUTE format(
-        'COPY temp.csv_energy_records FROM %L DELIMITER '','' CSV HEADER',
+        'COPY csv_energy_records FROM %L DELIMITER '','' CSV HEADER',
         local_file_path || '/csv_energy_records.csv'
     );
 
@@ -132,7 +132,7 @@ BEGIN
         power_plant_id, datetime, energy_generated, unit_of_measurement
     )
     SELECT power_plant_id, datetime, energy_generated, unit_of_measurement
-    FROM temp.csv_energy_records
+    FROM csv_energy_records
     ON CONFLICT (power_plant_id, datetime) DO UPDATE
     SET
         energy_generated = EXCLUDED.energy_generated,

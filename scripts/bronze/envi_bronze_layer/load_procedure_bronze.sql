@@ -9,7 +9,7 @@
 -- 4. The script also includes error handling to catch any errors that occur during the execution of the procedure.
 -- 5. The script prints the start and end time of each operation, as well as the total duration of the batch operation.
 
-CREATE OR REPLACE PROCEDURE bronze.load_bronze()
+CREATE OR REPLACE PROCEDURE bronze.load_envi_bronze()
 LANGUAGE plpgsql
 AS $$
 DECLARE
