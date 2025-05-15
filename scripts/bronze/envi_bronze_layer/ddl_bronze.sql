@@ -124,7 +124,7 @@ CREATE TABLE bronze.envi_power_generation (
     unit_of_measurement 	VARCHAR(20),
     generation 				DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
     quarter 				VARCHAR(5),
-    year INT
+    year                    INT
 );
 
 -- envi_non_hazard_waste
@@ -151,3 +151,14 @@ CREATE TABLE bronze.envi_hazard_waste (
     quarter 				VARCHAR(2),  		 		-- Example: 'Q1', 'Q2', 'Q3', 'Q4'
     year 					INT
 );
+
+-- Adding constraints (UNIQUE)
+ALTER TABLE bronze.envi_company_info ADD CONSTRAINT unique_company_id UNIQUE (company_id);
+ALTER TABLE bronze.envi_company_property ADD CONSTRAINT unique_cp_id UNIQUE (cp_id);
+ALTER TABLE bronze.envi_natural_sources ADD CONSTRAINT unique_ns_id UNIQUE (ns_id);
+ALTER TABLE bronze.envi_water_withdrawal ADD CONSTRAINT unique_ww_id UNIQUE (ww_id);
+ALTER TABLE bronze.envi_diesel_consumption ADD CONSTRAINT unique_dc_id UNIQUE (dc_id);
+ALTER TABLE bronze.envi_electric_consumption ADD CONSTRAINT unique_ec_id UNIQUE (ec_id);
+ALTER TABLE bronze.envi_power_generation ADD CONSTRAINT unique_pg_id UNIQUE (pg_id);
+ALTER TABLE bronze.envi_non_hazard_waste ADD CONSTRAINT unique_nhw_id UNIQUE (nhw_id);
+ALTER TABLE bronze.envi_hazard_waste ADD CONSTRAINT unique_hw_id UNIQUE (hw_id);
