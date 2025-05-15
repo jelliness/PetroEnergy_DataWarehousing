@@ -32,64 +32,68 @@ BEGIN
     
     BEGIN
 
-        -- Loading silver.csv_company
-        start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Truncating Table: silver.csv_company';
-        TRUNCATE TABLE silver.csv_company;
-        RAISE NOTICE '>> Inserting Data Into: silver.csv_company';
-        INSERT INTO silver.csv_company (
-            company_id,
+		-- Upserting into silver.csv_company
+		start_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upserting Data Into: silver.csv_company';
+		INSERT INTO silver.csv_company (
+		    company_id,
 		    company_name,
 		    resources,
-			dwh_date_created,
-			dwh_date_updated
-        )
-        SELECT
-            TRIM(company_id),
-            TRIM(company_name),
-            TRIM(resources),
-			dwh_date_created,
-			dwh_date_updated
-        FROM bronze.csv_company;
-        end_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-        RAISE NOTICE '>> -------------';
-
+		    create_at,
+		    updated_at
+		)
+		SELECT
+		    TRIM(company_id),
+		    TRIM(company_name),
+		    TRIM(resources),
+		    create_at,
+		    updated_at
+		FROM bronze.csv_company
+		ON CONFLICT (company_id) DO UPDATE
+		SET 
+		    company_name = EXCLUDED.company_name,
+		    resources = EXCLUDED.resources,
+		    updated_at = EXCLUDED.updated_at;
+		end_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upsert Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+		RAISE NOTICE '>> -------------';
 		
-		-- Loading silver.csv_emission_factors
-        start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Truncating Table: silver.csv_emission_factors';
-        TRUNCATE TABLE silver.csv_emission_factors;
-        RAISE NOTICE '>> Inserting Data Into: silver.csv_emission_factors';
-        INSERT INTO silver.csv_emission_factors (
-			ef_id,
-            generation_source,
-		    kg_co2_per_kwh,
-			dwh_date_created,
-			dwh_date_updated
-        )
-        WITH enriched AS (
+		
+		-- Upserting into silver.csv_emission_factors
+		start_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upserting Data Into: silver.csv_emission_factors';
+		WITH enriched AS (
 		    SELECT 
 		        LOWER(generation_source::text) AS generation_source,
 		        CAST(kg_co2_per_kwh AS DECIMAL(10,4)) AS kg_co2_per_kwh,
 		        'EF-' || LPAD(ROW_NUMBER() OVER (ORDER BY generation_source)::text, 3, '0') AS ef_id,
-				dwh_date_created,
-				dwh_date_updated
+		        create_at,
+		        updated_at
 		    FROM bronze.csv_emission_factors
 		)
-		SELECT ef_id, generation_source,kg_co2_per_kwh, dwh_date_created, dwh_date_updated FROM enriched;
-        end_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-        RAISE NOTICE '>> -------------';
+		INSERT INTO silver.csv_emission_factors (
+		    ef_id,
+		    generation_source,
+		    kg_co2_per_kwh,
+		    create_at,
+		    updated_at
+		)
+		SELECT ef_id, generation_source, kg_co2_per_kwh, create_at, updated_at FROM enriched
+		ON CONFLICT (ef_id) DO UPDATE
+		SET 
+		    generation_source = EXCLUDED.generation_source,
+		    kg_co2_per_kwh = EXCLUDED.kg_co2_per_kwh,
+		    updated_at = EXCLUDED.updated_at;
+		end_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upsert Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+		RAISE NOTICE '>> -------------';
 
 
-		-- Loading silver.csv_power_plants
-        start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Truncating Table: silver.csv_power_plants';
-        TRUNCATE TABLE silver.csv_power_plants;
-        RAISE NOTICE '>> Inserting Data Into: silver.csv_power_plants';
-        INSERT INTO silver.csv_power_plants (
-			power_plant_id,
+		-- Upserting into silver.csv_power_plants
+		start_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upserting Data Into: silver.csv_power_plants';
+		INSERT INTO silver.csv_power_plants (
+		    power_plant_id,
 		    company_id,
 		    site_name,
 		    site_address,
@@ -97,11 +101,11 @@ BEGIN
 		    province,
 		    country,
 		    zip,
-			ef_id,
-			dwh_date_created,
-			dwh_date_updated
-        )
-        SELECT 
+		    ef_id,
+		    create_at,
+		    updated_at
+		)
+		SELECT 
 		    pp.power_plant_id,
 		    pp.company_id,
 		    pp.site_name,
@@ -115,29 +119,30 @@ BEGIN
 		        WHEN com.resources = 'wind' THEN 'EF-002'
 		        ELSE null
 		    END AS ef_id,
-			pp.dwh_date_created,
-			pp.dwh_date_updated
+		    pp.create_at,
+		    pp.updated_at
 		FROM bronze.csv_power_plants pp
-		LEFT JOIN bronze.csv_company com ON com.company_id = pp.company_id;
-        end_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-        RAISE NOTICE '>> -------------';
+		LEFT JOIN bronze.csv_company com ON com.company_id = pp.company_id
+		ON CONFLICT (power_plant_id) DO UPDATE
+		SET 
+		    company_id = EXCLUDED.company_id,
+		    site_name = EXCLUDED.site_name,
+		    site_address = EXCLUDED.site_address,
+		    city_town = EXCLUDED.city_town,
+		    province = EXCLUDED.province,
+		    country = EXCLUDED.country,
+		    zip = EXCLUDED.zip,
+		    ef_id = EXCLUDED.ef_id,
+		    updated_at = EXCLUDED.updated_at;
+		end_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upsert Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+		RAISE NOTICE '>> -------------';
 
 
 	   -- Loading silver.csv_energy_records
-        start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Truncating Table: silver.csv_energy_records';
-        TRUNCATE TABLE silver.csv_energy_records;
-        RAISE NOTICE '>> Inserting Data Into: silver.csv_energy_records';
-        INSERT INTO silver.csv_energy_records (
-		    energy_id,
-		    power_plant_id,
-		    date_generated,
-		    energy_generated_kwh,
-		    co2_avoidance_kg,
-		    dwh_date_created,
-		    dwh_date_updated
-		)
+        -- Upserting into silver.csv_energy_records
+		start_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upserting Data Into: silver.csv_energy_records';
 		WITH standardized_data AS(
 			SELECT
 				power_plant_id,
@@ -148,8 +153,8 @@ BEGIN
 					ELSE REPLACE(energy_generated, ',', '')::NUMERIC
 				END AS energy_generated_converted,
 				unit_of_measurement,
-				'kwh' AS standardized_unit,
-				input_frequency
+				'kwh' AS standardized_unit
+				
 			FROM bronze.csv_energy_records
 		),
 		ranked_data AS (
@@ -224,22 +229,100 @@ BEGIN
 		        kg_co2_per_kwh
 		    FROM bronze.csv_emission_factors
 		)
+		INSERT INTO silver.csv_energy_records (
+		    energy_id,
+		    power_plant_id,
+		    date_generated,
+		    energy_generated_kwh,
+		    co2_avoidance_kg,
+		    create_at,
+		    updated_at
+		)
 		SELECT 
 		    ce.energy_id,
 		    ce.power_plant_id,
 		    ce.datetime,
 		    ce.energy_generated,
 		    ROUND(ce.energy_generated * ef.kg_co2_per_kwh::NUMERIC, 4) AS co2_avoidance,
-		    NOW() AS dwh_date_created,
-		    NOW() AS dwh_date_updated
+		    NOW(),
+		    NOW()
 		FROM energy_calculation ce
 		LEFT JOIN pp_data pp ON pp.power_plant_id = ce.power_plant_id
 		LEFT JOIN emission_factors ef ON ef.ef_id = pp.constants
-		ORDER BY energy_id;
-        end_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-        RAISE NOTICE '>> -------------';
-        
+		ORDER BY ce.energy_id
+		ON CONFLICT (energy_id) DO UPDATE 
+		SET 
+		    power_plant_id = EXCLUDED.power_plant_id,
+		    date_generated = EXCLUDED.date_generated,
+		    energy_generated_kwh = EXCLUDED.energy_generated_kwh,
+		    co2_avoidance_kg = EXCLUDED.co2_avoidance_kg,
+		    updated_at = CURRENT_TIMESTAMP;
+		end_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upsert Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+		RAISE NOTICE '>> -------------';
+
+		-- Upserting into silver.csv_fa_factors
+		start_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upserting Data Into: silver.csv_fa_factors';
+
+		INSERT INTO silver.csv_fa_factors (
+			ff_id,
+			ff_name,
+			ff_percentage,
+			create_at,
+			updated_at
+		)
+		SELECT 
+			(ff_id)::VARCHAR(20),
+			ff_name,
+			(ff_percentage)::DECIMAL(5,4),
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		FROM bronze.csv_fa_factors
+		ON CONFLICT (ff_id) DO UPDATE 
+		SET 
+			ff_name = EXCLUDED.ff_name,
+			ff_percentage = EXCLUDED.ff_percentage,
+			updated_at = CURRENT_TIMESTAMP;
+
+		end_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upsert Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+		RAISE NOTICE '>> -------------';
+
+		-- Upserting into silver.csv_hec_factors
+		start_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upserting Data Into: silver.csv_hec_factors';
+
+		INSERT INTO silver.csv_hec_factors (
+			hec_id,
+			hec_value,
+			hec_year,
+			source_name,
+			source_link,
+			create_at,
+			updated_at
+		)
+		SELECT 
+			(hec_id)::VARCHAR(20),
+			(hec_value)::DECIMAL(10,4),
+			(hec_year)::INTEGER,
+			source_name,
+			source_link,
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP
+		FROM bronze.csv_hec_factors
+		ON CONFLICT (hec_id) DO UPDATE 
+		SET 
+			hec_value = EXCLUDED.hec_value,
+			hec_year = EXCLUDED.hec_year,
+			source_name = EXCLUDED.source_name,
+			source_link = EXCLUDED.source_link,
+			updated_at = CURRENT_TIMESTAMP;
+
+		end_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Upsert Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+		RAISE NOTICE '>> -------------';
+
         
     EXCEPTION
         WHEN OTHERS THEN
@@ -251,3 +334,6 @@ BEGIN
     END;
 END;
 $$;
+
+
+call silver.load_csv_silver()

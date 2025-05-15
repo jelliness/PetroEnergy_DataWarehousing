@@ -16,8 +16,8 @@ CREATE TABLE bronze.csv_company (
     company_id TEXT PRIMARY KEY,                    -- Unique identifier for the company
     company_name TEXT,                              -- Name of the power generation company
     resources TEXT,                                 -- Comma-separated list or description of resources used (e.g., solar, wind)
-    dwh_date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Timestamp when the record was first created in the data warehouse
-    dwh_date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP   -- Timestamp of the most recent update to the record
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Timestamp when the record was first created
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Timestamp of the most recent update
 );
 
 -- ============================================================================
@@ -26,9 +26,9 @@ CREATE TABLE bronze.csv_company (
 DROP TABLE IF EXISTS bronze.csv_emission_factors;
 CREATE TABLE bronze.csv_emission_factors (
     generation_source TEXT PRIMARY KEY,             -- Type of energy source (e.g., coal, hydro, solar)
-    kg_co2_per_kwh TEXT,                            -- Emissions factor: kilograms of CO2 emitted per kilowatt-hour of energy produced
-    dwh_date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, -- Record creation timestamp
-    dwh_date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp
+    kg_co2_per_kwh TEXT,                            -- Emissions factor in kg CO2 per kWh
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp
 );
 
 -- ============================================================================
@@ -37,15 +37,15 @@ CREATE TABLE bronze.csv_emission_factors (
 DROP TABLE IF EXISTS bronze.csv_power_plants;
 CREATE TABLE bronze.csv_power_plants (
     power_plant_id TEXT PRIMARY KEY,                -- Unique identifier for the power plant
-    company_id TEXT,                                -- Foreign key referencing the company that owns or operates the plant
+    company_id TEXT,                                -- Reference to the owning company
     site_name TEXT,                                 -- Name of the power plant site
     site_address TEXT,                              -- Street address of the plant site
     city_town TEXT,                                 -- City or town where the plant is located
-    province TEXT,                                  -- Province or state of the plant location
-    country TEXT,                                   -- Country where the power plant is located
-    zip TEXT,                                       -- Postal or ZIP code for the plant site
-    dwh_date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
-    dwh_date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp
+    province TEXT,                                  -- Province or state
+    country TEXT,                                   -- Country
+    zip TEXT,                                       -- Postal or ZIP code
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp
 );
 
 -- ============================================================================
@@ -53,12 +53,37 @@ CREATE TABLE bronze.csv_power_plants (
 -- ============================================================================
 DROP TABLE IF EXISTS bronze.csv_energy_records;
 CREATE TABLE bronze.csv_energy_records (
-    power_plant_id TEXT,                            -- Foreign key referencing the power plant generating the energy
-    datetime TEXT,                                  -- Date and time when the energy measurement was recorded
-    energy_generated TEXT,                          -- Amount of energy generated (could be in kWh, MWh, etc.)
-    unit_of_measurement TEXT,						-- Unit in which energy is measured (e.g., kWh, MWh)
-	input_frequency	TEXT,							-- how often the user inputs data (per minute, hourly or daily)	
-    dwh_date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
-    dwh_date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Record update timestamp
-    PRIMARY KEY (power_plant_id, datetime)          -- Composite key for uniquely identifying an energy record per plant and timestamp
+    power_plant_id TEXT,                            -- Reference to the power plant
+    datetime TEXT,                                  -- Date and time of energy measurement
+    energy_generated TEXT,                          -- Amount of energy generated
+    unit_of_measurement TEXT,                       -- Unit of measurement (e.g., kWh, MWh)
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Record update timestamp
+    PRIMARY KEY (power_plant_id, datetime)          -- Composite key per plant and timestamp
+);
+
+-- ============================================================================
+-- Table: csv_fa_factors
+-- ============================================================================
+DROP TABLE IF EXISTS bronze.csv_fa_factors;
+CREATE TABLE bronze.csv_fa_factors (
+    ff_id TEXT PRIMARY KEY,                         -- Unique identifier
+    ff_name TEXT,                                   -- Name of the factor
+    ff_percentage TEXT,                             -- Percentage value
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp
+);
+
+-- ============================================================================
+-- Table: csv_hec_factors
+-- ============================================================================
+DROP TABLE IF EXISTS bronze.csv_hec_factors;
+CREATE TABLE bronze.csv_hec_factors (
+    hec_id TEXT PRIMARY KEY,                        -- Unique identifier
+    hec_value TEXT,                                 -- Value of HEC
+    hec_year TEXT,                                  -- Year of the HEC value
+    source_name TEXT,                               -- Source of the data
+    link TEXT,                                      -- Reference link
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp
 );
