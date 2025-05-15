@@ -1,0 +1,11 @@
+company_id,company_name,parent_company_id,address
+PERC,PetroEnergy Resources Corp,NULL,NULL
+PGEC,PetroGreen Energy Corp,PERC,NULL
+PSC,PetroSolar Corp,PGEC,NULL
+PWEI,PetroWind Energy Inc.,PGEC,NULL
+MGI,Maibarara Geothermal Inc.,PGEC,NULL
+ESEC,EcoSolar Energy Corp,PGEC,NULL
+RGEC,Rizal Green Energy Corp,PGEC,NULL
+BEP_NL,Buhawind Energy Philiippines (Northern Luzon),PGEC,NULL
+BEP_NM,Buhawind Energy Philiippines (Northern Mindoro),PGEC,NULL
+BEP_EP,Buhawind Energy Philiippines (East Panay),PGEC,NULL
