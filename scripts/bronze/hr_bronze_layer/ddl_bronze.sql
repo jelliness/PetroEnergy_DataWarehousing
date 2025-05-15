@@ -50,5 +50,6 @@ CREATE TABLE bronze.hr_safety (
     employee_id VARCHAR(20),
     company_id VARCHAR(8),
     date TIMESTAMP,
-    type_of_accident VARCHAR(50)
+    type_of_accident VARCHAR(50),
+    safety_man_hours INT
 );
