@@ -1,0 +1,54 @@
+/*
+===============================================================================
+DDL Script: Create Bronze Tables for HR demograpics, parental leave, tenure, 
+training, and safety values
+===============================================================================
+Script Purpose:
+    This script creates a table in bronze layer for hr values per year.
+    Each table will be dropped, then recreates a new table.
+===============================================================================
+*/
+
+CREATE SCHEMA IF NOT EXISTS bronze;
+
+DROP TABLE IF EXISTS bronze.hr_demographics;
+CREATE TABLE bronze.hr_demographics (
+    employee_id VARCHAR(20),
+    company_id VARCHAR(8),
+    gender VARCHAR(1),
+    birthdate TIMESTAMP,
+    post VARCHAR(20),
+    P_NPM VARCHAR(3)
+);
+
+DROP TABLE IF EXISTS bronze.hr_parental_leave;
+CREATE TABLE bronze.hr_parental_leave (
+    employee_id VARCHAR(20),
+    type_of_leave VARCHAR(8),
+    date TIMESTAMP,
+    days INT
+);
+
+DROP TABLE IF EXISTS bronze.hr_tenure;
+CREATE TABLE bronze.hr_tenure (
+    employee_id VARCHAR(20),
+    start_date TIMESTAMP,
+    end_date TIMESTAMP
+);
+
+DROP TABLE IF EXISTS bronze.hr_training;
+CREATE TABLE bronze.hr_training (
+    employee_id VARCHAR(20),
+    hours INT,
+    month_start INT,
+    year_start INT,
+    categories_per_level VARCHAR(2)
+);
+
+DROP TABLE IF EXISTS bronze.hr_safety;
+CREATE TABLE bronze.hr_safety (
+    employee_id VARCHAR(20),
+    company_id VARCHAR(8),
+    date TIMESTAMP,
+    type_of_accident VARCHAR(50)
+);
