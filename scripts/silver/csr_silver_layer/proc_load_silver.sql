@@ -20,50 +20,195 @@ DECLARE
     end_time TIMESTAMP;
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
+    null_count INT;
 BEGIN
     batch_start_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '================================';
     RAISE NOTICE 'Loading Silver Layer Data...';
     RAISE NOTICE '================================';
 
+    -- csr_company
     RAISE NOTICE '------------------------------------------------';
-    RAISE NOTICE 'Loading CSR Accomplishments Data...';
+    RAISE NOTICE 'Loading CSR Company Data...';
     RAISE NOTICE '------------------------------------------------';
 
     start_time := CURRENT_TIMESTAMP;
+    TRUNCATE TABLE silver.csr_company;
 
-    RAISE NOTICE '>> Truncating table: silver.csr_accomplishments...';
-    TRUNCATE TABLE silver.csr_accomplishments;
-
-    RAISE NOTICE '>> Inserting transformed data into silver.csr_accomplishments...';
-    INSERT INTO silver.csr_accomplishments (
-        ac_id,
+    INSERT INTO silver.csr_company (
         company_id,
+        company_name,
+        resources,
+        date_created,
+        date_updated
+    )
+    SELECT
+        COALESCE(NULLIF(TRIM(company_id), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(company_name), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(resources), ''), 'Not Available'),
+        NOW(), NOW()
+    FROM bronze.csr_company;
+
+    SELECT COUNT(*) INTO null_count
+    FROM bronze.csr_company
+    WHERE company_id IS NULL OR company_id = ''
+       OR company_name IS NULL OR company_name = ''
+       OR resources IS NULL OR resources = '';
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration (csr_company): % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '>> Null Values Found: %', null_count;
+    RAISE NOTICE '-----------------';
+
+    -- csr_programs
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Programs Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    TRUNCATE TABLE silver.csr_programs;
+
+    INSERT INTO silver.csr_programs (
+        program_id,
+        program_name,
+        date_created,
+        date_updated
+    )
+    SELECT
+        COALESCE(NULLIF(TRIM(program_id), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(program_name), ''), 'Not Available'),
+        NOW(), NOW()
+    FROM bronze.csr_programs;
+
+    SELECT COUNT(*) INTO null_count
+    FROM bronze.csr_programs
+    WHERE program_id IS NULL OR program_id = ''
+       OR program_name IS NULL OR program_name = '';
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration (csr_programs): % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '>> Null Values Found: %', null_count;
+    RAISE NOTICE '-----------------';
+
+    -- csr_projects
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Projects Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    TRUNCATE TABLE silver.csr_projects;
+
+    INSERT INTO silver.csr_projects (
+        project_id,
+        program_id,
+        project_name,
+        project_metrics,
+        date_created,
+        date_updated
+    )
+    SELECT
+        COALESCE(NULLIF(TRIM(project_id), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(program_id), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(project_name), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(project_metrics), ''), 'Not Available'),
+        NOW(), NOW()
+    FROM bronze.csr_projects;
+
+    SELECT COUNT(*) INTO null_count
+    FROM bronze.csr_projects
+    WHERE project_id IS NULL OR project_id = ''
+       OR program_id IS NULL OR program_id = ''
+       OR project_name IS NULL OR project_name = ''
+       OR project_metrics IS NULL OR project_metrics = '';
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration (csr_projects): % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '>> Null Values Found: %', null_count;
+    RAISE NOTICE '-----------------';
+
+    -- csr_per_company
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Per Company Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    TRUNCATE TABLE silver.csr_per_company;
+
+    INSERT INTO silver.csr_per_company (
+        inv_id,
+        company_id,
+        program_id,
+        program_investment,
+        date_created,
+        date_updated
+    )
+    SELECT
+        COALESCE(NULLIF(TRIM(inv_id), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(company_id), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(program_id), ''), 'Not Available'),
+        CASE
+            WHEN program_investment IS NULL THEN NULL
+            ELSE program_investment
+        END,
+        NOW(), NOW()
+    FROM bronze.csr_per_company;
+
+    SELECT COUNT(*) INTO null_count
+    FROM bronze.csr_per_company
+    WHERE inv_id IS NULL OR inv_id = ''
+       OR company_id IS NULL OR company_id = ''
+       OR program_id IS NULL OR program_id = ''
+       OR program_investment IS NULL;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration (csr_per_company): % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '>> Null Values Found: %', null_count;
+    RAISE NOTICE '-----------------';
+
+    -- csr_activity
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Activity Data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    TRUNCATE TABLE silver.csr_activity;
+
+    INSERT INTO silver.csr_activity (
+        csr_id,
+        company_id,
+        project_id,
         ac_year,
-        csr_program,
         csr_report,
         date_created,
         date_updated
     )
     SELECT
-        COALESCE(NULLIF(TRIM(ac_id), ''), 'Not Available') AS ac_id,
-        COALESCE(NULLIF(TRIM(company_id), ''), 'Not Available') AS company_id,
-        CASE 
-            WHEN TRIM(ac_year::TEXT) ~ '^\d+$' THEN TRIM(ac_year::TEXT)
+        COALESCE(NULLIF(TRIM(csr_id), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(company_id), ''), 'Not Available'),
+        COALESCE(NULLIF(TRIM(project_id), ''), 'Not Available'),
+        CASE
+            WHEN ac_year ~ '^\d{4}$' THEN ac_year
             ELSE 'Not Available'
-        END AS ac_year,
-        COALESCE(NULLIF(TRIM(csr_program), ''), 'Not Available') AS csr_program,
-        CASE 
-            WHEN TRIM(csr_report::TEXT) ~ '^\d+$' THEN TRIM(csr_report::TEXT)
-            ELSE 'Not Available'
-        END AS csr_report,
-        NOW() AS date_created,
-        NOW() AS date_updated
-    FROM bronze.csr_accomplishments;
+        END,
+        CASE
+            WHEN csr_report IS NULL THEN NULL
+            ELSE csr_report
+        END,
+        NOW(), NOW()
+    FROM bronze.csr_activity;
+
+    SELECT COUNT(*) INTO null_count
+    FROM bronze.csr_activity
+    WHERE csr_id IS NULL OR csr_id = ''
+       OR company_id IS NULL OR company_id = ''
+       OR project_id IS NULL OR project_id = ''
+       OR ac_year IS NULL OR NOT ac_year ~ '^\d{4}$'
+       OR csr_report IS NULL;
 
     end_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-    RAISE NOTICE '-----------------' ;
+    RAISE NOTICE '>> Load Duration (csr_activity): % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '>> Null Values Found: %', null_count;
+    RAISE NOTICE '-----------------';
 
     batch_end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '================================';
@@ -74,7 +219,7 @@ BEGIN
 EXCEPTION
     WHEN OTHERS THEN
         RAISE NOTICE '================================';
-        RAISE NOTICE 'Error occurred while loading data: %', SQLERRM;
+        RAISE NOTICE 'Error occurred while loading silver data: %', SQLERRM;
         RAISE NOTICE '================================';
 END;
 $$;

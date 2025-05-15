@@ -1,0 +1,24 @@
+project_id,program_id,project_name,project_metrics
+HE_AMM,HE,Annual Medical Mission ,Number of beneficiaries
+HE_CHC,HE,Community Health Center,Number of patients visiting health center
+HE_NP,HE,Nutrition Program,Number of beneficiaries
+HE_SA,HE,Service Ambulance,Number of ambulance donated
+HE_MC,HE,Mobile Clinics,Number of mobiile clinics donated
+ED_AS,ED,Adopted School,Number of schools under the program
+ED_EMD,ED,Educational Mobile Devices,Number of educational mobile devices donated
+ED_CS,ED,Scholarship Program,Number of recipients of scholarship program
+ED_TT,ED,Teacher Training,Number of teachers who completed the program
+LI_LT_T,LI,Livelihood Training,Number of trainings
+LI_LT_ORG,LI,Livelihood Training,Number of organizations as recipients of livelihood program
+LI_LT_IND,LI,Livelihood Training,Number of individuals who are recipients of training
+LI_CD_SL,LI,Community Development,Number of streetlights donated
+LI_CD_CCTV,LI,Community Development,Number of CCTV donated
+CO_SC,CO,Species Conservation,Number of partners for conservation
+AW_IEC_PC,AW,Information and Education Campaign,Number of information and education campaigns conducted
+AW_IEC_AU,AW,Information and Education Campaign,Number of audience reached
+AW_IEC_EC,AW,Information and Education Campaign,Number of wastes recycled in ecobrick
+RE_TPSR_TP,RE,Tree Planting and Site Restoration,Number of trees planted
+RE_TPSR_VEG,RE,Tree Planting and Site Restoration,Weight (Kg) of vegetables harvested from agrivoltaics
+RE_TPSR_REF,RE,Tree Planting and Site Restoration,Number of hectares reforested
+EC_EI_VIS,EC,Ecotourism Initiate,Number of visitors
+EC_EI_BEN,EC,Ecotourism Initiate,Number of beneficiaries

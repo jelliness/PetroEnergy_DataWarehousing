@@ -43,6 +43,6 @@ CREATE TABLE bronze.csr_activity (
     csr_id VARCHAR(20),
     company_id VARCHAR(20),
 	project_id VARCHAR(20),
-    ac_year VARCHAR(4),
+    ac_year VARCHAR(6),
     csr_report NUMERIC
 );
