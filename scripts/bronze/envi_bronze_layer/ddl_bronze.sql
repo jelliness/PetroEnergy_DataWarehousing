@@ -116,15 +116,26 @@ CREATE TABLE bronze.envi_non_hazard_waste (
 );
 
 -- envi_hazard_waste
-DROP TABLE IF EXISTS bronze.envi_hazard_waste;
-CREATE TABLE bronze.envi_hazard_waste (
-    hw_id 					VARCHAR(30),          		-- Example: HW-PSC-2023-001
+DROP TABLE IF EXISTS bronze.envi_hazard_waste_generated;
+CREATE TABLE bronze.envi_hazard_waste_generated (
+    hwg_id 					   VARCHAR(30),          		-- Example: HW-PSC-2023-001
     company_id 				VARCHAR(20),      		-- Referenced to company_info.
-    metrics 				VARCHAR(20),
+    metrics 				   VARCHAR(20),
     unit_of_measurement 	VARCHAR(20),
-    waste 					DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
-    quarter 				VARCHAR(2),  		 		-- Example: 'Q1', 'Q2', 'Q3', 'Q4'
-    year 					INT
+    waste_generated 			DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
+    quarter 				   VARCHAR(2),  		 		-- Example: 'Q1', 'Q2', 'Q3', 'Q4'
+    year 					   INT
+);
+
+-- envi_hazard_waste
+DROP TABLE IF EXISTS bronze.envi_hazard_waste_disposed;
+CREATE TABLE bronze.envi_hazard_waste_disposed (
+    hwd_id 					   VARCHAR(30),          		-- Example: HW-PSC-2023-001
+    company_id 				VARCHAR(20),      		-- Referenced to company_info.
+    metrics 				   VARCHAR(20),
+    unit_of_measurement 	VARCHAR(20),
+    waste_disposed 			DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
+    year 				   	INT
 );
 
 -- Adding constraints (UNIQUE)
@@ -134,4 +145,5 @@ ALTER TABLE bronze.envi_water_withdrawal ADD CONSTRAINT unique_ww_id UNIQUE (ww_
 ALTER TABLE bronze.envi_diesel_consumption ADD CONSTRAINT unique_dc_id UNIQUE (dc_id);
 ALTER TABLE bronze.envi_electric_consumption ADD CONSTRAINT unique_ec_id UNIQUE (ec_id);
 ALTER TABLE bronze.envi_non_hazard_waste ADD CONSTRAINT unique_nhw_id UNIQUE (nhw_id);
-ALTER TABLE bronze.envi_hazard_waste ADD CONSTRAINT unique_hw_id UNIQUE (hw_id);
+ALTER TABLE bronze.envi_hazard_waste_generated ADD CONSTRAINT unique_hwg_id UNIQUE (hwg_id);
+ALTER TABLE bronze.envi_hazard_waste_disposed ADD CONSTRAINT unique_hwd_id UNIQUE (hwd_id);
