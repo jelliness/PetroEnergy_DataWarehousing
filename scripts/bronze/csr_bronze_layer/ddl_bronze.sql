@@ -21,6 +21,6 @@ CREATE TABLE bronze.csr_accomplishments (
     ac_id VARCHAR(20),
     company_id VARCHAR(20),
     ac_year VARCHAR(4),
-    program VARCHAR(100),
+    csr_program VARCHAR(100),
     csr_report NUMERIC
 );

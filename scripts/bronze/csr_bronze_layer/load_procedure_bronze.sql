@@ -38,7 +38,7 @@ TRUNCATE TABLE bronze.csr_company; -- Clear the table before inserting new data
 RAISE NOTICE '>> Bulk inserting data into bronze.csr_company...'; 
 -- Bulk insert data from CSV files into the bronze layer tables
 COPY bronze.csr_company
-FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_company.csv'
+FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_company.csv'
 DELIMITER ',' CSV HEADER;
 
 end_time := CURRENT_TIMESTAMP; -- End time for the operation
@@ -58,7 +58,7 @@ TRUNCATE TABLE bronze.csr_accomplishments; -- Clear the table before inserting n
 RAISE NOTICE '>> Bulk inserting data into bronze.csr_accomplishments...'; 
 -- Bulk insert data from CSV files into the bronze layer tables
 COPY bronze.csr_accomplishments
-FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_accomplishments.csv'
+FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_company.csv'
 DELIMITER ',' CSV HEADER;
 
 end_time := CURRENT_TIMESTAMP; -- End time for the operation

@@ -13,6 +13,6 @@ CREATE TABLE silver.csr_accomplishments (
     ac_id TEXT NOT NULL,
     company_id TEXT NOT NULL,
     ac_year INTEGER NOT NULL,
-    program TEXT NOT NULL,
+    csr_program TEXT NOT NULL,
     csr_report INTEGER
 );

@@ -17,7 +17,7 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     start_time TIMESTAMP;
-    end_time TIMESTAMP;
+    end_time TIMESTAMP; 
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
 
@@ -47,19 +47,19 @@ BEGIN
         ac_id,
         company_id,
         ac_year,
-        program,
+        csr_program,
         csr_report
     )
     SELECT
         -- Ensure consistent types for all COALESCE operations
-        COALESCE(NULLIF(TRIM(ac_id), ''), 'UNKNOWN') AS ac_id,
-        COALESCE(NULLIF(TRIM(company_id), ''), 'UNKNOWN') AS company_id,
+        COALESCE(NULLIF(TRIM(ac_id), ''), 'Not Available') AS ac_id,
+        COALESCE(NULLIF(TRIM(company_id), ''), 'Not Available') AS company_id,
         -- Ensure ac_year is treated as an integer, inserting NULL for null/empty values
         CASE 
             WHEN TRIM(ac_year::TEXT) = '' THEN NULL
             ELSE ac_year::INTEGER
         END AS ac_year,
-        COALESCE(NULLIF(TRIM(program), ''), 'UNKNOWN') AS program,
+        COALESCE(NULLIF(TRIM(csr_program), ''), 'Not Available') AS csr_program,
         CASE 
             -- Ensure csr_report is treated as an integer, defaulting to 0 for non-numeric or negative values
             WHEN TRIM(csr_report::TEXT) ~ '^\d+$' THEN 
