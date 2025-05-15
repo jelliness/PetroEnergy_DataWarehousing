@@ -1,34 +1,27 @@
 -- WARNING:
--- Running this script will drop the 'DataWarehouse' database if it exists.
+-- Running this script will drop the 'Petroenergy_Data_Warehousing' database if it exists.
 -- All data in the database will be permanently deleted. Proceed with caution.
 
--- Terminate all other connections to the 'datawarehouse' database
-RAISE NOTICE 'Terminating connections to datawarehouse...';
+-- Step 1: Terminate existing connections and drop the database
+
 SELECT pg_terminate_backend(pid)
 FROM pg_stat_activity
-WHERE datname = 'datawarehouse' AND pid <> pg_backend_pid();
+WHERE datname = 'Petroenergy_Data_Warehousing' AND pid <> pg_backend_pid();
 
--- Drop the database
-RAISE NOTICE 'Dropping database: datawarehouse (if exists)...';
-DROP DATABASE IF EXISTS datawarehouse;
+-- Step 2: Drop the database if it exists
+DROP DATABASE IF EXISTS Petroenergy_Data_Warehousing;
 
--- Create the new 'datawarehouse' database
-RAISE NOTICE 'Creating new database: datawarehouse...';
-CREATE DATABASE datawarehouse;
+-- Step 3: Create the database
+CREATE DATABASE Petroenergy_Data_Warehousing;
 
-RAISE NOTICE 'Database created. Please connect to datawarehouse before proceeding.';
-
-
--- Note: You must connect to 'datawarehouse' now before running the schema creation part.
--- This must be done manually in pgAdmin.
-
--- After switching to the 'datawarehouse' database, run the following:
+-- ================================
+-- After connecting to 'Petroenergy_Data_Warehousing', run this part
+-- ================================
 
 -- Set the time zone
 SET TIME ZONE 'Asia/Manila';
-RAISE NOTICE 'Time zone set to Asia/Manila';
 
--- Create Schemas
-CREATE SCHEMA bronze;
-CREATE SCHEMA silver;
-CREATE SCHEMA gold;
+-- Create schemas
+CREATE SCHEMA IF NOT EXISTS bronze;
+CREATE SCHEMA IF NOT EXISTS silver;
+CREATE SCHEMA IF NOT EXISTS gold;
