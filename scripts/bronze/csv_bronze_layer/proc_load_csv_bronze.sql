@@ -2,12 +2,16 @@ CREATE OR REPLACE PROCEDURE bronze.load_csv_bronze(local_file_path TEXT)
 LANGUAGE plpgsql
 AS $BODY$
 DECLARE
-    start_time TIMESTAMP;
-    end_time TIMESTAMP;
+    start_time TIMESTAMPTZ;
+    end_time TIMESTAMPTZ;
 BEGIN
     RAISE NOTICE '================================';
     RAISE NOTICE 'Loading Bronze Layer Data with UPSERT...';
     RAISE NOTICE '================================';
+
+    -- Set session timezone to Asia/Manila for this procedure run
+    SET TIME ZONE 'Asia/Manila';
+    RAISE NOTICE 'Session time zone set to %', current_setting('TIMEZONE');
 
     -- ====================
     -- Load csv_company
@@ -33,7 +37,7 @@ BEGIN
     SET
         company_name = EXCLUDED.company_name,
         resources = EXCLUDED.resources,
-        dwh_date_updated = CURRENT_TIMESTAMP;
+        dwh_date_updated = CURRENT_TIMESTAMP;  -- Make sure this column is TIMESTAMPTZ!
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -120,7 +124,8 @@ BEGIN
         power_plant_id TEXT,
         datetime TEXT,
         energy_generated TEXT,
-        unit_of_measurement TEXT
+        unit_of_measurement TEXT,
+        input_frequency TEXT
     );
 
     EXECUTE format(
@@ -129,14 +134,15 @@ BEGIN
     );
 
     INSERT INTO bronze.csv_energy_records (
-        power_plant_id, datetime, energy_generated, unit_of_measurement
+        power_plant_id, datetime, energy_generated, unit_of_measurement, input_frequency
     )
-    SELECT power_plant_id, datetime, energy_generated, unit_of_measurement
+    SELECT power_plant_id, datetime, energy_generated, unit_of_measurement, input_frequency
     FROM csv_energy_records
     ON CONFLICT (power_plant_id, datetime) DO UPDATE
     SET
         energy_generated = EXCLUDED.energy_generated,
         unit_of_measurement = EXCLUDED.unit_of_measurement,
+        input_frequency = EXCLUDED.input_frequency,
         dwh_date_updated = CURRENT_TIMESTAMP;
 
     end_time := CURRENT_TIMESTAMP;
@@ -151,4 +157,4 @@ END;
 $BODY$;
 
 ALTER PROCEDURE bronze.load_csv_bronze(TEXT)
-    OWNER TO postgres;
+OWNER TO postgres;
