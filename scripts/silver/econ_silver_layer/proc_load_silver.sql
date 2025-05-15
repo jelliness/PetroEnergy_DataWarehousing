@@ -25,9 +25,7 @@ BEGIN
     BEGIN
         -- Loading silver.econ_value
         start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Truncating Table: silver.econ_value';
-        TRUNCATE TABLE silver.econ_value;
-        RAISE NOTICE '>> Inserting Data Into: silver.econ_value';
+        RAISE NOTICE '>> Upserting Data Into: silver.econ_value';
         INSERT INTO silver.econ_value (
             year,
             electricity_sales,
@@ -45,16 +43,24 @@ BEGIN
             GREATEST(COALESCE(interest_income, 0), 0),
             GREATEST(COALESCE(share_in_net_income_of_associate, 0), 0),
             GREATEST(COALESCE(miscellaneous_income, 0), 0)
-        FROM bronze.econ_value;
+        FROM bronze.econ_value
+        ON CONFLICT (year)  -- Assuming year is unique
+        DO UPDATE SET
+            electricity_sales = EXCLUDED.electricity_sales,
+            oil_revenues = EXCLUDED.oil_revenues,
+            other_revenues = EXCLUDED.other_revenues,
+            interest_income = EXCLUDED.interest_income,
+            share_in_net_income_of_associate = EXCLUDED.share_in_net_income_of_associate,
+            miscellaneous_income = EXCLUDED.miscellaneous_income,
+            updated_at = CURRENT_TIMESTAMP;
+
         end_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
         RAISE NOTICE '>> -------------';
 
         -- Loading silver.econ_expenditures
         start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Truncating Table: silver.econ_expenditures';
-        TRUNCATE TABLE silver.econ_expenditures;
-        RAISE NOTICE '>> Inserting Data Into: silver.econ_expenditures';
+        RAISE NOTICE '>> Upserting Data Into: silver.econ_expenditures';
         INSERT INTO silver.econ_expenditures (
             year,
             company_id,
@@ -78,16 +84,25 @@ BEGIN
             GREATEST(COALESCE(depreciation, 0), 0),
             GREATEST(COALESCE(depletion, 0), 0),
             GREATEST(COALESCE(others, 0), 0)
-        FROM bronze.econ_expenditures;
+        FROM bronze.econ_expenditures
+        ON CONFLICT (year, company_id, type)  -- Composite unique key
+        DO UPDATE SET
+            government_payments = EXCLUDED.government_payments,
+            supplier_spending_local = EXCLUDED.supplier_spending_local,
+            supplier_spending_abroad = EXCLUDED.supplier_spending_abroad,
+            community_investments = EXCLUDED.community_investments,
+            depreciation = EXCLUDED.depreciation,
+            depletion = EXCLUDED.depletion,
+            others = EXCLUDED.others,
+            updated_at = CURRENT_TIMESTAMP;
+
         end_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
         RAISE NOTICE '>> -------------';
 
         -- Loading silver.econ_capital_provider_payment
         start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Truncating Table: silver.econ_capital_provider_payment';
-        TRUNCATE TABLE silver.econ_capital_provider_payment;
-        RAISE NOTICE '>> Inserting Data Into: silver.econ_capital_provider_payment';
+        RAISE NOTICE '>> Upserting Data Into: silver.econ_capital_provider_payment';
         INSERT INTO silver.econ_capital_provider_payment (
             year,
             interest,
@@ -99,7 +114,14 @@ BEGIN
             GREATEST(COALESCE(interest, 0), 0),
             GREATEST(COALESCE(dividends_to_nci, 0), 0),
             GREATEST(COALESCE(dividends_to_parent, 0), 0)
-        FROM bronze.econ_capital_provider_payment;
+        FROM bronze.econ_capital_provider_payment
+        ON CONFLICT (year)  -- Assuming year is unique
+        DO UPDATE SET
+            interest = EXCLUDED.interest,
+            dividends_to_nci = EXCLUDED.dividends_to_nci,
+            dividends_to_parent = EXCLUDED.dividends_to_parent,
+            updated_at = CURRENT_TIMESTAMP;
+
         end_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
         RAISE NOTICE '>> -------------';
