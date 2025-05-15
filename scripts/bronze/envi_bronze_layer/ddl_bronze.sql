@@ -151,22 +151,3 @@ CREATE TABLE bronze.envi_hazard_waste (
     quarter 				VARCHAR(2),  		 		-- Example: 'Q1', 'Q2', 'Q3', 'Q4'
     year 					INT
 );
-
--- envi_activity
-DROP TABLE IF EXISTS bronze.envi_activity;
-CREATE TABLE bronze.envi_activity (
-    ea_id 			VARCHAR(30),           -- Example: EA_PSC_001
-	metrics 				VARCHAR(20),
-    company_id 				VARCHAR(20),       	   -- Referenced to company_info.
-    envi_act_name 			TEXT
-);
-
--- envi_act_output
-DROP TABLE IF EXISTS bronze.envi_activity_output;
-CREATE TABLE bronze.envi_activity_output (
-    eao_id 					VARCHAR(30),           		-- Example: EAO-PSC-2018-001
-    company_id 				VARCHAR(20),       		    -- Referenced to company_info.
-    ea_id 				    VARCHAR(30),                -- Referenced to envi_activity.
-    act_output 				INT,
-    year INT
-);
