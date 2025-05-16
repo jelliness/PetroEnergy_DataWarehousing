@@ -65,7 +65,7 @@ BEGIN
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
     RAISE NOTICE '-----------------';
-/*
+
     -- hr_training
     RAISE NOTICE '------------------------------------------------';
     RAISE NOTICE 'Loading HR Training Data...';
@@ -83,7 +83,7 @@ BEGIN
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
     RAISE NOTICE '-----------------';
-*/
+
     -- hr_safety
     RAISE NOTICE '------------------------------------------------';
     RAISE NOTICE 'Loading HR Safety Data...';

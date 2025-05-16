@@ -56,7 +56,7 @@ BEGIN
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
     RAISE NOTICE '-----------------';
-/*
+
     -- hr_training
     RAISE NOTICE '------------------------------------------------';
     RAISE NOTICE 'Loading HR Training Data...';
@@ -64,12 +64,12 @@ BEGIN
 
     RAISE NOTICE '>> Inserting data into silver.hr_training...';
 
-	INSERT INTO silver.hr_demographics SELECT * FROM bronze.hr_demographics
+	INSERT INTO silver.hr_demographics SELECT * FROM bronze.hr_demographics;
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
     RAISE NOTICE '-----------------';
-*/
+	
     -- hr_safety
     RAISE NOTICE '------------------------------------------------';
     RAISE NOTICE 'Loading HR Safety Data...';
