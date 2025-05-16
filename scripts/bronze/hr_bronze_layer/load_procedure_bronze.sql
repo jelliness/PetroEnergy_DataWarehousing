@@ -18,8 +18,8 @@ BEGIN
     RAISE NOTICE '------------------------------------------------';
 
     start_time := CURRENT_TIMESTAMP;
-    -- RAISE NOTICE '>> Truncating table: bronze.hr_demographics...';
-    -- TRUNCATE TABLE bronze.hr_demographics;
+    RAISE NOTICE '>> Truncating table: bronze.hr_demographics...';
+    TRUNCATE TABLE bronze.hr_demographics;
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_demographics...';
 
     COPY bronze.hr_demographics

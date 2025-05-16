@@ -58,7 +58,7 @@ CREATE TABLE bronze.hr_safety (
     safety_man_hours INT
 );
 
-ALTER TABLE bronze.hr_parental_leave ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
-ALTER TABLE bronze.hr_tenure ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
-ALTER TABLE bronze.hr_training ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
-ALTER TABLE bronze.hr_safety ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
+-- ALTER TABLE bronze.hr_parental_leave ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
+-- ALTER TABLE bronze.hr_tenure ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
+-- ALTER TABLE bronze.hr_training ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
+-- ALTER TABLE bronze.hr_safety ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);

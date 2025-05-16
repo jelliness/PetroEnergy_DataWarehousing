@@ -6,6 +6,8 @@ DECLARE
     end_time TIMESTAMP;
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
+	null_count INT;
+	
 BEGIN
     batch_start_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '================================';
@@ -18,13 +20,10 @@ BEGIN
     RAISE NOTICE '------------------------------------------------';
 
     start_time := CURRENT_TIMESTAMP;
-    -- RAISE NOTICE '>> Truncating table: silver.hr_demographics...';
-    -- TRUNCATE TABLE silver.hr_demographics;
-    RAISE NOTICE '>> Bulk inserting data into silver.hr_demographics...';
+    RAISE NOTICE '>> Inserting Data into silver.hr_demographics...';
 
-    COPY silver.hr_demographics
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_demographics.csv'  -- Temporary Path. Create a path
-    DELIMITER ',' CSV HEADER;
+	INSERT INTO silver.hr_demographics SELECT * FROM bronze.hr_demographics;
+	
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -36,13 +35,9 @@ BEGIN
     RAISE NOTICE '------------------------------------------------';
 
     start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Truncating table: silver.hr_parental_leave...';
-    TRUNCATE TABLE silver.hr_parental_leave;
-    RAISE NOTICE '>> Bulk inserting data into silver.hr_parental_leave...';
+    RAISE NOTICE '>> Inserting Data into silver.hr_parental_leave...';
 
-    COPY silver.hr_parental_leave
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_parental_leave.csv'  -- Temporary Path. Create a path
-    DELIMITER ',' CSV HEADER;
+	INSERT INTO silver.hr_parental_leave SELECT * FROM bronze.hr_parental_leave;
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -54,13 +49,9 @@ BEGIN
     RAISE NOTICE '------------------------------------------------';
 
     start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Truncating table: silver.hr_tenure...';
-    TRUNCATE TABLE silver.hr_tenure;
-    RAISE NOTICE '>> Bulk inserting data into silver.hr_tenure...';
+	RAISE NOTICE '>> Inserting Data into silver.hr_tenure...';
 
-    COPY silver.hr_tenure
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_tenure.csv'  -- Temporary Path. Create a path
-    DELIMITER ',' CSV HEADER;
+	INSERT INTO silver.hr_tenure SELECT * FROM bronze.hr_tenure;
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -71,14 +62,9 @@ BEGIN
     RAISE NOTICE 'Loading HR Training Data...';
     RAISE NOTICE '------------------------------------------------';
 
-    start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Truncating table: silver.hr_training...';
-    TRUNCATE TABLE silver.hr_training;
-    RAISE NOTICE '>> Bulk inserting data into silver.hr_training...';
+    RAISE NOTICE '>> Inserting data into silver.hr_training...';
 
-    COPY silver.hr_training
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_training.csv'  -- Temporary Path. Create a path
-    DELIMITER ',' CSV HEADER;
+	INSERT INTO silver.hr_demographics SELECT * FROM bronze.hr_demographics
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -90,13 +76,9 @@ BEGIN
     RAISE NOTICE '------------------------------------------------';
 
     start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Truncating table: silver.hr_safety...';
-    TRUNCATE TABLE silver.hr_safety;
-    RAISE NOTICE '>> Bulk inserting data into silver.hr_safety...';
+	RAISE NOTICE '>> Inserting data into silver.hr_safety...';
 
-    COPY silver.hr_safety
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_safety.csv'  -- Temporary Path. Create a path
-    DELIMITER ',' CSV HEADER;
+	INSERT INTO silver.hr_safety SELECT * FROM bronze.hr_safety;
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
