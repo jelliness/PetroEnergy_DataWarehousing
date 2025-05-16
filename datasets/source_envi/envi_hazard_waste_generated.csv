@@ -2,18 +2,18 @@
 HW-PSC-2023-001,PSC,Battery,Kilogram,8,Q1,2023
 HW-PSC-2023-002,PSC,Battery,Kilogram,300,Q3,2023
 HW-PSC-2023-003,PSC,Battery,Kilogram,20,Q4,2023
-HW-PSC-2023-004,PSC,Battery,Kilogram,700,Q2,2023
-HW-PSC-2023-005,PSC,Empty Containers,Kilogram,50,Q1,2023
-HW-PSC-2023-006,PSC,Empty Containers,Kilogram,90,Q2,2023
-HW-PSC-2023-007,PSC,Empty Containers,Kilogram,120,Q3,2023
-HW-PSC-2023-008,PSC,Empty Containers,Kilogram,360,Q4,2023
-HW-PSC-2023-009,PSC,Empty Containers,Kilogram,10,Q1,2023
-HW-PSC-2024-001,PSC,Empty Containers,Kilogram,10,Q4,2024
-HW-PSC-2024-002,PSC,Empty Containers,Kilogram,12,Q4,2024
-HW-PSC-2024-003,PSC,Used Oil,Liter,10,Q1,2024
-HW-PSC-2024-004,PSC,Used Oil,Liter,140,Q3,2024
-HW-PSC-2024-005,PSC,Used Oil,Liter,40,Q4,2024
-HW-PSC-2024-006,PSC,Used Oil,Liter,50,Q1,2024
-HW-PSC-2024-007,PSC,Used Oil,Liter,80,Q3,2024
-HW-PSC-2024-008,PSC,Electronic Waste,Kilogram,4500,Q3,2024
-HW-PSC-2025-001,PSC,BFL,Kilogram,1000,Q2,2025
+HW-PSC-2023-004,PSC,Empty Containers,Kilogram,50,Q1,2023
+HW-PSC-2023-005,PSC,Empty Containers,Kilogram,90,Q2,2023
+HW-PSC-2023-006,PSC,Empty Containers,Kilogram,120,Q3,2023
+HW-PSC-2023-007,PSC,Empty Containers,Kilogram,360,Q4,2023
+HW-PSC-2023-008,PSC,Used Oil,Liter,10,Q1,2023
+HW-PSC-2023-009,PSC,Used Oil,Liter,140,Q3,2023
+HW-PSC-2023-010,PSC,Used Oil,Liter,40,Q4,2023
+HW-PSC-2023-011,PSC,Electronic Waste,Kilogram,4500,Q3,2023
+HW-PSC-2024-001,PSC,Battery,Kilogram,700,Q2,2024
+HW-PSC-2024-002,PSC,Empty Containers,Kilogram,10,Q1,2024
+HW-PSC-2024-003,PSC,Empty Containers,Kilogram,10,Q4,2024
+HW-PSC-2024-004,PSC,Used Oil,Liter,50,Q1,2024
+HW-PSC-2024-005,PSC,Used Oil,Liter,80,Q3,2024
+HW-PSC-2024-006,PSC,BFL,Kilogram,50,Q2,2024
+HW-PSC-2025-001,PSC,Empty Containers,Kilogram,12,Q4,2025
