@@ -8,6 +8,11 @@ Script Purpose:
 ===============================================================================
 */
 
+-- First drop dependent gold views
+DROP VIEW IF EXISTS gold.vw_economic_value_summary;
+DROP VIEW IF EXISTS gold.vw_economic_value_distributed;
+DROP VIEW IF EXISTS gold.vw_economic_value_generated;
+
 -- Drop and recreate table for economic value
 DROP TABLE IF EXISTS silver.econ_value;
 CREATE TABLE silver.econ_value (
@@ -42,6 +47,7 @@ CREATE TABLE silver.econ_expenditures (
     government_payments NUMERIC NOT NULL DEFAULT 0,
     supplier_spending_local NUMERIC NOT NULL DEFAULT 0,
     supplier_spending_abroad NUMERIC NOT NULL DEFAULT 0,
+    employee_wages_benefits NUMERIC NOT NULL DEFAULT 0,
     community_investments NUMERIC NOT NULL DEFAULT 0,
     depreciation NUMERIC NOT NULL DEFAULT 0,
     depletion NUMERIC NOT NULL DEFAULT 0,

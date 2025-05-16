@@ -32,6 +32,7 @@ CREATE TABLE bronze.econ_expenditures (
     government_payments NUMERIC,
     supplier_spending_local NUMERIC,
     supplier_spending_abroad NUMERIC,
+    employee_wages_benefits NUMERIC, 
     community_investments NUMERIC,
     depreciation NUMERIC,
     depletion NUMERIC,
