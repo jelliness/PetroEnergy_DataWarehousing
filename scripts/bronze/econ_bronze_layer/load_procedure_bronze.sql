@@ -71,6 +71,7 @@ BEGIN
         government_payments = EXCLUDED.government_payments,
         supplier_spending_local = EXCLUDED.supplier_spending_local,
         supplier_spending_abroad = EXCLUDED.supplier_spending_abroad,
+        employee_wages_benefits = EXCLUDED.employee_wages_benefits,
         community_investments = EXCLUDED.community_investments,
         depreciation = EXCLUDED.depreciation,
         depletion = EXCLUDED.depletion,
