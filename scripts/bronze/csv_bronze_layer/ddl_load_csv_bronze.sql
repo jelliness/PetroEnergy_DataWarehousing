@@ -83,7 +83,7 @@ CREATE TABLE bronze.csv_hec_factors (
     hec_value TEXT,                                 -- Value of HEC
     hec_year TEXT,                                  -- Year of the HEC value
     source_name TEXT,                               -- Source of the data
-    link TEXT,                                      -- Reference link
+    source_link TEXT,                                      -- Reference link
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp
 );
