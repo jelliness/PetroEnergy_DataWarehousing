@@ -18,12 +18,12 @@ BEGIN
     RAISE NOTICE '------------------------------------------------';
 
     start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Truncating table: bronze.hr_demographics...';
-    TRUNCATE TABLE bronze.hr_demographics;
+    -- RAISE NOTICE '>> Truncating table: bronze.hr_demographics...';
+    -- TRUNCATE TABLE bronze.hr_demographics;
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_demographics...';
 
     COPY bronze.hr_demographics
-    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_demographics.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_demographics.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -41,7 +41,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_parental_leave...';
 
     COPY bronze.hr_parental_leave
-    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_parental_leave.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_parental_leave.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -59,13 +59,13 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_tenure...';
 
     COPY bronze.hr_tenure
-    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_tenure.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_tenure.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
     RAISE NOTICE '-----------------';
-
+/*
     -- hr_training
     RAISE NOTICE '------------------------------------------------';
     RAISE NOTICE 'Loading HR Training Data...';
@@ -77,13 +77,13 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_training...';
 
     COPY bronze.hr_training
-    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_training.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_training.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
     RAISE NOTICE '-----------------';
-
+*/
     -- hr_safety
     RAISE NOTICE '------------------------------------------------';
     RAISE NOTICE 'Loading HR Safety Data...';
@@ -95,7 +95,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_safety...';
 
     COPY bronze.hr_safety
-    FROM 'C:/Users/Kino/Desktop/hr_sqlscript/source_hr/hr_safety.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_safety.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
