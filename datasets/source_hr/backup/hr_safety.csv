@@ -1,0 +1,20 @@
+PWEI_RF_001,PWEI,2019-03-15 08:45:00,Electrical short circuit,120
+MGI_MM_002,MGI,2019-06-10 14:20:00,Slip on wet surface,80
+RGEC_RF_004,RGEC,2020-01-22 11:00:00,Steam leak burn,150
+PSC_RF_005,PSC,2020-07-19 09:10:00,Solar panel electrical arc,100
+PWEI_RF_006,PWEI,2020-11-04 16:30:00,Fall from height during maintenance,200
+RGEC_MM_009,RGEC,2021-02-11 13:50:00,Tripping over loose cable,90
+PSC_RF_018,PSC,2021-06-07 10:05:00,Lifting injury during equipment move,170
+MGI_RF_014,MGI,2021-10-29 15:25:00,Exposure to geothermal gas,140
+RGEC_SM_017,RGEC,2022-03-12 12:40:00,Thermal burn from hot pipe,190
+PSC_MM_021,PSC,2022-05-28 08:15:00,Cut from broken glass panel,110
+PWEI_SM_024,PWEI,2022-09-30 17:55:00,Back strain during panel installation,130
+RGEC_RF_030,RGEC,2023-01-18 07:35:00,Minor electric shock,160
+MGI_MM_033,MGI,2023-03-05 14:10:00,Hand injury from turbine blade maintenance,145
+PSC_MM_039,PSC,2023-06-22 11:30:00,Overexertion during drill operation,155
+RGEC_RF_040,RGEC,2023-08-03 13:45:00,High-pressure pipe rupture,210
+PWEI_RF_043,PWEI,2023-10-14 09:20:00,Fall from scaffold,175
+MGI_RF_049,MGI,2024-01-27 10:00:00,Eye exposure to arc flash,95
+RGEC_RF_051,RGEC,2024-04-05 16:45:00,Equipment collision in tight space,125
+PSC_RF_066,PSC,2024-07-13 08:30:00,Panel short-circuit incident,85
+PWEI_RF_070,PWEI,2024-12-21 15:15:00,Trip during wiring inspection,105

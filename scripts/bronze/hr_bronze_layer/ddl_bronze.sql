@@ -25,7 +25,7 @@ CREATE TABLE bronze.hr_demographics (
     position_id VARCHAR(2),
 	position_name VARCHAR(20),
     p_np VARCHAR(2),
-    company_id VARCHAR(6)
+    company_id VARCHAR(6)	
 );
 
 CREATE TABLE bronze.hr_parental_leave (
