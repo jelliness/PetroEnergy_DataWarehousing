@@ -228,20 +228,20 @@ BEGIN
 			
 			ROUND(
 				CASE
-				WHEN unit_of_measurement ILIKE 'MWh' THEN energy_generated * 1000
-				WHEN unit_of_measurement ILIKE 'GWh' THEN energy_generated * 1000000
-				WHEN unit_of_measurement ILIKE 'kWh' THEN energy_generated 
-				ELSE 0
+					WHEN unit_of_measurement ILIKE 'MWh' THEN COALESCE(energy_generated, 0) * 1000
+					WHEN unit_of_measurement ILIKE 'GWh' THEN COALESCE(energy_generated, 0) * 1000000
+					WHEN unit_of_measurement ILIKE 'kWh' THEN COALESCE(energy_generated, 0)
+					ELSE 0
 				END,
-				4
+			  	4
 			) AS energy_generated,
 			
 			ROUND(
 				(
 				CASE
-					WHEN unit_of_measurement ILIKE 'MWh' THEN energy_generated * 1000
-					WHEN unit_of_measurement ILIKE 'GWh' THEN energy_generated * 1000000
-					WHEN unit_of_measurement ILIKE 'kWh' THEN energy_generated 
+					WHEN unit_of_measurement ILIKE 'MWh' THEN COALESCE(energy_generated, 0) * 1000
+					WHEN unit_of_measurement ILIKE 'GWh' THEN COALESCE(energy_generated, 0) * 1000000
+					WHEN unit_of_measurement ILIKE 'kWh' THEN COALESCE(energy_generated, 0) 
 					ELSE 0
 				END
 				) * COALESCE(CAST(ef.kg_co2_per_kwh AS NUMERIC), 0),
