@@ -99,7 +99,7 @@ CREATE TABLE bronze.envi_electric_consumption (
     unit_of_measurement	 	VARCHAR(15),
     consumption 		 	DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
     quarter           	 	VARCHAR(2),
-    year               	 	INT
+    year               	 	SMALLINT
 );
 
 -- envi_non_hazard_waste
@@ -112,7 +112,7 @@ CREATE TABLE bronze.envi_non_hazard_waste (
     unit_of_measurement 	VARCHAR(15),
     waste 					DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
     month 					VARCHAR(10),
-    year 					INT
+    year 					SMALLINT
 );
 
 -- envi_hazard_waste
@@ -124,7 +124,7 @@ CREATE TABLE bronze.envi_hazard_waste_generated (
     unit_of_measurement 	VARCHAR(15),
     waste_generated 		DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
     quarter 				VARCHAR(2),  		 		-- Example: 'Q1', 'Q2', 'Q3', 'Q4'
-    year 					INT
+    year 					SMALLINT
 );
 
 -- envi_hazard_waste
@@ -135,7 +135,7 @@ CREATE TABLE bronze.envi_hazard_waste_disposed (
     metrics                 VARCHAR(20),
     unit_of_measurement 	VARCHAR(15),
     waste_disposed 			DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
-    year 				   	INT
+    year 				   	SMALLINT
 );
 
 -- Adding constraints (UNIQUE)

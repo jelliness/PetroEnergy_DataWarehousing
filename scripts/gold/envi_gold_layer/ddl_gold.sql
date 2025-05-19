@@ -100,7 +100,7 @@ DROP VIEW IF EXISTS gold.vw_environment_hazard_waste_generated;
 CREATE VIEW gold.vw_environment_hazard_waste_generated AS
 SELECT
     ehwg.hwg_id                           AS hazard_waste_generated_id,
-    ehwg.company_id                     AS company_name,
+    ehwg.company_id                     AS company_id,
     ehwg.metrics                        AS waste_type,
     ehwg.unit_of_measurement            AS unit,
     ehwg.waste_generated                AS generate,                        
@@ -119,7 +119,7 @@ DROP VIEW IF EXISTS gold.vw_environment_hazard_waste_disposed;
 CREATE VIEW gold.vw_environment_hazard_waste_disposed AS
 SELECT
     ehwd.hwd_id                            AS hazard_waste_generated_id,
-    ehwd.company_id                     AS company_name,
+    ehwd.company_id                     AS company_id,
     ehwd.metrics                        AS waste_type,
     ehwd.unit_of_measurement            AS unit,
     ehwd.waste_disposed                    AS disposed,

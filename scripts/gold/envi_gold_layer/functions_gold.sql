@@ -264,7 +264,7 @@ BEGIN
     RETURN QUERY
     SELECT
         edc.company_id,
-		edc.year::SMALLINT,
+		edc.year,
         edc.company_property_name,
 		edc.company_property_type,
         CAST(SUM(edc.consumption) AS NUMERIC(10,2)) AS total_consumption,
@@ -317,7 +317,7 @@ BEGIN
     RETURN QUERY
     SELECT
         edc.company_id,
-		edc.year::SMALLINT,
+		edc.year,
 		edc.quarter,
         edc.company_property_name,
 		edc.company_property_type,
@@ -373,7 +373,7 @@ BEGIN
     RETURN QUERY
     SELECT
         edc.company_id,
-		edc.year::SMALLINT,
+		edc.year,
 		edc.month,
         edc.company_property_name,
 		edc.company_property_type,
@@ -542,11 +542,11 @@ DROP FUNCTION IF EXISTS gold.func_environment_electric_consumption_by_year;
 CREATE OR REPLACE FUNCTION gold.func_environment_electric_consumption_by_year(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
-	year INT,
+	year SMALLINT,
     unit_of_measurement VARCHAR(15),
     total_consumption NUMERIC(10,2)
 )
@@ -575,11 +575,11 @@ DROP FUNCTION IF EXISTS gold.func_environment_electric_consumption_by_quarter;
 CREATE OR REPLACE FUNCTION gold.func_environment_electric_consumption_by_quarter(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
-	year INT,
+	year SMALLINT,
     quarter VARCHAR(2),
     unit_of_measurement VARCHAR(15),
     total_consumption NUMERIC(10,2)
@@ -610,7 +610,7 @@ DROP FUNCTION IF EXISTS gold.func_environment_electric_consumption_by_perc_lvl;
 CREATE OR REPLACE FUNCTION gold.func_environment_electric_consumption_by_perc_lvl(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
@@ -648,11 +648,11 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_year(
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_month VARCHAR(10)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
-	year INT,
+	year SMALLINT,
 	waste_source VARCHAR(20),
 	metrics VARCHAR(20),
 	unit_of_measurement VARCHAR(15),
@@ -690,11 +690,11 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_quarter(
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_month VARCHAR(10)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
-	year INT,
+	year SMALLINT,
     quarter VARCHAR(2),
 	waste_source VARCHAR(20),
 	metrics VARCHAR(20),
@@ -734,11 +734,11 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_month(
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_month VARCHAR(10)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
-	year INT,
+	year SMALLINT,
     month VARCHAR(10),
 	waste_source VARCHAR(20),
 	metrics VARCHAR(20),
@@ -778,7 +778,7 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_waste_sourc
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_month VARCHAR(10)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
@@ -816,7 +816,7 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_metrics(
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_month VARCHAR(10)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
@@ -854,7 +854,7 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_perc_lvl(
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_month VARCHAR(10)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
@@ -884,41 +884,47 @@ $$ LANGUAGE plpgsql;
 -- Create Function: gold.func_environment_hazard_waste_generated
 -- =============================================================================
 -- DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_generated;
-DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_generated;
+DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_generated_by_year;
 
 -- Now create our new functions
-CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_generated(
+CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_generated_by_year(
     p_company_id   VARCHAR(10)[] DEFAULT NULL,
-    p_year         INT[] DEFAULT NULL,
+    p_year         SMALLINT[] DEFAULT NULL,
     p_quarter      VARCHAR(2)[] DEFAULT NULL,
     p_waste_type   VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id     VARCHAR(10),
+	year           SMALLINT,
     waste_type     VARCHAR(15),
     unit           VARCHAR(15),
-    total_generate NUMERIC(10,2),
-    year           INT
+    total_generate NUMERIC(10,2)
 )
 AS $$
 BEGIN
     RETURN QUERY
     SELECT
-        g.company_name,
+        g.company_id,
+		g.year,
         g.waste_type,
         g.unit,
-        CAST(SUM(g.generate) AS NUMERIC(10,2)) AS total_generate,
-        g.year
+        CAST(SUM(g.generate) AS NUMERIC(10,2)) AS total_generate
     FROM gold.vw_environment_hazard_waste_generated g
-    WHERE (p_company_id IS NULL OR g.company_name = ANY(p_company_id))
+    WHERE (p_company_id IS NULL OR g.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
-    GROUP BY g.company_name, g.waste_type, g.unit, g.year
-    ORDER BY g.company_name, g.year;
+    GROUP BY g.company_id, g.year,g.waste_type, g.unit
+    ORDER BY g.company_id, g.year;
 END;
 $$ LANGUAGE plpgsql;
 
+SELECT * FROM gold.func_environment_hazard_waste_generated_by_year(
+    NULL,
+    NULL,
+    NULL,
+    NULL
+);
 
 -- =============================================================================
 -- Create Function: gold.func_environment_hazard_waste_disposed
@@ -930,7 +936,7 @@ DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_disposed;
 -- FUNCTION disposed
 CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_disposed(
     p_company_id   VARCHAR(10)[] DEFAULT NULL,
-    p_year         INT[] DEFAULT NULL,
+    p_year         SMALLINT[] DEFAULT NULL,
     p_quarter      VARCHAR(2)[] DEFAULT NULL,
     p_waste_type   VARCHAR(15)[] DEFAULT NULL
 )
@@ -939,7 +945,7 @@ RETURNS TABLE (
     waste_type      VARCHAR(15),
     unit            VARCHAR(15),
     total_disposed  NUMERIC(10,2),
-    year            INT
+    year            SMALLINT
 )
 AS $$
 BEGIN
@@ -1055,19 +1061,19 @@ SELECT * FROM gold.func_environment_diesel_consumption_by_perc_lvl(
 SELECT * FROM gold.func_environment_electric_consumption_by_year(
     NULL, 
     NULL, 
-    ARRAY[2024]
+    ARRAY[2024]::SMALLINT[]
 );
 
 SELECT * FROM gold.func_environment_electric_consumption_by_quarter(
     NULL, 
     ARRAY['Q1'], 
-    NULL
+    NULL::SMALLINT[]
 );
 
 SELECT * FROM gold.func_environment_electric_consumption_by_perc_lvl(
     NULL, 
     NULL, 
-    NULL
+    NULL::SMALLINT[]
 );
 
 -- SAMPLE QUERIES FOR NON HAZARD WASTE GENERATED
@@ -1077,7 +1083,7 @@ SELECT * FROM gold.func_environment_non_hazard_waste_by_year(
     NULL, 
     NULL, 
     NULL,
-	ARRAY[2024]
+	ARRAY[2024]::SMALLINT[]
 );
 
 SELECT * FROM gold.func_environment_non_hazard_waste_by_quarter(
@@ -1086,7 +1092,7 @@ SELECT * FROM gold.func_environment_non_hazard_waste_by_quarter(
     NULL, 
     NULL, 
     ARRAY['Q1','Q2'],
-	NULL
+	NULL::SMALLINT[]
 );
 
 SELECT * FROM gold.func_environment_non_hazard_waste_by_month(
@@ -1095,7 +1101,7 @@ SELECT * FROM gold.func_environment_non_hazard_waste_by_month(
     NULL, 
     ARRAY['January','March'], 
     NULL,
-	NULL
+	NULL::SMALLINT[]
 );
 
 SELECT * FROM gold.func_environment_non_hazard_waste_by_waste_source(
@@ -1104,7 +1110,7 @@ SELECT * FROM gold.func_environment_non_hazard_waste_by_waste_source(
     NULL, 
     NULL, 
     NULL,
-	NULL
+	NULL::SMALLINT[]
 );
 
 SELECT * FROM gold.func_environment_non_hazard_waste_by_metrics(
