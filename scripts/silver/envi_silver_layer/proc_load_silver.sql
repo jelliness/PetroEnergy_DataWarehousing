@@ -102,7 +102,7 @@ BEGIN
             END AS volume,
             TRIM(unit_of_measurement),
             year,
-            month,
+            TRIM(month),
             CASE 
 		        WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
 		        WHEN LOWER(TRIM(month)) IN ('april', 'may', 'june') THEN 'Q2'
@@ -157,7 +157,7 @@ BEGIN
 		        WHEN consumption < 0 THEN 0 -- Handle negative values
 		        ELSE consumption
 		    END AS consumption,
-		    TO_CHAR(date, 'Month') AS month,
+		    TRIM(TO_CHAR(date, 'Month')) AS month,
 		    EXTRACT(YEAR FROM date)::INT AS year,
 		    CASE
 		        WHEN EXTRACT(MONTH FROM date) BETWEEN 1 AND 3 THEN 'Q1'
@@ -252,7 +252,7 @@ BEGIN
                 WHEN waste < 0 THEN 0  -- Handle negative values
                 ELSE waste
             END AS waste,
-            month,
+            TRIM(month),
             year,
             CASE 
 		        WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
