@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS bronze.csv_emission_factors;
 CREATE TABLE bronze.csv_emission_factors (
     ef_id VARCHAR(6) PRIMARY KEY,                   -- Unique identifier for emission factors
     generation_source TEXT,                         -- Type of energy source (e.g., coal, hydro, solar)
-    kg_co2_per_kwh TEXT,                            -- Emissions factor in kg CO2 per kWh
+    kg_co2_per_kwh NUMERIC,                            -- Emissions factor in kg CO2 per kWh
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp
 );

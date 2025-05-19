@@ -24,7 +24,7 @@ BEGIN
     CREATE TEMP TABLE csv_emission_factors (
 		ef_id TEXT,
         generation_source TEXT,
-        kg_co2_per_kwh TEXT
+        kg_co2_per_kwh NUMERIC
     );
 
     EXECUTE format(
