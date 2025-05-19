@@ -881,6 +881,52 @@ $$ LANGUAGE plpgsql;
 
 
 -- =============================================================================
+-- Create Function: gold.func_environment_hazard_waste_generated
+-- =============================================================================
+-- DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_generated;
+DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_generated_by_year;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_generated_by_year(
+    p_company_id   VARCHAR(10)[] DEFAULT NULL,
+    p_year         SMALLINT[] DEFAULT NULL,
+    p_quarter      VARCHAR(2)[] DEFAULT NULL,
+    p_waste_type   VARCHAR(15)[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id     VARCHAR(10),
+	year           SMALLINT,
+    waste_type     VARCHAR(15),
+    unit           VARCHAR(15),
+    total_generate NUMERIC(10,2)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        g.company_id,
+		g.year,
+        g.waste_type,
+        g.unit,
+        CAST(SUM(g.generate) AS NUMERIC(10,2)) AS total_generate
+    FROM gold.vw_environment_hazard_waste_generated g
+    WHERE (p_company_id IS NULL OR g.company_id = ANY(p_company_id))
+      AND (p_year IS NULL OR g.year = ANY(p_year))
+      AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
+      AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
+    GROUP BY g.company_id, g.year,g.waste_type, g.unit
+    ORDER BY g.company_id, g.year;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT * FROM gold.func_environment_hazard_waste_generated_by_year(
+    NULL,
+    NULL,
+    NULL,
+    NULL
+);
+
+-- =============================================================================
 -- Create Functions for gold.func_environment_hazard_waste_generated
 -- =============================================================================
 -- DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_generated_by_year;
@@ -969,8 +1015,6 @@ CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_generated_by_waste
 )
 RETURNS TABLE (
     company_id     VARCHAR(10),
-    year           SMALLINT,
-	quarter		   VARCHAR(2),
     waste_type     VARCHAR(15),
     unit           VARCHAR(15),
     total_generate NUMERIC(10,2)
@@ -980,8 +1024,6 @@ BEGIN
     RETURN QUERY
     SELECT
         g.company_id,
-        g.year,
-		g.quarter,
         g.waste_type,
         g.unit,
         CAST(SUM(g.generate) AS NUMERIC(10,2)) AS total_generate
@@ -990,7 +1032,7 @@ BEGIN
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
-    GROUP BY g.company_id, g.quarter, g.year,g.waste_type, g.unit
+    GROUP BY g.company_id,g.waste_type, g.unit
     ORDER BY g.company_id;
 END;
 $$ LANGUAGE plpgsql;
@@ -1042,25 +1084,25 @@ CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_disposed_by_year(
 )
 RETURNS TABLE (
     company_id      VARCHAR(10),
+	year            SMALLINT,
     waste_type      VARCHAR(15),
     unit            VARCHAR(15),
-    total_disposed  NUMERIC(10,2),
-    year            SMALLINT
+    total_disposed  NUMERIC(10,2)
 )
 AS $$
 BEGIN
     RETURN QUERY
     SELECT
         d.company_id,
+		d.year,
         d.waste_type,
         d.unit,
-        CAST(SUM(d.disposed) AS NUMERIC(10,2)) AS total_disposed,
-        d.year
+        CAST(SUM(d.disposed) AS NUMERIC(10,2)) AS total_disposed
     FROM gold.vw_environment_hazard_waste_disposed d
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
-    GROUP BY d.company_id, d.waste_type, d.unit, d.year
+    GROUP BY d.company_id, d.year, d.waste_type, d.unit
     ORDER BY d.company_id, d.year;
 END;
 $$ LANGUAGE plpgsql;
@@ -1076,8 +1118,7 @@ RETURNS TABLE (
     company_id      VARCHAR(10),
     waste_type      VARCHAR(15),
     unit            VARCHAR(15),
-    total_disposed  NUMERIC(10,2),
-    year            SMALLINT
+    total_disposed  NUMERIC(10,2)
 )
 AS $$
 BEGIN
@@ -1086,14 +1127,13 @@ BEGIN
         d.company_id,
         d.waste_type,
         d.unit,
-        CAST(SUM(d.disposed) AS NUMERIC(10,2)) AS total_disposed,
-        d.year
+        CAST(SUM(d.disposed) AS NUMERIC(10,2)) AS total_disposed
     FROM gold.vw_environment_hazard_waste_disposed d
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
-    GROUP BY d.company_id, d.waste_type, d.unit, d.year
-    ORDER BY d.company_id, d.year;
+    GROUP BY d.company_id, d.waste_type, d.unit
+    ORDER BY d.company_id;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1120,10 +1160,11 @@ BEGIN
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
-    GROUP BY d.company_id, d.waste_type, d.unit, d.year
-    ORDER BY d.company_id, d.year;
+    GROUP BY d.company_id, d.unit
+    ORDER BY d.company_id;
 END;
 $$ LANGUAGE plpgsql;
+
 
 -- =============================================================================
 -- Sample Query: Execute this queries to test the functions
@@ -1135,7 +1176,7 @@ SELECT * FROM gold.func_environment_water_withdrawal_by_year(
     NULL::VARCHAR(30)[], 
     NULL::VARCHAR(10)[], 
     NULL::VARCHAR(2)[], 
-    ARRAY['2021', '2022']::SMALLINT[]
+    NULL::SMALLINT[]
 );
 SELECT * FROM gold.func_environment_water_withdrawal_by_quarter(
     NULL::VARCHAR(10)[], 
@@ -1297,26 +1338,25 @@ SELECT * FROM gold.func_environment_hazard_waste_generated_by_year(
     NULL,
     NULL
 );
-
 SELECT * FROM gold.func_environment_hazard_waste_generated_by_quarter(
     NULL,
     NULL,
     NULL,
     NULL
 );
-
 SELECT * FROM gold.func_environment_hazard_waste_generated_by_waste_type(
     NULL,
     NULL,
     NULL,
-	NULL
+    NULL
 );
-
 SELECT * FROM gold.func_environment_hazard_waste_generated_by_perc_lvl(
+    NULL,
     NULL,
     NULL,
     NULL
 );
+
 -- SAMPLE QUERIES FOR WASTE DISPOSED
 SELECT * FROM gold.func_environment_hazard_waste_disposed_by_year(
     NULL,
