@@ -8,13 +8,13 @@ Function Script: Create Gold Functions for Environment Data
 -- =============================================================================
 
 -- =============================================================================
--- Create Function: gold.func_environment_water_withdrawal
+-- Create Functions for gold.func_environment_water_withdrawal
 -- =============================================================================
--- DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal;
-DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal;
+-- DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_year;
+DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_year;
 
 -- Now create our new functions
-CREATE OR REPLACE FUNCTION gold.func_environment_water_withdrawal(
+CREATE OR REPLACE FUNCTION gold.func_environment_water_withdrawal_by_year(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_natural_sources VARCHAR(30)[] DEFAULT NULL,
     p_month VARCHAR(10)[] DEFAULT NULL,
@@ -56,14 +56,194 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_quarter;
+DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_quarter;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_water_withdrawal_by_quarter(
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_natural_sources VARCHAR(30)[] DEFAULT NULL,
+    p_month VARCHAR(10)[] DEFAULT NULL,
+    p_quarter VARCHAR(2)[] DEFAULT NULL,
+    p_year SMALLINT[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id VARCHAR(10),
+	year SMALLINT,
+    quarter VARCHAR(2),
+	natural_sources VARCHAR(30),
+    total_volume NUMERIC(10,2),  -- updated data type for 2-decimal precision
+    unit_of_measurement VARCHAR(15)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        eww.company_id,
+		eww.year,
+        eww.quarter,
+		eww.natural_sources,
+        CAST(SUM(eww.water_volume) AS NUMERIC(10,2)) AS total_volume,
+        eww.unit_of_measurement
+    FROM gold.vw_environment_water_withdrawal eww
+    WHERE (p_company_id IS NULL OR eww.company_id = ANY(p_company_id))
+      AND (p_natural_sources IS NULL OR eww.natural_sources = ANY(p_natural_sources))
+      AND (p_year IS NULL OR eww.year = ANY(p_year))
+      AND (p_quarter IS NULL OR eww.quarter = ANY(p_quarter))
+      AND (p_month IS NULL OR eww.month = ANY(p_month))
+    GROUP BY 
+        eww.company_id, 
+        eww.year,
+        eww.quarter,
+		eww.natural_sources,
+        eww.unit_of_measurement
+    ORDER BY 
+        eww.company_id, 
+        eww.year, 
+       	eww.quarter, 
+		   eww.natural_sources,
+        eww.unit_of_measurement;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_month;
+DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_month;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_water_withdrawal_by_month(
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_natural_sources VARCHAR(30)[] DEFAULT NULL,
+    p_month VARCHAR(10)[] DEFAULT NULL,
+    p_quarter VARCHAR(2)[] DEFAULT NULL,
+    p_year SMALLINT[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id VARCHAR(10),
+    year SMALLINT,
+    month VARCHAR(10),
+	natural_sources VARCHAR(30),
+    total_volume NUMERIC(10,2),  -- updated data type for 2-decimal precision
+    unit_of_measurement VARCHAR(15)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        eww.company_id,
+        eww.year,
+        eww.month,
+		eww.natural_sources,
+        CAST(SUM(eww.water_volume) AS NUMERIC(10,2)) AS total_volume,
+        eww.unit_of_measurement
+    FROM gold.vw_environment_water_withdrawal eww
+    WHERE (p_company_id IS NULL OR eww.company_id = ANY(p_company_id))
+      AND (p_natural_sources IS NULL OR eww.natural_sources = ANY(p_natural_sources))
+      AND (p_year IS NULL OR eww.year = ANY(p_year))
+      AND (p_quarter IS NULL OR eww.quarter = ANY(p_quarter))
+      AND (p_month IS NULL OR eww.month = ANY(p_month))
+    GROUP BY 
+        eww.company_id, 
+        eww.year,
+        eww.month,
+		eww.natural_sources,
+        eww.unit_of_measurement
+    ORDER BY 
+        eww.company_id, 
+        eww.year, 
+        eww.month, 
+		eww.natural_sources,
+        eww.unit_of_measurement;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_natural_sources;
+DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_natural_sources;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_water_withdrawal_by_natural_sources(
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_natural_sources VARCHAR(30)[] DEFAULT NULL,
+    p_month VARCHAR(10)[] DEFAULT NULL,
+    p_quarter VARCHAR(2)[] DEFAULT NULL,
+    p_year SMALLINT[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id VARCHAR(10),
+    natural_sources VARCHAR(30),
+    total_volume NUMERIC(10,2),  -- updated data type for 2-decimal precision
+    unit_of_measurement VARCHAR(15)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        eww.company_id,
+        eww.natural_sources,
+        CAST(SUM(eww.water_volume) AS NUMERIC(10,2)) AS total_volume,
+        eww.unit_of_measurement
+    FROM gold.vw_environment_water_withdrawal eww
+    WHERE (p_company_id IS NULL OR eww.company_id = ANY(p_company_id))
+      AND (p_natural_sources IS NULL OR eww.natural_sources = ANY(p_natural_sources))
+      AND (p_year IS NULL OR eww.year = ANY(p_year))
+      AND (p_quarter IS NULL OR eww.quarter = ANY(p_quarter))
+      AND (p_month IS NULL OR eww.month = ANY(p_month))
+    GROUP BY 
+        eww.company_id, 
+        eww.natural_sources,
+        eww.unit_of_measurement
+    ORDER BY 
+        eww.company_id, 
+        eww.natural_sources, 
+        eww.unit_of_measurement;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_perc_lvl;
+DROP FUNCTION IF EXISTS gold.func_environment_water_withdrawal_by_perc_lvl;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_water_withdrawal_by_perc_lvl(
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_natural_sources VARCHAR(30)[] DEFAULT NULL,
+    p_month VARCHAR(10)[] DEFAULT NULL,
+    p_quarter VARCHAR(2)[] DEFAULT NULL,
+    p_year SMALLINT[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id VARCHAR(10),
+    total_volume NUMERIC(10,2),  -- updated data type for 2-decimal precision
+    unit_of_measurement VARCHAR(15)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        eww.company_id,
+        CAST(SUM(eww.water_volume) AS NUMERIC(10,2)) AS total_volume,
+        eww.unit_of_measurement
+    FROM gold.vw_environment_water_withdrawal eww
+    WHERE (p_company_id IS NULL OR eww.company_id = ANY(p_company_id))
+      AND (p_natural_sources IS NULL OR eww.natural_sources = ANY(p_natural_sources))
+      AND (p_year IS NULL OR eww.year = ANY(p_year))
+      AND (p_quarter IS NULL OR eww.quarter = ANY(p_quarter))
+      AND (p_month IS NULL OR eww.month = ANY(p_month))
+    GROUP BY 
+        eww.company_id, 
+        eww.unit_of_measurement
+    ORDER BY 
+        eww.company_id, 
+        eww.unit_of_measurement;
+END;
+$$ LANGUAGE plpgsql;
+
 -- =============================================================================
 -- Create Function: gold.func_environment_diesel_consumption
 -- =============================================================================
--- DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption;
-DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption;
+-- DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_year;
+DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_year;
 
 -- Now create our new functions
-CREATE OR REPLACE FUNCTION gold.func_environment_diesel_consumption(
+CREATE OR REPLACE FUNCTION gold.func_environment_diesel_consumption_by_year(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
 	p_company_property_name VARCHAR(30)[] DEFAULT NULL,
 	p_company_property_type VARCHAR(15)[] DEFAULT NULL,
@@ -107,6 +287,246 @@ BEGIN
 		edc.year,
 		edc.company_property_name, 
 		edc.company_property_type, 
+		edc.unit_of_measurement;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_quarter;
+DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_quarter;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_diesel_consumption_by_quarter(
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+	p_company_property_name VARCHAR(30)[] DEFAULT NULL,
+	p_company_property_type VARCHAR(15)[] DEFAULT NULL,
+    p_month VARCHAR(10)[] DEFAULT NULL,
+    p_year SMALLINT[] DEFAULT NULL,
+    p_quarter VARCHAR(2)[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id VARCHAR(10),
+	year SMALLINT,
+	quarter VARCHAR(2),
+    company_property_name VARCHAR(30),
+	company_property_type VARCHAR(15),
+    total_consumption NUMERIC(10,2),
+	unit_of_measurement VARCHAR(15)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        edc.company_id,
+		edc.year::SMALLINT,
+		edc.quarter,
+        edc.company_property_name,
+		edc.company_property_type,
+        CAST(SUM(edc.consumption) AS NUMERIC(10,2)) AS total_consumption,
+		edc.unit_of_measurement
+    FROM gold.vw_environment_diesel_consumption edc
+    WHERE (p_company_id IS NULL OR edc.company_id = ANY(p_company_id))
+      AND (p_company_property_name IS NULL OR edc.company_property_name = ANY(p_company_property_name))
+	  AND (p_company_property_type IS NULL OR edc.company_property_type = ANY(p_company_property_type))
+      AND (p_year IS NULL OR edc.year = ANY(p_year))
+      AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
+      AND (p_month IS NULL OR edc.month = ANY(p_month))
+    GROUP BY 
+        edc.company_id, 
+		edc.year,
+		edc.quarter,
+        edc.company_property_name,
+		edc.company_property_type,
+		edc.unit_of_measurement
+    ORDER BY 
+		edc.company_id, 
+		edc.year,
+		edc.quarter,
+		edc.company_property_name, 
+		edc.company_property_type, 
+		edc.unit_of_measurement;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_month;
+DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_month;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_diesel_consumption_by_month(
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+	p_company_property_name VARCHAR(30)[] DEFAULT NULL,
+	p_company_property_type VARCHAR(15)[] DEFAULT NULL,
+    p_month VARCHAR(10)[] DEFAULT NULL,
+    p_year SMALLINT[] DEFAULT NULL,
+    p_quarter VARCHAR(2)[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id VARCHAR(10),
+	year SMALLINT,
+	month VARCHAR(10),
+    company_property_name VARCHAR(30),
+	company_property_type VARCHAR(15),
+    total_consumption NUMERIC(10,2),
+	unit_of_measurement VARCHAR(15)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        edc.company_id,
+		edc.year::SMALLINT,
+		edc.month,
+        edc.company_property_name,
+		edc.company_property_type,
+        CAST(SUM(edc.consumption) AS NUMERIC(10,2)) AS total_consumption,
+		edc.unit_of_measurement
+    FROM gold.vw_environment_diesel_consumption edc
+    WHERE (p_company_id IS NULL OR edc.company_id = ANY(p_company_id))
+      AND (p_company_property_name IS NULL OR edc.company_property_name = ANY(p_company_property_name))
+	  AND (p_company_property_type IS NULL OR edc.company_property_type = ANY(p_company_property_type))
+      AND (p_year IS NULL OR edc.year = ANY(p_year))
+      AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
+      AND (p_month IS NULL OR edc.month = ANY(p_month))
+    GROUP BY 
+        edc.company_id, 
+		edc.year,
+		edc.month,
+        edc.company_property_name,
+		edc.company_property_type,
+		edc.unit_of_measurement
+    ORDER BY 
+		edc.company_id, 
+		edc.year,
+		edc.month,
+		edc.company_property_name, 
+		edc.company_property_type, 
+		edc.unit_of_measurement;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_cp_name;
+DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_cp_name;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_diesel_consumption_by_cp_name(
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+	p_company_property_name VARCHAR(30)[] DEFAULT NULL,
+	p_company_property_type VARCHAR(15)[] DEFAULT NULL,
+    p_month VARCHAR(10)[] DEFAULT NULL,
+    p_year SMALLINT[] DEFAULT NULL,
+    p_quarter VARCHAR(2)[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id VARCHAR(10),
+    company_property_name VARCHAR(30),
+    total_consumption NUMERIC(10,2),
+	unit_of_measurement VARCHAR(15)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        edc.company_id,
+        edc.company_property_name,
+        CAST(SUM(edc.consumption) AS NUMERIC(10,2)) AS total_consumption,
+		edc.unit_of_measurement
+    FROM gold.vw_environment_diesel_consumption edc
+    WHERE (p_company_id IS NULL OR edc.company_id = ANY(p_company_id))
+      AND (p_company_property_name IS NULL OR edc.company_property_name = ANY(p_company_property_name))
+	  AND (p_company_property_type IS NULL OR edc.company_property_type = ANY(p_company_property_type))
+      AND (p_year IS NULL OR edc.year = ANY(p_year))
+      AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
+      AND (p_month IS NULL OR edc.month = ANY(p_month))
+    GROUP BY 
+        edc.company_id, 
+        edc.company_property_name,
+		edc.unit_of_measurement
+    ORDER BY 
+		edc.company_id, 
+		edc.company_property_name, 
+		edc.unit_of_measurement;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_cp_type;
+DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_cp_type;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_diesel_consumption_by_cp_type(
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+	p_company_property_name VARCHAR(30)[] DEFAULT NULL,
+	p_company_property_type VARCHAR(15)[] DEFAULT NULL,
+    p_month VARCHAR(10)[] DEFAULT NULL,
+    p_year SMALLINT[] DEFAULT NULL,
+    p_quarter VARCHAR(2)[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id VARCHAR(10),
+	company_property_type VARCHAR(15),
+    total_consumption NUMERIC(10,2),
+	unit_of_measurement VARCHAR(15)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        edc.company_id,
+		edc.company_property_type,
+        CAST(SUM(edc.consumption) AS NUMERIC(10,2)) AS total_consumption,
+		edc.unit_of_measurement
+    FROM gold.vw_environment_diesel_consumption edc
+    WHERE (p_company_id IS NULL OR edc.company_id = ANY(p_company_id))
+      AND (p_company_property_name IS NULL OR edc.company_property_name = ANY(p_company_property_name))
+	  AND (p_company_property_type IS NULL OR edc.company_property_type = ANY(p_company_property_type))
+      AND (p_year IS NULL OR edc.year = ANY(p_year))
+      AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
+      AND (p_month IS NULL OR edc.month = ANY(p_month))
+    GROUP BY 
+        edc.company_id, 
+		edc.company_property_type,
+		edc.unit_of_measurement
+    ORDER BY 
+		edc.company_id, 
+		edc.company_property_type, 
+		edc.unit_of_measurement;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_perc_lvl;
+DROP FUNCTION IF EXISTS gold.func_environment_diesel_consumption_by_perc_lvl;
+
+-- Now create our new functions
+CREATE OR REPLACE FUNCTION gold.func_environment_diesel_consumption_by_perc_lvl(
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+	p_company_property_name VARCHAR(30)[] DEFAULT NULL,
+	p_company_property_type VARCHAR(15)[] DEFAULT NULL,
+    p_month VARCHAR(10)[] DEFAULT NULL,
+    p_year SMALLINT[] DEFAULT NULL,
+    p_quarter VARCHAR(2)[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_id VARCHAR(10),
+    total_consumption NUMERIC(10,2),
+	unit_of_measurement VARCHAR(15)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        edc.company_id,
+        CAST(SUM(edc.consumption) AS NUMERIC(10,2)) AS total_consumption,
+		edc.unit_of_measurement
+    FROM gold.vw_environment_diesel_consumption edc
+    WHERE (p_company_id IS NULL OR edc.company_id = ANY(p_company_id))
+      AND (p_company_property_name IS NULL OR edc.company_property_name = ANY(p_company_property_name))
+	  AND (p_company_property_type IS NULL OR edc.company_property_type = ANY(p_company_property_type))
+      AND (p_year IS NULL OR edc.year = ANY(p_year))
+      AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
+      AND (p_month IS NULL OR edc.month = ANY(p_month))
+    GROUP BY 
+        edc.company_id, 
+		edc.unit_of_measurement
+    ORDER BY 
+		edc.company_id, 
 		edc.unit_of_measurement;
 END;
 $$ LANGUAGE plpgsql;
@@ -276,16 +696,84 @@ $$ LANGUAGE plpgsql;
 -- =============================================================================
 
 -- SAMPLE QUERIES FOR WATER WITHDRAWAL
-SELECT * FROM gold.func_environment_water_withdrawal(
+SELECT * FROM gold.func_environment_water_withdrawal_by_year(
     NULL::VARCHAR(10)[], 
     NULL::VARCHAR(30)[], 
     NULL::VARCHAR(10)[], 
     NULL::VARCHAR(2)[], 
     ARRAY['2021', '2022']::SMALLINT[]
 );
+SELECT * FROM gold.func_environment_water_withdrawal_by_quarter(
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(30)[], 
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(2)[], 
+    ARRAY['2021', '2022']::SMALLINT[]
+);
+SELECT * FROM gold.func_environment_water_withdrawal_by_month(
+    ARRAY['PSC']::VARCHAR(10)[], 
+    NULL::VARCHAR(30)[], 
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(2)[], 
+    NULL::SMALLINT[]
+);
+SELECT * FROM gold.func_environment_water_withdrawal_by_natural_sources(
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(30)[], 
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(2)[], 
+    ARRAY['2025']::SMALLINT[]
+);
+SELECT * FROM gold.func_environment_water_withdrawal_by_perc_lvl(
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(30)[], 
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(2)[], 
+    NULL::SMALLINT[]
+);
 
 -- SAMPLE QUERIES FOR DIESEL CONSUMPTION
-SELECT * FROM gold.func_environment_diesel_consumption(
+SELECT * FROM gold.func_environment_diesel_consumption_by_year(
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(30)[], 
+    NULL::VARCHAR(15)[], 
+    NULL::VARCHAR(10)[], 
+    ARRAY[2024]::SMALLINT[], 
+    NULL::VARCHAR(2)[]
+);
+SELECT * FROM gold.func_environment_diesel_consumption_by_quarter(
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(30)[], 
+    NULL::VARCHAR(15)[], 
+    NULL::VARCHAR(10)[], 
+    ARRAY[2024]::SMALLINT[], 
+    NULL::VARCHAR(2)[]
+);
+SELECT * FROM gold.func_environment_diesel_consumption_by_month(
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(30)[], 
+    NULL::VARCHAR(15)[], 
+    NULL::VARCHAR(10)[], 
+    ARRAY[2024]::SMALLINT[], 
+    NULL::VARCHAR(2)[]
+);
+SELECT * FROM gold.func_environment_diesel_consumption_by_cp_name(
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(30)[], 
+    NULL::VARCHAR(15)[], 
+    NULL::VARCHAR(10)[], 
+    ARRAY[2024]::SMALLINT[], 
+    NULL::VARCHAR(2)[]
+);
+SELECT * FROM gold.func_environment_diesel_consumption_by_cp_type(
+    NULL::VARCHAR(10)[], 
+    NULL::VARCHAR(30)[], 
+    NULL::VARCHAR(15)[], 
+    NULL::VARCHAR(10)[], 
+    ARRAY[2024]::SMALLINT[], 
+    NULL::VARCHAR(2)[]
+);
+SELECT * FROM gold.func_environment_diesel_consumption_by_perc_lvl(
     NULL::VARCHAR(10)[], 
     NULL::VARCHAR(30)[], 
     NULL::VARCHAR(15)[], 
