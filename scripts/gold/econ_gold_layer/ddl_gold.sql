@@ -8,6 +8,8 @@ DDL Script: Create Gold Views for Economic Data
 DROP VIEW IF EXISTS gold.vw_economic_value_summary;
 DROP VIEW IF EXISTS gold.vw_economic_value_distributed;
 DROP VIEW IF EXISTS gold.vw_economic_value_generated;
+DROP VIEW IF EXISTS gold.vw_economic_expenditure_by_company;
+DROP VIEW IF EXISTS gold.vw_economic_value_distributed_by_company;
 
 -- Now create our new views
 -- =============================================================================
@@ -77,3 +79,92 @@ SELECT
 FROM gold.vw_economic_value_generated g
 LEFT JOIN gold.vw_economic_value_distributed d
     ON g.year = d.year;
+
+-- =============================================================================
+-- Create View: gold.vw_economic_expenditure_by_company
+-- =============================================================================
+CREATE VIEW gold.vw_economic_expenditure_by_company AS
+SELECT
+    year,
+    company_id,
+    type,
+    SUM(government_payments) as government_payments,
+    SUM(supplier_spending_local) as local_supplier_spending,
+    SUM(supplier_spending_abroad) as foreign_supplier_spending,
+    SUM(employee_wages_benefits) as employee_wages_benefits,
+    SUM(community_investments) as community_investments,
+    SUM(depreciation) as depreciation,
+    SUM(depletion) as depletion,
+    SUM(others) as other_expenditures,
+    (SUM(government_payments) + 
+     SUM(supplier_spending_local) + 
+     SUM(supplier_spending_abroad) + 
+     SUM(employee_wages_benefits) + 
+     SUM(community_investments)) as total_distributed_value_by_company
+FROM silver.econ_expenditures
+GROUP BY year, company_id, type
+ORDER BY year, company_id, type;
+
+-- =============================================================================
+-- Create View: gold.vw_economic_value_distributed_by_company
+-- =============================================================================
+CREATE VIEW gold.vw_economic_value_distributed_by_company AS
+WITH company_totals AS (
+    -- Calculate totals per company per year
+    SELECT
+        year,
+        company_id,
+        SUM(government_payments) as total_government_payments,
+        SUM(supplier_spending_local) as total_local_supplier_spending,
+        SUM(supplier_spending_abroad) as total_foreign_supplier_spending,
+        SUM(employee_wages_benefits) as total_employee_wages_benefits,
+        SUM(community_investments) as total_community_investments,
+        SUM(depreciation) as total_depreciation,
+        SUM(depletion) as total_depletion,
+        SUM(others) as total_other_expenditures,
+        (SUM(government_payments) + 
+         SUM(supplier_spending_local) + 
+         SUM(supplier_spending_abroad) + 
+         SUM(employee_wages_benefits) + 
+         SUM(community_investments)) as total_economic_value_distributed_by_company
+    FROM silver.econ_expenditures
+    GROUP BY year, company_id
+),
+year_totals AS (
+    -- Calculate overall totals per year across all companies
+    SELECT
+        year,
+        SUM(government_payments + 
+            supplier_spending_local + 
+            supplier_spending_abroad + 
+            employee_wages_benefits + 
+            community_investments) as year_total_distribution
+    FROM silver.econ_expenditures
+    GROUP BY year
+)
+SELECT
+    ct.year,
+    ct.company_id,
+    ct.total_government_payments,
+    ct.total_local_supplier_spending,
+    ct.total_foreign_supplier_spending,
+    ct.total_employee_wages_benefits,
+    ct.total_community_investments,
+    ct.total_depreciation,
+    ct.total_depletion,
+    ct.total_other_expenditures,
+    ct.total_economic_value_distributed_by_company,
+    -- Calculate percentage contribution to total economic distribution
+    CASE 
+        WHEN yt.year_total_distribution > 0 
+        THEN 
+            ROUND(
+                (ct.total_economic_value_distributed_by_company * 100.0) / 
+                yt.year_total_distribution,
+                2
+            )
+        ELSE 0 
+    END as percentage_of_total_distribution
+FROM company_totals ct
+JOIN year_totals yt ON ct.year = yt.year
+ORDER BY ct.year, ct.company_id;
