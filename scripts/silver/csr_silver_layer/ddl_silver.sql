@@ -9,48 +9,48 @@
 
 DROP TABLE IF EXISTS silver.csr_company;
 CREATE TABLE silver.csr_company (
-    company_id TEXT NOT NULL,
+    company_id VARCHAR(20) NOT NULL PRIMARY KEY,
     company_name TEXT,
-    resources TEXT,
+    resources VARCHAR(20),
     date_created TIMESTAMP DEFAULT NOW(),
     date_updated TIMESTAMP DEFAULT NOW()
 );
 
 DROP TABLE IF EXISTS silver.csr_programs;
 CREATE TABLE silver.csr_programs (
-    program_id TEXT NOT NULL,
-    program_name TEXT,
+    program_id VARCHAR(5) NOT NULL PRIMARY KEY,
+    program_name VARCHAR(20),
     date_created TIMESTAMP DEFAULT NOW(),
     date_updated TIMESTAMP DEFAULT NOW()
 );
 
 DROP TABLE IF EXISTS silver.csr_projects;
 CREATE TABLE silver.csr_projects (
-    project_id TEXT NOT NULL,
-    program_id TEXT,
-    project_name TEXT,
-    project_metrics TEXT,
+    project_id VARCHAR(20) NOT NULL PRIMARY KEY,
+    program_id VARCHAR(20) NOT NULL,
+    project_name VARCHAR(50) NOT NULL,
+    project_metrics TEXT NOT NULL DEFAULT 'None',
     date_created TIMESTAMP DEFAULT NOW(),
-    date_updated TIMESTAMP DEFAULT NOW()
-);
-
-DROP TABLE IF EXISTS silver.csr_per_company;
-CREATE TABLE silver.csr_per_company (
-    inv_id TEXT NOT NULL,
-    company_id TEXT,
-    program_id TEXT,
-    program_investment TEXT,
-    date_created TIMESTAMP DEFAULT NOW(),
-    date_updated TIMESTAMP DEFAULT NOW()
+    date_updated TIMESTAMP DEFAULT NOW(),
+	CONSTRAINT fk_program_name 
+		FOREIGN KEY (program_id)
+		REFERENCES silver.csr_programs (program_id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS silver.csr_activity;
 CREATE TABLE silver.csr_activity (
-    csr_id TEXT NOT NULL,
-    company_id TEXT NOT NULL,
-    project_id TEXT NOT NULL,
-    ac_year TEXT NOT NULL,
-    csr_report TEXT,
+    csr_id VARCHAR(10) NOT NULL NOT NULL PRIMARY KEY,
+    company_id VARCHAR(20) NOT NULL,
+    project_id VARCHAR(20) NOT NULL,
+    project_year SMALLINT,
+    csr_report NUMERIC,
+    project_expenses NUMERIC,
     date_created TIMESTAMP DEFAULT NOW(),
-    date_updated TIMESTAMP DEFAULT NOW()
+    date_updated TIMESTAMP DEFAULT NOW(),
+	CONSTRAINT fk_company_name 
+		FOREIGN KEY (company_id)
+		REFERENCES silver.csr_company (company_id) ON DELETE CASCADE,
+	CONSTRAINT fk_company_project 
+		FOREIGN KEY (project_id) 
+		REFERENCES silver.csr_projects (project_id) ON DELETE SET NULL
 );
