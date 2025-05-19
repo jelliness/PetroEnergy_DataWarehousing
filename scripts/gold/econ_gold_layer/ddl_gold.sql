@@ -86,7 +86,9 @@ LEFT JOIN gold.vw_economic_value_distributed d
 CREATE VIEW gold.vw_economic_expenditure_by_company AS
 SELECT
     ex.year,
+    ex.company_id,
     cm.company_name,
+    ex.type_id,
     et.type_description,
     SUM(ex.government_payments) as government_payments,
     SUM(ex.supplier_spending_local) as local_supplier_spending,
@@ -104,7 +106,7 @@ SELECT
 FROM silver.econ_expenditures ex
 JOIN ref.company_main cm ON ex.company_id = cm.company_id
 JOIN ref.expenditure_type et ON ex.type_id = et.type_id
-GROUP BY ex.year, cm.company_name, et.type_description
+GROUP BY ex.year, ex.company_id, cm.company_name, ex.type_id, et.type_description
 ORDER BY ex.year, cm.company_name, et.type_description;
 
 -- =============================================================================
@@ -115,6 +117,7 @@ WITH company_totals AS (
     -- Calculate totals per company per year
     SELECT
         ex.year,
+        ex.company_id,
         cm.company_name,
         SUM(ex.government_payments) as total_government_payments,
         SUM(ex.supplier_spending_local) as total_local_supplier_spending,
@@ -131,7 +134,7 @@ WITH company_totals AS (
          SUM(ex.community_investments)) as total_economic_value_distributed_by_company
     FROM silver.econ_expenditures ex
     JOIN ref.company_main cm ON ex.company_id = cm.company_id
-    GROUP BY ex.year, cm.company_name
+    GROUP BY ex.year, ex.company_id, cm.company_name
 ),
 year_totals AS (
     -- Calculate overall totals per year across all companies
@@ -147,6 +150,7 @@ year_totals AS (
 )
 SELECT
     ct.year,
+    ct.company_id,
     ct.company_name,
     ct.total_government_payments,
     ct.total_local_supplier_spending,
