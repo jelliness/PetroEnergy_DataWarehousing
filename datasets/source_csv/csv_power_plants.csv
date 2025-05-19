@@ -1,11 +1,11 @@
-﻿power_plant_id,company_id (fk),site_name,site_address,city_town,province,country,zip
-TSPP1,PSC,Tarlac Solar Power Plant 1,,Tarlac,Tarlac,Philippines,2300
-TSPP2,PSC,Tarlac Solar Power Plant 2,,Tarlac,Tarlac,Philippines,2300
-DSPP,RGEC,Dagohoy Solar Power Plant,Brgy. San Vicente,Dagohoy,Bohol,Philippines,6322
-SJSPP,RGEC,San Jose Solar Power Plan,Brgy. Sto. Niño 3rd,San Jose City,Nueva Ecija,Philippines,3121
-LSPP,RGEC,Limbauan Solar Power Plant ,,San Pablo,Isabela,Philippines,3329
-BSPP,RGEC,Bugallon Solar Power Plant,,Bugallon,Pangasinan,Philippines,2416
-NWPP1,PWEI,NABAS WIND FARM - Phase 1,Brgy. Pawa,Nabas,Aklan,Philippines,5607
-NWPP2,PWEI,NABAS WIND FARM - Phase 2,Brgy. Pawa,Nabas,Aklan,Philippines,5607
-MGPP1,MGI,Maibarara-1,,Sto. Tomas,Batangas,Philippines,4234
-MGPP2,MGI,Maibarara-2,,Sto. Tomas,Batangas,Philippines,4234
+﻿power_plant_id,company_id (fk),site_name,site_address,city_town,province,country,zip,ef_id
+TSPP1,PSC,Tarlac Solar Power Plant 1,,Tarlac,Tarlac,Philippines,2300,EF-002
+TSPP2,PSC,Tarlac Solar Power Plant 2,,Tarlac,Tarlac,Philippines,2300,EF-002
+DSPP,RGEC,Dagohoy Solar Power Plant,Brgy. San Vicente,Dagohoy,Bohol,Philippines,6322,EF-002
+SJSPP,RGEC,San Jose Solar Power Plan,Brgy. Sto. Niño 3rd,San Jose City,Nueva Ecija,Philippines,3121,EF-002
+LSPP,RGEC,Limbauan Solar Power Plant ,,San Pablo,Isabela,Philippines,3329,EF-002
+BSPP,RGEC,Bugallon Solar Power Plant,,Bugallon,Pangasinan,Philippines,2416,EF-002
+NWPP1,PWEI,NABAS WIND FARM - Phase 1,Brgy. Pawa,Nabas,Aklan,Philippines,5607,EF-001
+NWPP2,PWEI,NABAS WIND FARM - Phase 2,Brgy. Pawa,Nabas,Aklan,Philippines,5607,EF-001
+MGPP1,MGI,Maibarara-1,,Sto. Tomas,Batangas,Philippines,4234,EF-003
+MGPP2,MGI,Maibarara-2,,Sto. Tomas,Batangas,Philippines,4234,EF-003

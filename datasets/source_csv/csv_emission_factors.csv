@@ -1,3 +1,4 @@
-﻿generation_source,kg_co2_per_kwh
-wind_onshore,0.00464
-Solar,0.058
+﻿ef_id,generation_source,kg_co2_per_kwh
+EF-001,wind onshore,0.00464
+EF-002,solar,0.058
+EF-003,geothermal,
