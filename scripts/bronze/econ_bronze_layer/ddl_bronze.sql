@@ -28,7 +28,7 @@ DROP TABLE IF EXISTS bronze.econ_expenditures;
 CREATE TABLE bronze.econ_expenditures (
     year SMALLINT,  -- Year of the data entry
     company_id VARCHAR(20),  -- Foreign key to econ_company_info
-    type VARCHAR(10),  -- Cost category (e.g., COS or G&A)
+    type_id VARCHAR(10),  -- Cost category (e.g., COS or G&A)
     government_payments NUMERIC,
     supplier_spending_local NUMERIC,
     supplier_spending_abroad NUMERIC,
@@ -37,7 +37,7 @@ CREATE TABLE bronze.econ_expenditures (
     depreciation NUMERIC,
     depletion NUMERIC,
     others NUMERIC,
-    CONSTRAINT econ_expenditures_pk PRIMARY KEY (year, company_id, type)
+    CONSTRAINT econ_expenditures_pk PRIMARY KEY (year, company_id, type_id)
 );
 
 -- Drop and recreate table for capital provider payments (detailed breakdown)
@@ -54,5 +54,5 @@ CREATE TABLE bronze.econ_capital_provider_payment (
 
 -- Adding constraints (UNIQUE)
 ALTER TABLE bronze.econ_value ADD CONSTRAINT econ_value_unique_year UNIQUE (year);
-ALTER TABLE bronze.econ_expenditures ADD CONSTRAINT econ_expenditures_unique_key UNIQUE (year, company_id, type);
+ALTER TABLE bronze.econ_expenditures ADD CONSTRAINT econ_expenditures_unique_key UNIQUE (year, company_id, type_id);
 ALTER TABLE bronze.econ_capital_provider_payment ADD CONSTRAINT econ_capital_provider_payment_unique_year UNIQUE (year);
