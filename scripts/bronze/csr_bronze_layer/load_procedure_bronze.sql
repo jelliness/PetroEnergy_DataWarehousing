@@ -34,7 +34,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.csr_company...';
 
     COPY bronze.csr_company
-    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_company.csv'
+    FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_company.csv'
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -52,7 +52,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.csr_programs...';
 
     COPY bronze.csr_programs
-    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_programs.csv'
+    FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_programs.csv'
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -70,25 +70,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.csr_projects...';
 
     COPY bronze.csr_projects
-    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_projects.csv'
-    DELIMITER ',' CSV HEADER;
-
-    end_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-    RAISE NOTICE '-----------------';
-
-    -- csr_per_company
-    RAISE NOTICE '------------------------------------------------';
-    RAISE NOTICE 'Loading CSR Per Company Data...';
-    RAISE NOTICE '------------------------------------------------';
-
-    start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Truncating table: bronze.csr_per_company...';
-    TRUNCATE TABLE bronze.csr_per_company;
-    RAISE NOTICE '>> Bulk inserting data into bronze.csr_per_company...';
-
-    COPY bronze.csr_per_company
-    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_per_company.csv'
+    FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_projects.csv'
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -106,7 +88,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.csr_activity...';
 
     COPY bronze.csr_activity
-    FROM 'C:\Users\KEI\OneDrive\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_activity.csv'
+    FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_activity.csv'
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;

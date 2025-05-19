@@ -18,7 +18,7 @@ CREATE TABLE bronze.csr_company (
 
 DROP TABLE IF EXISTS bronze.csr_programs;
 CREATE TABLE bronze.csr_programs (
-	program_id VARCHAR(20),
+	program_id VARCHAR(5),
 	program_name VARCHAR(20)
 );
 
@@ -27,22 +27,15 @@ CREATE TABLE bronze.csr_projects (
 	project_id VARCHAR(20),
 	program_id VARCHAR(20),
 	project_name VARCHAR(50),
-	project_metrics VARCHAR(100)
-);
-
-DROP TABLE IF EXISTS bronze.csr_per_company;
-CREATE TABLE bronze.csr_per_company (
-	inv_id VARCHAR(20),
-	company_id VARCHAR(20),
-	program_id VARCHAR(20),
-	program_investment NUMERIC
+	project_metrics TEXT
 );
 
 DROP TABLE IF EXISTS bronze.csr_activity;
 CREATE TABLE bronze.csr_activity (
-    csr_id VARCHAR(20),
+    csr_id VARCHAR(10),
     company_id VARCHAR(20),
 	project_id VARCHAR(20),
-    ac_year VARCHAR(6),
-    csr_report NUMERIC
+    project_year SMALLINT,
+    csr_report NUMERIC,
+	project_expenses NUMERIC
 );
