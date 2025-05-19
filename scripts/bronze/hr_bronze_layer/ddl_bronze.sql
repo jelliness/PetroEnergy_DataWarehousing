@@ -22,7 +22,8 @@ CREATE TABLE bronze.hr_demographics (
     employee_id VARCHAR(20) PRIMARY KEY,
     gender VARCHAR(1),
     birthdate TIMESTAMP,
-    position_name VARCHAR(2),
+    position_id VARCHAR(2),
+	position_name VARCHAR(20),
     p_np VARCHAR(2),
     company_id VARCHAR(6)
 );
