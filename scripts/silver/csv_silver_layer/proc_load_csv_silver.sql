@@ -32,32 +32,6 @@ BEGIN
     
     BEGIN
 
-		-- Upserting into silver.csv_company
-		start_time := CLOCK_TIMESTAMP();
-		RAISE NOTICE '>> Upserting Data Into: silver.csv_company';
-		INSERT INTO silver.csv_company (
-		    company_id,
-		    company_name,
-		    resources,
-		    create_at,
-		    updated_at
-		)
-		SELECT
-		    TRIM(company_id),
-		    TRIM(company_name),
-		    TRIM(resources),
-		    create_at,
-		    updated_at
-		FROM bronze.csv_company
-		ON CONFLICT (company_id) DO UPDATE
-		SET 
-		    company_name = EXCLUDED.company_name,
-		    resources = EXCLUDED.resources,
-		    updated_at = EXCLUDED.updated_at;
-		end_time := CLOCK_TIMESTAMP();
-		RAISE NOTICE '>> Upsert Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-		RAISE NOTICE '>> -------------';
-		
 		
 		-- Upserting into silver.csv_emission_factors
 		start_time := CLOCK_TIMESTAMP();
@@ -114,15 +88,11 @@ BEGIN
 		    pp.province,
 		    pp.country,
 		    pp.zip,
-		    CASE 
-		        WHEN com.resources = 'solar' THEN 'EF-001'
-		        WHEN com.resources = 'wind' THEN 'EF-002'
-		        ELSE null
-		    END AS ef_id,
+		    ef_id,
 		    pp.create_at,
 		    pp.updated_at
 		FROM bronze.csv_power_plants pp
-		LEFT JOIN bronze.csv_company com ON com.company_id = pp.company_id
+		LEFT JOIN ref.company_main com ON com.company_id = pp.company_id
 		ON CONFLICT (power_plant_id) DO UPDATE
 		SET 
 		    company_id = EXCLUDED.company_id,
@@ -139,124 +109,150 @@ BEGIN
 		RAISE NOTICE '>> -------------';
 
 
-	   -- Loading silver.csv_energy_records
+	    -- Loading silver.csv_energy_records
         -- Upserting into silver.csv_energy_records
 		start_time := CLOCK_TIMESTAMP();
 		RAISE NOTICE '>> Upserting Data Into: silver.csv_energy_records';
-		WITH standardized_data AS(
-			SELECT
-				power_plant_id,
-				to_timestamp(datetime, 'DD/MM/YYYY HH24:MI') AS datetime_column,
-				energy_generated,
-				CASE 
-					WHEN unit_of_measurement = 'mwh' THEN REPLACE(energy_generated, ',', '')::NUMERIC * 1000
-					ELSE REPLACE(energy_generated, ',', '')::NUMERIC
-				END AS energy_generated_converted,
-				unit_of_measurement,
-				'kwh' AS standardized_unit
+		-- WITH standardized_data AS(
+		-- 	SELECT
+		-- 		power_plant_id,
+		-- 		to_timestamp(datetime, 'DD/MM/YYYY HH24:MI') AS datetime_column,
+		-- 		energy_generated,
+		-- 		CASE 
+		-- 			WHEN unit_of_measurement = 'mwh' THEN REPLACE(energy_generated, ',', '')::NUMERIC * 1000
+		-- 			ELSE REPLACE(energy_generated, ',', '')::NUMERIC
+		-- 		END AS energy_generated_converted,
+		-- 		unit_of_measurement,
+		-- 		'kwh' AS standardized_unit
 				
-			FROM bronze.csv_energy_records
-		),
-		ranked_data AS (
-		    SELECT
-		        * ,
-		        ROW_NUMBER() OVER (
-		        PARTITION BY datetime_column::date, power_plant_id
-		        ORDER BY datetime_column ASC
-		    ) AS rn_asc,
-		    ROW_NUMBER() OVER (
-		        PARTITION BY datetime_column::date,power_plant_id
-		        ORDER BY datetime_column DESC
-		    ) AS rn_desc
-		    FROM standardized_data
-		),
-		aggregated_data AS (
-		    SELECT
-		        power_plant_id,
-		        MAX(CASE WHEN rn_asc = 1 THEN energy_generated_converted END) AS first_energy,
-		        MAX(CASE WHEN rn_desc = 1 THEN energy_generated_converted END) AS last_energy,
-		        SUM(energy_generated_converted) AS total_energy,
-		        MIN(datetime_column) AS earliest_datetime
-		    FROM ranked_data
-			GROUP BY power_plant_id,datetime_column::date
-		),
-		energy_id_generation AS (
-		    SELECT
-		        * ,
-		        'EN-' || TO_CHAR(earliest_datetime, 'YYYYMMDD') || '-' || LPAD(ROW_NUMBER() OVER (ORDER BY earliest_datetime)::TEXT, 3, '0') AS energy_id
-		    FROM aggregated_data
-		),
-		energy_calculation AS(
-			SELECT 
-				eg.energy_id,
-				eg.power_plant_id,
-				eg.earliest_datetime as datetime,
-				ROUND(
-					CASE 
-						WHEN cp.resources='solar' THEN eg.last_energy - eg.first_energy
-						WHEN cp.resources='wind' THEN eg.total_energy
-						ELSE NULL
-					END, 4
-				) AS energy_generated
-			FROM energy_id_generation eg
-			LEFT JOIN bronze.csv_power_plants pp on pp.power_plant_id = eg.power_plant_id 
-			LEFT JOIN bronze.csv_company cp on cp.company_id = pp.company_id
-		),
-		pp_data AS (
-		    SELECT 
-		        pp.power_plant_id,
-		        pp.company_id,
-		        pp.site_name,
-		        pp.site_address,
-		        pp.city_town,
-		        pp.province,
-		        pp.country,
-		        pp.zip,
-		        LOWER(com.resources) AS resource,
-		        CASE 
-		            WHEN LOWER(com.resources) = 'solar' THEN 'EF-001'
-		            WHEN LOWER(com.resources) = 'wind' THEN 'EF-002'
-		            ELSE NULL
-		        END AS constants
-		    FROM bronze.csv_power_plants pp
-		    LEFT JOIN bronze.csv_company com ON com.company_id = pp.company_id
-		),
+		-- 	FROM bronze.csv_energy_records
+		-- ),
+		-- ranked_data AS (
+		--     SELECT
+		--         * ,
+		--         ROW_NUMBER() OVER (
+		--         PARTITION BY datetime_column::date, power_plant_id
+		--         ORDER BY datetime_column ASC
+		--     ) AS rn_asc,
+		--     ROW_NUMBER() OVER (
+		--         PARTITION BY datetime_column::date,power_plant_id
+		--         ORDER BY datetime_column DESC
+		--     ) AS rn_desc
+		--     FROM standardized_data
+		-- ),
+		-- aggregated_data AS (
+		--     SELECT
+		--         power_plant_id,
+		--         MAX(CASE WHEN rn_asc = 1 THEN energy_generated_converted END) AS first_energy,
+		--         MAX(CASE WHEN rn_desc = 1 THEN energy_generated_converted END) AS last_energy,
+		--         SUM(energy_generated_converted) AS total_energy,
+		--         MIN(datetime_column) AS earliest_datetime
+		--     FROM ranked_data
+		-- 	GROUP BY power_plant_id,datetime_column::date
+		-- ),
+		-- energy_id_generation AS (
+		--     SELECT
+		--         * ,
+		--         'EN-' || TO_CHAR(earliest_datetime, 'YYYYMMDD') || '-' || LPAD(ROW_NUMBER() OVER (ORDER BY earliest_datetime)::TEXT, 3, '0') AS energy_id
+		--     FROM aggregated_data
+		-- ),
+		-- energy_calculation AS(
+		-- 	SELECT 
+		-- 		eg.energy_id,
+		-- 		eg.power_plant_id,
+		-- 		eg.earliest_datetime as datetime,
+		-- 		ROUND(
+		-- 			CASE 
+		-- 				WHEN cp.resources='solar' THEN eg.last_energy - eg.first_energy
+		-- 				WHEN cp.resources='wind' THEN eg.total_energy
+		-- 				ELSE NULL
+		-- 			END, 4
+		-- 		) AS energy_generated
+		-- 	FROM energy_id_generation eg
+		-- 	LEFT JOIN bronze.csv_power_plants pp on pp.power_plant_id = eg.power_plant_id 
+		-- 	LEFT JOIN bronze.csv_company cp on cp.company_id = pp.company_id
+		-- ),
+		-- pp_data AS (
+		--     SELECT 
+		--         pp.power_plant_id,
+		--         pp.company_id,
+		--         pp.site_name,
+		--         pp.site_address,
+		--         pp.city_town,
+		--         pp.province,
+		--         pp.country,
+		--         pp.zip,
+		--         LOWER(com.resources) AS resource,
+		--         CASE 
+		--             WHEN LOWER(com.resources) = 'solar' THEN 'EF-001'
+		--             WHEN LOWER(com.resources) = 'wind' THEN 'EF-002'
+		--             ELSE NULL
+		--         END AS constants
+		--     FROM bronze.csv_power_plants pp
+		--     LEFT JOIN bronze.csv_company com ON com.company_id = pp.company_id
+		-- ),
 		
-		emission_factors AS (
-		    SELECT 
-		        'EF-' || LPAD(ROW_NUMBER() OVER (ORDER BY LOWER(generation_source))::TEXT, 3, '0') AS ef_id,
-		        LOWER(generation_source) AS generation_source,
-		        kg_co2_per_kwh
-		    FROM bronze.csv_emission_factors
-		)
+		-- emission_factors AS (
+		--     SELECT 
+		--         'EF-' || LPAD(ROW_NUMBER() OVER (ORDER BY LOWER(generation_source))::TEXT, 3, '0') AS ef_id,
+		--         LOWER(generation_source) AS generation_source,
+		--         kg_co2_per_kwh
+		--     FROM bronze.csv_emission_factors
+		-- )
 		INSERT INTO silver.csv_energy_records (
 		    energy_id,
 		    power_plant_id,
 		    date_generated,
 		    energy_generated_kwh,
 		    co2_avoidance_kg,
-		    create_at,
+			create_at,
 		    updated_at
 		)
 		SELECT 
-		    ce.energy_id,
-		    ce.power_plant_id,
-		    ce.datetime,
-		    ce.energy_generated,
-		    ROUND(ce.energy_generated * ef.kg_co2_per_kwh::NUMERIC, 4) AS co2_avoidance,
-		    NOW(),
-		    NOW()
-		FROM energy_calculation ce
-		LEFT JOIN pp_data pp ON pp.power_plant_id = ce.power_plant_id
-		LEFT JOIN emission_factors ef ON ef.ef_id = pp.constants
-		ORDER BY ce.energy_id
-		ON CONFLICT (energy_id) DO UPDATE 
-		SET 
-		    power_plant_id = EXCLUDED.power_plant_id,
-		    date_generated = EXCLUDED.date_generated,
-		    energy_generated_kwh = EXCLUDED.energy_generated_kwh,
-		    co2_avoidance_kg = EXCLUDED.co2_avoidance_kg,
-		    updated_at = CURRENT_TIMESTAMP;
+			CAST(
+				'EN-' || 
+				TO_CHAR(TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp, 'YYYYMMDD') || 
+				'-' || 
+				LPAD(
+				ROW_NUMBER() OVER (
+					PARTITION BY TO_CHAR(TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp, 'YYYYMMDD') 
+					ORDER BY TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp
+				)::TEXT, 
+				3, '0')
+			AS VARCHAR(20)
+			) AS energy_id,
+			
+			er.power_plant_id,
+			
+			TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp AS date_generated,
+			
+			ROUND(
+				CASE
+				WHEN unit_of_measurement ILIKE 'MWh' THEN energy_generated * 1000
+				WHEN unit_of_measurement ILIKE 'GWh' THEN energy_generated * 1000000
+				WHEN unit_of_measurement ILIKE 'kWh' THEN energy_generated 
+				ELSE 0
+				END,
+				4
+			) AS energy_generated,
+			
+			ROUND(
+				(
+				CASE
+					WHEN unit_of_measurement ILIKE 'MWh' THEN energy_generated * 1000
+					WHEN unit_of_measurement ILIKE 'GWh' THEN energy_generated * 1000000
+					WHEN unit_of_measurement ILIKE 'kWh' THEN energy_generated 
+					ELSE 0
+				END
+				) * COALESCE(CAST(ef.kg_co2_per_kwh AS NUMERIC), 0),
+				4
+			) AS co2_avoidance,
+			NOW(),
+			NOW()
+
+			FROM bronze.csv_energy_records er
+			LEFT JOIN bronze.csv_power_plants pp ON pp.power_plant_id = er.power_plant_id
+			LEFT JOIN bronze.csv_emission_factors ef ON pp.ef_id = ef.ef_id;
 		end_time := CLOCK_TIMESTAMP();
 		RAISE NOTICE '>> Upsert Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
 		RAISE NOTICE '>> -------------';
