@@ -12,6 +12,8 @@ Script Purpose:
 DROP VIEW IF EXISTS gold.vw_economic_value_summary;
 DROP VIEW IF EXISTS gold.vw_economic_value_distributed;
 DROP VIEW IF EXISTS gold.vw_economic_value_generated;
+DROP VIEW IF EXISTS gold.vw_economic_value_distributed_by_company;
+DROP VIEW IF EXISTS gold.vw_economic_expenditure_by_company;
 
 -- Drop and recreate table for economic value
 DROP TABLE IF EXISTS silver.econ_value;
@@ -43,7 +45,7 @@ DROP TABLE IF EXISTS silver.econ_expenditures;
 CREATE TABLE silver.econ_expenditures (
     year SMALLINT,
     company_id VARCHAR(20),
-    type VARCHAR(10),
+    type_id VARCHAR(10),
     government_payments NUMERIC NOT NULL DEFAULT 0,
     supplier_spending_local NUMERIC NOT NULL DEFAULT 0,
     supplier_spending_abroad NUMERIC NOT NULL DEFAULT 0,
@@ -60,7 +62,7 @@ CREATE TABLE silver.econ_expenditures (
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_econ_expenditures_pk PRIMARY KEY (year, company_id, type)
+    CONSTRAINT silver_econ_expenditures_pk PRIMARY KEY (year, company_id, type_id)
 );
 
 -- Drop and recreate table for capital provider payments
@@ -84,5 +86,5 @@ CREATE TABLE silver.econ_capital_provider_payment (
 
 -- alter 
 ALTER TABLE silver.econ_value ADD CONSTRAINT econ_value_unique_year UNIQUE (year);
-ALTER TABLE silver.econ_expenditures ADD CONSTRAINT econ_expenditures_unique_key UNIQUE (year, company_id, type);
+ALTER TABLE silver.econ_expenditures ADD CONSTRAINT econ_expenditures_unique_key UNIQUE (year, company_id, type_id);
 ALTER TABLE silver.econ_capital_provider_payment ADD CONSTRAINT econ_capital_provider_payment_unique_year UNIQUE (year);

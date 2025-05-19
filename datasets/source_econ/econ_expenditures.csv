@@ -1,4 +1,4 @@
-year,company_id,type,government_payments,supplier_spending_local,supplier_spending_abroad,employee_wages_benefits,community_investments,depreciation,depletion,others
+year,company_id,type_id,government_payments,supplier_spending_local,supplier_spending_abroad,employee_wages_benefits,community_investments,depreciation,depletion,others
 2020,MGI,CS,45822873,330966644,4073841,59676006,1350770,246062549,,1869463
 2020,MGI,GA,2816319,18611510,,9779486,403000,6108962,,13313183
 2021,MGI,CS,37540324,274477448,20282664,59757993,158184,244243220,,24018397

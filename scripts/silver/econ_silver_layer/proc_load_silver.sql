@@ -66,7 +66,7 @@ BEGIN
         INSERT INTO silver.econ_expenditures (
             year,
             company_id,
-            type,
+            type_id,
             government_payments,
             supplier_spending_local,
             supplier_spending_abroad,
@@ -79,7 +79,7 @@ BEGIN
         SELECT
             year,
             TRIM(company_id),
-            TRIM(type),
+            TRIM(type_id),
             GREATEST(COALESCE(government_payments, 0), 0),
             GREATEST(COALESCE(supplier_spending_local, 0), 0),
             GREATEST(COALESCE(supplier_spending_abroad, 0), 0),
@@ -89,7 +89,7 @@ BEGIN
             GREATEST(COALESCE(depletion, 0), 0),
             GREATEST(COALESCE(others, 0), 0)
         FROM bronze.econ_expenditures
-        ON CONFLICT (year, company_id, type)
+        ON CONFLICT (year, company_id, type_id)
         DO UPDATE SET
             government_payments = GREATEST(COALESCE(EXCLUDED.government_payments, 0), 0),
             supplier_spending_local = GREATEST(COALESCE(EXCLUDED.supplier_spending_local, 0), 0),

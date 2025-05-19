@@ -66,7 +66,7 @@ BEGIN
     
     INSERT INTO bronze.econ_expenditures
     SELECT * FROM temp_econ_expenditures
-    ON CONFLICT (year, company_id, type) 
+    ON CONFLICT (year, company_id, type_id) 
     DO UPDATE SET
         government_payments = EXCLUDED.government_payments,
         supplier_spending_local = EXCLUDED.supplier_spending_local,
