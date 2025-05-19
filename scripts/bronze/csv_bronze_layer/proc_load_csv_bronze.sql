@@ -13,35 +13,7 @@ BEGIN
     SET TIME ZONE 'Asia/Manila';
     RAISE NOTICE 'Session time zone set to %', current_setting('TIMEZONE');
 
-    -- ====================
-    -- Load csv_company
-    -- ====================
-    start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Loading csv_company with UPSERT...';
-
-    DROP TABLE IF EXISTS csv_company;
-    CREATE TEMP TABLE csv_company (
-        company_id TEXT,
-        company_name TEXT,
-        resources TEXT
-    );
-
-    EXECUTE format(
-        'COPY csv_company FROM %L DELIMITER '','' CSV HEADER',
-        local_file_path || '/csv_company.csv'
-    );
-
-    INSERT INTO bronze.csv_company (company_id, company_name, resources)
-    SELECT company_id, company_name, resources FROM csv_company
-    ON CONFLICT (company_id) DO UPDATE
-    SET
-        company_name = EXCLUDED.company_name,
-        resources = EXCLUDED.resources,
-        updated_at = CURRENT_TIMESTAMP;
-
-    end_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-
+    
     -- ====================
     -- Load csv_emission_factors
     -- ====================
@@ -50,6 +22,7 @@ BEGIN
 
     DROP TABLE IF EXISTS csv_emission_factors;
     CREATE TEMP TABLE csv_emission_factors (
+		ef_id TEXT,
         generation_source TEXT,
         kg_co2_per_kwh TEXT
     );
@@ -59,10 +32,11 @@ BEGIN
         local_file_path || '/csv_emission_factors.csv'
     );
 
-    INSERT INTO bronze.csv_emission_factors (generation_source, kg_co2_per_kwh)
-    SELECT generation_source, kg_co2_per_kwh FROM csv_emission_factors
-    ON CONFLICT (generation_source) DO UPDATE
+    INSERT INTO bronze.csv_emission_factors (ef_id, generation_source, kg_co2_per_kwh)
+    SELECT ef_id, generation_source, kg_co2_per_kwh FROM csv_emission_factors
+    ON CONFLICT (ef_id) DO UPDATE
     SET
+		generation_source = EXCLUDED.generation_source,
         kg_co2_per_kwh = EXCLUDED.kg_co2_per_kwh,
         updated_at = CURRENT_TIMESTAMP;
 
@@ -84,7 +58,8 @@ BEGIN
         city_town TEXT,
         province TEXT,
         country TEXT,
-        zip TEXT
+        zip TEXT,
+		ef_id TEXT
     );
 
     EXECUTE format(
@@ -94,10 +69,10 @@ BEGIN
 
     INSERT INTO bronze.csv_power_plants (
         power_plant_id, company_id, site_name, site_address,
-        city_town, province, country, zip
+        city_town, province, country, zip, ef_id
     )
     SELECT power_plant_id, company_id, site_name, site_address,
-           city_town, province, country, zip
+           city_town, province, country, zip, ef_id
     FROM csv_power_plants
     ON CONFLICT (power_plant_id) DO UPDATE
     SET
@@ -108,6 +83,7 @@ BEGIN
         province = EXCLUDED.province,
         country = EXCLUDED.country,
         zip = EXCLUDED.zip,
+		ef_id = EXCLUDED.ef_id,
         updated_at = CURRENT_TIMESTAMP;
 
     end_time := CURRENT_TIMESTAMP;
@@ -123,7 +99,7 @@ BEGIN
     CREATE TEMP TABLE csv_energy_records (
         power_plant_id TEXT,
         datetime TEXT,
-        energy_generated TEXT,
+        energy_generated NUMERIC,
         unit_of_measurement TEXT
     );
 
@@ -156,7 +132,7 @@ BEGIN
     CREATE TEMP TABLE csv_fa_factors (
         ff_id TEXT,
         ff_name TEXT,
-        ff_percentage TEXT
+        ff_percentage NUMERIC
     );
 
     EXECUTE format(
@@ -184,10 +160,10 @@ BEGIN
     DROP TABLE IF EXISTS csv_hec_factors;
     CREATE TEMP TABLE csv_hec_factors (
         hec_id TEXT,
-        hec_value TEXT,
-        hec_year TEXT,
+        hec_value INT,
+        hec_year INT,
         source_name TEXT,
-        link TEXT
+        source_link TEXT
     );
 
     EXECUTE format(
