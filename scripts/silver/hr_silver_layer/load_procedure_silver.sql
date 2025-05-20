@@ -33,6 +33,7 @@ BEGIN
     	-- position_name,
     	p_np,
     	company_id,
+		employment_status,
     	date_created,
     	date_updated
 	)
@@ -45,6 +46,7 @@ BEGIN
     	-- b.position_name,
     	b.p_np,
     	b.company_id,
+		b.employment_status,
     	CURRENT_TIMESTAMP, -- date_created
     	CURRENT_TIMESTAMP  -- date_updated
 	FROM bronze.hr_demographics b
@@ -57,6 +59,7 @@ BEGIN
     	-- position_name = EXCLUDED.position_name,
     	p_np = EXCLUDED.p_np,
     	company_id = EXCLUDED.company_id,
+		employment_status = EXCLUDED.employment_status,
     	date_updated = CURRENT_TIMESTAMP;
 
     end_time := CURRENT_TIMESTAMP;
