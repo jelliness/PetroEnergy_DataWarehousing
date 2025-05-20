@@ -19,7 +19,10 @@ CREATE OR REPLACE FUNCTION gold.func_fact_energy(
     p_generation_source TEXT[] DEFAULT NULL,
     p_province VARCHAR(30)[] DEFAULT NULL,
     p_start_date DATE DEFAULT NULL,
-    p_end_date DATE DEFAULT NULL
+    p_end_date DATE DEFAULT NULL, 
+    p_month INT[] DEFAULT NULL,
+    p_quarter INT[] DEFAULT NULL,
+    p_year INT[] DEFAULT NULL
 )
 RETURNS TABLE (
     power_plant_id VARCHAR(10),
@@ -48,12 +51,16 @@ BEGIN
 	    AND (p_province IS NULL OR feg.province = ANY(p_province))
 	    AND (p_start_date IS NULL OR feg.date_generated >= p_start_date)
 	    AND (p_end_date IS NULL OR feg.date_generated <= p_end_date)
+        AND (p_month IS NULL OR feg.month = ANY(p_month))   
+        AND (p_quarter IS NULL OR feg.quarter = ANY(p_quarter))   
+        AND (p_year IS NULL OR feg.year = ANY(p_year))   
     GROUP BY 
         feg.power_plant_id,
         feg.company_id, 
         feg.generation_source,
         feg.province,
-        feg.date_generated
+        feg.date_generated,
+        feg.month
 	ORDER BY 
         feg.date_generated;
 
@@ -61,11 +68,152 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+-- ===================================================================================
+-- Create Functions for gold.func_fact_energy_monthly (monthly)
+-- ===================================================================================
+DROP FUNCTION IF EXISTS gold.func_fact_energy_monthly;
+
+CREATE OR REPLACE FUNCTION gold.func_fact_energy_monthly(
+    p_power_plant_id VARCHAR(10)[] DEFAULT NULL,
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_generation_source TEXT[] DEFAULT NULL,
+    p_province VARCHAR(30)[] DEFAULT NULL,
+    p_start_date DATE DEFAULT NULL,
+    p_end_date DATE DEFAULT NULL,
+    p_month INT[] DEFAULT NULL,
+    p_quarter INT[] DEFAULT NULL,
+    p_year INT[] DEFAULT NULL
+)
+RETURNS TABLE (
+	month_name TEXT,
+    energy_generated_kwh NUMERIC(10,2),
+    co2_avoidance_kg NUMERIC(10,2)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+		feg.month_name,
+        CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(10,2)) AS energy_generated_kwh,
+        CAST(SUM(feg.co2_avoidance_kg) AS NUMERIC(10,2)) AS co2_avoidance_kg
+    FROM gold.fact_energy_generated feg
+    WHERE (p_power_plant_id IS NULL OR feg.power_plant_id = ANY(p_power_plant_id))
+    	AND (p_company_id IS NULL OR feg.company_id = ANY(p_company_id))
+	    AND (p_generation_source IS NULL OR feg.generation_source = ANY(p_generation_source))
+	    AND (p_province IS NULL OR feg.province = ANY(p_province))
+	    AND (p_start_date IS NULL OR feg.date_generated >= p_start_date)
+	    AND (p_end_date IS NULL OR feg.date_generated <= p_end_date)
+        AND (p_month IS NULL OR feg.month = ANY(p_month))   
+        AND (p_quarter IS NULL OR feg.quarter = ANY(p_quarter))   
+        AND (p_year IS NULL OR feg.year = ANY(p_year))   
+    GROUP BY 
+
+        feg.month_name,
+		feg.month,
+		feg.year
+	ORDER BY 
+        feg.year, feg.month;
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- ===================================================================================
+-- Create Functions for gold.func_fact_energy_quarterly (quarterly)
+-- ===================================================================================
+DROP FUNCTION IF EXISTS gold.func_fact_energy_quarterly;
+
+CREATE OR REPLACE FUNCTION gold.func_fact_energy_quarterly(
+    p_power_plant_id VARCHAR(10)[] DEFAULT NULL,
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_generation_source TEXT[] DEFAULT NULL,
+    p_province VARCHAR(30)[] DEFAULT NULL,
+    p_start_date DATE DEFAULT NULL,
+    p_end_date DATE DEFAULT NULL,
+    p_month INT[] DEFAULT NULL,
+    p_quarter INT[] DEFAULT NULL,
+    p_year INT[] DEFAULT NULL
+)
+RETURNS TABLE (
+	quarter INT,
+    energy_generated_kwh NUMERIC(15,2),
+    co2_avoidance_kg NUMERIC(15,2)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+		feg.quarter,
+        CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(15,2)) AS energy_generated_kwh,
+        CAST(SUM(feg.co2_avoidance_kg) AS NUMERIC(15,2)) AS co2_avoidance_kg
+    FROM gold.fact_energy_generated feg
+    WHERE (p_power_plant_id IS NULL OR feg.power_plant_id = ANY(p_power_plant_id))
+    	AND (p_company_id IS NULL OR feg.company_id = ANY(p_company_id))
+	    AND (p_generation_source IS NULL OR feg.generation_source = ANY(p_generation_source))
+	    AND (p_province IS NULL OR feg.province = ANY(p_province))
+	    AND (p_start_date IS NULL OR feg.date_generated >= p_start_date)
+	    AND (p_end_date IS NULL OR feg.date_generated <= p_end_date)
+        AND (p_month IS NULL OR feg.month = ANY(p_month))   
+        AND (p_quarter IS NULL OR feg.quarter = ANY(p_quarter))   
+        AND (p_year IS NULL OR feg.year = ANY(p_year))   
+    GROUP BY 
+        feg.quarter
+	ORDER BY 
+        feg.quarter;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- ===================================================================================
+-- Create Functions for gold.func_fact_energy_yearly (yearly)
+-- ===================================================================================
+DROP FUNCTION IF EXISTS gold.func_fact_energy_yearly;
+
+CREATE OR REPLACE FUNCTION gold.func_fact_energy_yearly(
+    p_power_plant_id VARCHAR(10)[] DEFAULT NULL,
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_generation_source TEXT[] DEFAULT NULL,
+    p_province VARCHAR(30)[] DEFAULT NULL,
+    p_start_date DATE DEFAULT NULL,
+    p_end_date DATE DEFAULT NULL,
+    p_month INT[] DEFAULT NULL,
+    p_quarter INT[] DEFAULT NULL,
+    p_year INT[] DEFAULT NULL
+)
+RETURNS TABLE (
+	year INT,
+    energy_generated_kwh NUMERIC(15,2),
+    co2_avoidance_kg NUMERIC(15,2)
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+		feg.year,
+        CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(15,2)) AS energy_generated_kwh,
+        CAST(SUM(feg.co2_avoidance_kg) AS NUMERIC(15,2)) AS co2_avoidance_kg
+    FROM gold.fact_energy_generated feg
+    WHERE (p_power_plant_id IS NULL OR feg.power_plant_id = ANY(p_power_plant_id))
+    	AND (p_company_id IS NULL OR feg.company_id = ANY(p_company_id))
+	    AND (p_generation_source IS NULL OR feg.generation_source = ANY(p_generation_source))
+	    AND (p_province IS NULL OR feg.province = ANY(p_province))
+	    AND (p_start_date IS NULL OR feg.date_generated >= p_start_date)
+	    AND (p_end_date IS NULL OR feg.date_generated <= p_end_date)
+        AND (p_month IS NULL OR feg.month = ANY(p_month))   
+        AND (p_quarter IS NULL OR feg.quarter = ANY(p_quarter))   
+        AND (p_year IS NULL OR feg.year = ANY(p_year))   
+    GROUP BY 
+        feg.year
+	ORDER BY 
+        feg.year;
+END;
+$$ LANGUAGE plpgsql;
+
 
 -- =============================================================================
 -- Create Function for Number of Household Powered (Monthly Energy Generated)
 -- =============================================================================
-DROP FUNCTION IF EXISTS gold.func_energy_per_hec_unit();
+DROP FUNCTION IF EXISTS gold.func_energy_per_hec_unit;
 
 CREATE OR REPLACE FUNCTION gold.func_energy_per_hec_unit(
     p_power_plant_id VARCHAR(10)[] DEFAULT NULL,
