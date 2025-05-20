@@ -318,6 +318,14 @@ $$ LANGUAGE plpgsql;
 -- Sample Query: Execute this queries to test the functions
 -- =============================================================================
 
+SELECT * FROM gold.fact_energy_generated;
+SELECT * FROM gold.func_energy_per_hec_unit();
+SELECT * FROM gold.func_energy_per_hec_unit_rounded();
+SELECT * FROM gold.func_fact_energy();
+SELECT * FROM gold.func_fact_energy_monthly();
+SELECT * FROM gold.func_fact_energy_quarterly();
+SELECT * FROM gold.func_fact_energy_yearly();
+
 ------------------------------------------------ daily ------------------------------------------------
 SELECT * FROM gold.func_fact_energy();
 
@@ -328,7 +336,10 @@ FROM gold.func_fact_energy(
     NULL,                 	-- generation_source
 	NULL,              		-- province
 	NULL,                 	-- start
-	NULL              		-- end
+	NULL,              		-- end
+	ARRAY[2,3],				-- month
+	NULL,					-- quarter
+	NULL					-- year
 );
 
 SELECT * 
@@ -338,7 +349,10 @@ FROM gold.func_fact_energy(
     NULL,                 	-- generation_source
 	ARRAY['Tarlac'],     	-- province
 	NULL,               	-- start
-	NULL                   	-- end
+	NULL,              		-- end
+	NULL,					-- month
+	NULL,					-- quarter
+	NULL					-- year
 );
 
 SELECT * 
@@ -348,7 +362,10 @@ FROM gold.func_fact_energy(
     NULL,              		-- generation_source
 	NULL,     				-- province
 	'2025-03-01',     	    -- start
-	NULL                   	-- end
+	NULL,                   -- end
+	NULL,					-- month
+	NULL,					-- quarter
+	NULL					-- year
 );
 
 SELECT * 
@@ -357,12 +374,28 @@ FROM gold.func_fact_energy(
     NULL,        			-- company_id
     NULL,              		-- generation_source
 	NULL,                  	-- province
-	'2025-03-01',			-- start
-	'2025-03-03'			-- end
+	'2025-01-01',			-- start
+	'2025-03-03',			-- end
+	NULL,					-- month
+	NULL,					-- quarter
+	NULL					-- year
+);
+
+SELECT * 
+FROM gold.func_fact_energy(
+    Null,   				-- power_plant_id
+    NULL,        			-- company_id
+    NULL,              		-- generation_source
+	NULL,                  	-- province
+	NULL,					-- start
+	NULL,					-- end
+	ARRAY[3],				-- month
+	NULL,					-- quarter
+	NULL					-- year
 );
 
 
------------------------------------------------- monthly ------------------------------------------------
+------------------------------------------------ monthly hec ------------------------------------------------
 SELECT * FROM gold.func_energy_per_hec_unit();
 
 SELECT * FROM gold.func_energy_per_hec_unit(
@@ -371,7 +404,7 @@ SELECT * FROM gold.func_energy_per_hec_unit(
     NULL::TEXT[],              -- generation_source
     NULL::VARCHAR(30)[],       -- province
     '2025-03-01'::DATE,        -- start_date
-    '2025-03-03'::DATE         -- end_date
+    '2025-03-02'::DATE         -- end_date
 );
 
 SELECT * FROM gold.func_energy_per_hec_unit(
