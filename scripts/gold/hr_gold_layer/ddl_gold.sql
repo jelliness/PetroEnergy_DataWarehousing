@@ -8,7 +8,7 @@ DDL Script: Create Gold Views for HR Data
 ===============================================================================
 */
 CREATE SCHEMA IF NOT EXISTS gold;
-
+/*
 DROP VIEW IF EXISTS gold.vw_active_employees;
 DROP VIEW IF EXISTS gold.vw_active_per_gender;
 DROP VIEW IF EXISTS gold.vw_headcount_per_year;
@@ -18,12 +18,61 @@ DROP VIEW IF EXISTS gold.vw_attrition_rate;
 DROP VIEW IF EXISTS gold.vw_avg_tenure;
 DROP VIEW IF EXISTS gold.vw_training_participants_per_year;
 DROP VIEW IF EXISTS gold.vw_training_hours_per_year;
+*/
 
+DROP VIEW IF EXISTS gold.dim_employee_details;
+
+CREATE VIEW gold.dim_employee_details AS
+	SELECT 
+    d.employee_id,
+    d.gender,
+    d.position_id,
+    t.start_date,
+    t.end_date,
+    t.tenure_length,
+    p.type_of_leave,
+    p.date AS leave_start_date,
+    p.end_date AS leave_end_date,
+    tr.hours AS training_hours,
+    tr.year_start
+	FROM silver.hr_demographics d
+		LEFT JOIN silver.hr_tenure t 
+    		ON d.employee_id = t.employee_id
+		LEFT JOIN silver.hr_parental_leave p 
+    		ON d.employee_id = p.employee_id
+		LEFT JOIN silver.hr_training tr 
+    		ON d.employee_id = tr.employee_id;
+
+
+/*
+CREATE VIEW gold.vw_hr_fact AS
+	SELECT 
+    d.employee_id,
+    d.gender,
+    d.position_id,
+    t.start_date,
+    t.end_date,
+    t.tenure_length,
+    p.type_of_leave,
+    p.date AS leave_start_date,
+    p.end_date AS leave_end_date,
+    tr.hours AS training_hours,
+    tr.year_start
+	FROM silver.hr_demographics d
+		LEFT JOIN silver.hr_tenure t 
+    		ON d.employee_id = t.employee_id
+		LEFT JOIN silver.hr_parental_leave p 
+    		ON d.employee_id = p.employee_id
+		LEFT JOIN silver.hr_training tr 
+    		ON d.employee_id = tr.employee_id;
+*/
+
+/*
 --ACTIVE EMPLOYEES
 CREATE VIEW gold.vw_active_employees AS
 	SELECT 
 		COUNT(*) AS Active_Employees
-	FROM silver.hr_tenure
+	FROM gold.vw_hr_fact
 	WHERE end_date IS NULL;
 
 -- ACTIVE PER GENDER
@@ -106,9 +155,4 @@ CREATE VIEW gold.vw_training_hours_per_year AS
 	FROM silver.hr_training
 	GROUP BY year_start
 	ORDER BY year_start;
-
-
-
-
-
-
+*/

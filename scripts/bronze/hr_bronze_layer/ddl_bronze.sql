@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS bronze.hr_safety;
 DROP TABLE IF EXISTS bronze.hr_training;
 DROP TABLE IF EXISTS bronze.hr_tenure;
 DROP TABLE IF EXISTS bronze.hr_parental_leave;
+DROP TABLE IF EXISTS bronze.hr_position;
 DROP TABLE IF EXISTS bronze.hr_demographics;
 
 
@@ -23,9 +24,14 @@ CREATE TABLE bronze.hr_demographics (
     gender VARCHAR(1),
     birthdate TIMESTAMP,
     position_id VARCHAR(2),
-	position_name VARCHAR(20),
     p_np VARCHAR(2),
-    company_id VARCHAR(6)	
+    company_id VARCHAR(6),
+	employment_status VARCHAR(20)
+);
+
+CREATE TABLE bronze.hr_position (
+	position_id VARCHAR(2) PRIMARY KEY,
+	position_name VARCHAR(20)
 );
 
 CREATE TABLE bronze.hr_parental_leave (
@@ -48,7 +54,7 @@ CREATE TABLE bronze.hr_training (
     hours INT,
     month_start INT,
     year_start INT,
-    categories_per_level VARCHAR(2)
+    position_id VARCHAR(2)
 );
 
 CREATE TABLE bronze.hr_safety (

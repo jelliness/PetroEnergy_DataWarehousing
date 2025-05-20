@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS silver.hr_training;
 DROP TABLE IF EXISTS silver.hr_tenure;
 DROP TABLE IF EXISTS silver.hr_parental_leave;
 DROP TABLE IF EXISTS silver.hr_demographics;
+DROP TABLE IF EXISTS silver.hr_position;
 
 CREATE TABLE silver.hr_demographics (
     employee_id VARCHAR(20) PRIMARY KEY,
@@ -23,11 +24,17 @@ CREATE TABLE silver.hr_demographics (
     birthdate TIMESTAMP,
 	--age INT, -- DERIVED VALUES FOR CALCULATING AGE
     position_id VARCHAR(2),
-	position_name VARCHAR(20),
+	--position_name VARCHAR(20),
     p_np VARCHAR(2),
     company_id VARCHAR(6),
+	employment_status VARCHAR(20),
 	date_created TIMESTAMP,
 	date_updated TIMESTAMP
+);
+
+CREATE TABLE silver.hr_position (
+	position_id VARCHAR(2) PRIMARY KEY,
+	position_name VARCHAR(20)
 );
 
 CREATE TABLE silver.hr_parental_leave (
@@ -59,7 +66,7 @@ CREATE TABLE silver.hr_training (
     hours INT,
     month_start INT,
     year_start INT,
-    categories_per_level VARCHAR(2),
+    position_id VARCHAR(2),
 	date_created TIMESTAMP,
 	date_updated TIMESTAMP
 );

@@ -30,7 +30,7 @@ BEGIN
     	birthdate,
     	-- age,
     	position_id,
-    	position_name,
+    	-- position_name,
     	p_np,
     	company_id,
     	date_created,
@@ -42,7 +42,7 @@ BEGIN
     	b.birthdate,
     	-- DATE_PART('year', AGE(CURRENT_DATE, b.birthdate))::INT, -- derived age
     	b.position_id,
-    	b.position_name,
+    	-- b.position_name,
     	b.p_np,
     	b.company_id,
     	CURRENT_TIMESTAMP, -- date_created
@@ -54,7 +54,7 @@ BEGIN
     	birthdate = EXCLUDED.birthdate,
     	-- age = EXCLUDED.age,
     	position_id = EXCLUDED.position_id,
-    	position_name = EXCLUDED.position_name,
+    	-- position_name = EXCLUDED.position_name,
     	p_np = EXCLUDED.p_np,
     	company_id = EXCLUDED.company_id,
     	date_updated = CURRENT_TIMESTAMP;
@@ -160,7 +160,7 @@ BEGIN
 		hours, 
 		month_start, 
 		year_start, 
-		categories_per_level, 
+		position_id, 
 		date_created, 
 		date_updated
 	)
@@ -169,7 +169,7 @@ BEGIN
     	b.hours,
     	b.month_start,
     	b.year_start,
-    	b.categories_per_level,
+    	b.position_id,
     	CURRENT_TIMESTAMP,
     	CURRENT_TIMESTAMP
 	FROM bronze.hr_training b;
