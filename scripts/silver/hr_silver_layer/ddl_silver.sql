@@ -21,7 +21,7 @@ CREATE TABLE silver.hr_demographics (
     employee_id VARCHAR(20) PRIMARY KEY,
     gender VARCHAR(1),
     birthdate TIMESTAMP,
-	age INT, -- DERIVED VALUES FOR CALCULATING AGE
+	--age INT, -- DERIVED VALUES FOR CALCULATING AGE
     position_id VARCHAR(2),
 	position_name VARCHAR(20),
     p_np VARCHAR(2),
@@ -38,15 +38,16 @@ CREATE TABLE silver.hr_parental_leave (
 	end_date TIMESTAMP, -- DERIVED BY ADDING DAYS TO DATE
 	months_availed INT, -- DERIVED BY CALCULATING MONTHS AVAILED
 	date_created TIMESTAMP,
-	date_updated TIMESTAMP
+	date_updated TIMESTAMP,
+	PRIMARY KEY (date, employee_id)
 );
 
 
 CREATE TABLE silver.hr_tenure (
-    employee_id VARCHAR(20),
+    employee_id VARCHAR(20) PRIMARY KEY,
     start_date TIMESTAMP,
     end_date TIMESTAMP,
-	is_active BOOLEAN, -- DERIVED, CHECK IF END DATE IS NULL
+	-- is_active BOOLEAN, -- DERIVED, CHECK IF END DATE IS NULL
 	tenure_length NUMERIC(5,2), -- derived by subtracting end date from start date/ used in gold layer to calculate average tenure
 	date_created TIMESTAMP,
 	date_updated TIMESTAMP
@@ -54,7 +55,7 @@ CREATE TABLE silver.hr_tenure (
 
 
 CREATE TABLE silver.hr_training (
-    employee_id VARCHAR(20),
+    employee_id VARCHAR(20) PRIMARY KEY,
     hours INT,
     month_start INT,
     year_start INT,
@@ -64,7 +65,7 @@ CREATE TABLE silver.hr_training (
 );
 
 CREATE TABLE silver.hr_safety (
-    employee_id VARCHAR(20),
+    employee_id VARCHAR(20) PRIMARY KEY,
     company_id VARCHAR(8),
     date TIMESTAMP,
     type_of_accident VARCHAR(50),
