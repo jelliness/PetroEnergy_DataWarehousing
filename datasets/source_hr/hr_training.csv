@@ -1,4 +1,4 @@
-employee_id,hours,month_start,year_start,categories_per_level
+employee_id,hours,month_start,year_start,position_id
 PWEI_RF_001,13,7,2020,RF
 MGI_MM_002,11,11,2019,MM
 MGI_MM_003,11,9,2022,MM
