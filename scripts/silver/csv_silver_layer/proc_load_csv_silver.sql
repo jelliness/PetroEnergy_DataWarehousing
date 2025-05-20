@@ -333,3 +333,30 @@ $$;
 
 
 call silver.load_csv_silver()
+
+-- additional table (fund allocation)
+INSERT INTO silver.csv_funds_allocation (
+	month_generated,
+    power_plant_id,
+	ff_id, 
+    power_generated_peso,
+    funds_allocated_peso,
+    create_at,
+    updated_at
+)
+SELECT 
+    DATE_TRUNC('month', er.date_generated) AS month_generated,
+    pp.power_plant_id,
+    ff.ff_id,
+    ROUND(SUM(er.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
+    ROUND(SUM((er.energy_generated_kwh * 0.01) * ff.ff_percentage), 2) AS funds_allocated_peso,
+	NOW(),
+	NOW()
+FROM silver.csv_energy_records er
+LEFT JOIN bronze.csv_power_plants pp ON pp.power_plant_id = er.power_plant_id
+CROSS JOIN bronze.csv_fa_factors ff
+GROUP BY 
+    DATE_TRUNC('month', er.date_generated),
+    pp.power_plant_id,
+    ff.ff_id
+ORDER BY month_generated;
