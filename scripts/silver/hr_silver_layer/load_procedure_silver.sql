@@ -28,7 +28,7 @@ BEGIN
 	    employee_id,
     	gender,
     	birthdate,
-    	age,
+    	-- age,
     	position_id,
     	position_name,
     	p_np,
@@ -40,7 +40,7 @@ BEGIN
     	b.employee_id,
     	b.gender,
     	b.birthdate,
-    	DATE_PART('year', AGE(CURRENT_DATE, b.birthdate))::INT, -- derived age
+    	-- DATE_PART('year', AGE(CURRENT_DATE, b.birthdate))::INT, -- derived age
     	b.position_id,
     	b.position_name,
     	b.p_np,
@@ -52,7 +52,7 @@ BEGIN
 	DO UPDATE SET
     	gender = EXCLUDED.gender,
     	birthdate = EXCLUDED.birthdate,
-    	age = EXCLUDED.age,
+    	-- age = EXCLUDED.age,
     	position_id = EXCLUDED.position_id,
     	position_name = EXCLUDED.position_name,
     	p_np = EXCLUDED.p_np,
@@ -116,13 +116,19 @@ BEGIN
 	WHERE employee_id IN (SELECT employee_id FROM bronze.hr_tenure);
 
 	INSERT INTO silver.hr_tenure (
-    employee_id, start_date, end_date, is_active, tenure_length, date_created, date_updated
+	    employee_id, 
+		start_date, 
+		end_date, 
+		-- is_active, 
+		tenure_length, 
+		date_created, 
+		date_updated
 	)
 	SELECT
     	b.employee_id,
     	b.start_date,
     	b.end_date,
-    	b.end_date IS NULL,
+    	-- b.end_date IS NULL,
     	ROUND(EXTRACT(DAY FROM COALESCE(b.end_date, CURRENT_DATE) - b.start_date) / 365.0, 2), -- TO BE UPDATED
     	CURRENT_TIMESTAMP,
     	CURRENT_TIMESTAMP

@@ -39,20 +39,6 @@ CREATE VIEW gold.vw_active_per_gender AS
 -- ACTIVE EMPLOYEES PER YEAR
 CREATE VIEW gold.vw_headcount_per_year AS
 	SELECT
-    	EXTRACT(YEAR FROM active_year)::INT AS year,
-    	COUNT(DISTINCT employee_id) AS active_employee_count
-	FROM (
-    	SELECT
-        	employee_id,
-        	generate_series(
-            	DATE_TRUNC('year', start_date),
-            	COALESCE(end_date, CURRENT_DATE),
-            	INTERVAL '1 year'
-        	)::DATE AS active_year
-    	FROM silver.hr_tenure
-	) AS yearly_activity
-	GROUP BY year
-	ORDER BY year;
 
 -- ACTIVE GENDER HEADCOUNT PER YEAR
 CREATE VIEW gold.vw_gender_headcount_per_year AS
