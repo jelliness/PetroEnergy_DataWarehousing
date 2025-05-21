@@ -13,11 +13,15 @@ CREATE OR REPLACE PROCEDURE bronze.load_csr_bronze()
 LANGUAGE plpgsql
 AS $$
 DECLARE
+    local_file_path TEXT;
     start_time TIMESTAMP;
     end_time TIMESTAMP;
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
 BEGIN
+    -- Set the local file path here for easy directory changes
+    local_file_path := 'C:\Users\Rafael\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr';
+    
     batch_start_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '================================';
     RAISE NOTICE 'Loading Bronze Layer Data...';
@@ -33,9 +37,10 @@ BEGIN
     TRUNCATE TABLE bronze.csr_company;
     RAISE NOTICE '>> Bulk inserting data into bronze.csr_company...';
 
-    COPY bronze.csr_company
-    FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_company.csv'
-    DELIMITER ',' CSV HEADER;
+    EXECUTE format(
+        'COPY bronze.csr_company FROM %L DELIMITER '','' CSV HEADER',
+        local_file_path || '\csr_company.csv'
+    );
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -51,9 +56,10 @@ BEGIN
     TRUNCATE TABLE bronze.csr_programs;
     RAISE NOTICE '>> Bulk inserting data into bronze.csr_programs...';
 
-    COPY bronze.csr_programs
-    FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_programs.csv'
-    DELIMITER ',' CSV HEADER;
+    EXECUTE format(
+        'COPY bronze.csr_programs FROM %L DELIMITER '','' CSV HEADER',
+        local_file_path || '\csr_programs.csv'
+    );
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -69,9 +75,10 @@ BEGIN
     TRUNCATE TABLE bronze.csr_projects;
     RAISE NOTICE '>> Bulk inserting data into bronze.csr_projects...';
 
-    COPY bronze.csr_projects
-    FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_projects.csv'
-    DELIMITER ',' CSV HEADER;
+    EXECUTE format(
+        'COPY bronze.csr_projects FROM %L DELIMITER '','' CSV HEADER',
+        local_file_path || '\csr_projects.csv'
+    );
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -87,9 +94,10 @@ BEGIN
     TRUNCATE TABLE bronze.csr_activity;
     RAISE NOTICE '>> Bulk inserting data into bronze.csr_activity...';
 
-    COPY bronze.csr_activity
-    FROM 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr\csr_activity.csv'
-    DELIMITER ',' CSV HEADER;
+    EXECUTE format(
+        'COPY bronze.csr_activity FROM %L DELIMITER '','' CSV HEADER',
+        local_file_path || '\csr_activity.csv'
+    );
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
