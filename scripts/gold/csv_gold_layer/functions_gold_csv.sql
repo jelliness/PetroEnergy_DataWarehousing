@@ -30,7 +30,7 @@ RETURNS TABLE (
     generation_sources TEXT,
     province VARCHAR(30),
     energy_generated_kwh NUMERIC(10,2),
-    co2_avoidance_kg NUMERIC(10,2),
+    co2_avoidance_tons NUMERIC(10,2),
     date_generated DATE
 )
 AS $$
@@ -42,7 +42,7 @@ BEGIN
         feg.generation_source,
         feg.province,
         CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(10,2)) AS energy_generated_kwh,
-        CAST(SUM(feg.co2_avoidance_kg) AS NUMERIC(10,2)) AS co2_avoidance_kg,
+        CAST(SUM(feg.co2_avoidance_tons) AS NUMERIC(10,2)) AS co2_avoidance_tons,
         feg.date_generated
     FROM gold.fact_energy_generated feg
     WHERE (p_power_plant_id IS NULL OR feg.power_plant_id = ANY(p_power_plant_id))
@@ -87,7 +87,7 @@ CREATE OR REPLACE FUNCTION gold.func_fact_energy_monthly(
 RETURNS TABLE (
 	month_name TEXT,
     energy_generated_kwh NUMERIC(10,2),
-    co2_avoidance_kg NUMERIC(10,2)
+    co2_avoidance_tons NUMERIC(10,2)
 )
 AS $$
 BEGIN
@@ -95,7 +95,7 @@ BEGIN
     SELECT
 		feg.month_name,
         CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(10,2)) AS energy_generated_kwh,
-        CAST(SUM(feg.co2_avoidance_kg) AS NUMERIC(10,2)) AS co2_avoidance_kg
+        CAST(SUM(feg.co2_avoidance_tons) AS NUMERIC(10,2)) AS co2_avoidance_tons
     FROM gold.fact_energy_generated feg
     WHERE (p_power_plant_id IS NULL OR feg.power_plant_id = ANY(p_power_plant_id))
     	AND (p_company_id IS NULL OR feg.company_id = ANY(p_company_id))
@@ -137,7 +137,7 @@ CREATE OR REPLACE FUNCTION gold.func_fact_energy_quarterly(
 RETURNS TABLE (
 	quarter INT,
     energy_generated_kwh NUMERIC(15,2),
-    co2_avoidance_kg NUMERIC(15,2)
+    co2_avoidance_tons NUMERIC(15,2)
 )
 AS $$
 BEGIN
@@ -145,7 +145,7 @@ BEGIN
     SELECT
 		feg.quarter,
         CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(15,2)) AS energy_generated_kwh,
-        CAST(SUM(feg.co2_avoidance_kg) AS NUMERIC(15,2)) AS co2_avoidance_kg
+        CAST(SUM(feg.co2_avoidance_tons) AS NUMERIC(15,2)) AS co2_avoidance_tons
     FROM gold.fact_energy_generated feg
     WHERE (p_power_plant_id IS NULL OR feg.power_plant_id = ANY(p_power_plant_id))
     	AND (p_company_id IS NULL OR feg.company_id = ANY(p_company_id))
@@ -183,7 +183,7 @@ CREATE OR REPLACE FUNCTION gold.func_fact_energy_yearly(
 RETURNS TABLE (
 	year INT,
     energy_generated_kwh NUMERIC(15,2),
-    co2_avoidance_kg NUMERIC(15,2)
+    co2_avoidance_tons NUMERIC(15,2)
 )
 AS $$
 BEGIN
@@ -191,7 +191,7 @@ BEGIN
     SELECT
 		feg.year,
         CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(15,2)) AS energy_generated_kwh,
-        CAST(SUM(feg.co2_avoidance_kg) AS NUMERIC(15,2)) AS co2_avoidance_kg
+        CAST(SUM(feg.co2_avoidance_tons) AS NUMERIC(15,2)) AS co2_avoidance_tons
     FROM gold.fact_energy_generated feg
     WHERE (p_power_plant_id IS NULL OR feg.power_plant_id = ANY(p_power_plant_id))
     	AND (p_company_id IS NULL OR feg.company_id = ANY(p_company_id))

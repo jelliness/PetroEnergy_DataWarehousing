@@ -17,6 +17,7 @@ Usage:
 -- =============================================================================
 -- Create Dimension: gold.dim_date
 -- =============================================================================
+DROP VIEW IF EXISTS gold.dim_date CASCADE;
 CREATE OR REPLACE VIEW gold.dim_date AS
 SELECT
     d::DATE AS date_id,
@@ -34,6 +35,7 @@ FROM generate_series('2000-01-01'::DATE, '2050-12-31'::DATE, '1 day') AS d;
 -- =============================================================================
 -- Create Dimension: gold.dim_powerplant_profile
 -- =============================================================================
+DROP VIEW IF EXISTS gold.dim_powerplant_profile CASCADE;
 CREATE OR REPLACE VIEW gold.dim_powerplant_profile AS 
 SELECT
     pp.power_plant_id,
@@ -52,12 +54,14 @@ LEFT JOIN ref.ref_emission_factors ef ON pp.ef_id = ef.ef_id;
 -- =============================================================================
 -- Create Fact: gold.fact_energy_generated
 -- =============================================================================
+DROP VIEW IF EXISTS gold.fact_energy_generated CASCADE;
 CREATE OR REPLACE VIEW gold.fact_energy_generated AS
 SELECT 
     er.power_plant_id,
     CAST(er.date_generated AS DATE) AS date_generated,
     er.energy_generated_kwh,
-    er.co2_avoidance_kg,
+    er.co2_avoidance_kg*0.001 as co2_avoidance_tons,
+	
     -- from dim_power_plant
     pp.company_id,
     pp.generation_source,
