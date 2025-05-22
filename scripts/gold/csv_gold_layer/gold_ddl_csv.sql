@@ -45,9 +45,9 @@ SELECT
     pp.city_town,
     pp.province,
     pp.country
-FROM silver.csv_power_plants pp
+FROM ref.ref_power_plants pp
 LEFT JOIN ref.company_main co ON pp.company_id = co.company_id
-LEFT JOIN silver.csv_emission_factors ef ON pp.ef_id = ef.ef_id;
+LEFT JOIN ref.ref_emission_factors ef ON pp.ef_id = ef.ef_id;
 
 -- =============================================================================
 -- Create Fact: gold.fact_energy_generated

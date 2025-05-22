@@ -238,7 +238,7 @@ BEGIN
             chf.hec_id,
             chf.hec_value,
             chf.hec_year
-        FROM silver.csv_hec_factors chf
+        FROM ref.ref_hec_factors chf
         ORDER BY hec_id, chf.hec_year DESC
     )
     SELECT 
@@ -286,7 +286,7 @@ BEGIN
             chf.hec_id,
             chf.hec_value,
             chf.hec_year
-        FROM silver.csv_hec_factors chf
+        FROM ref.ref_hec_factors chf
         ORDER BY hec_id, hec_year DESC
     )
     SELECT 
