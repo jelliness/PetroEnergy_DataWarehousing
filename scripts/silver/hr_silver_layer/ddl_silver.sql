@@ -60,22 +60,25 @@ CREATE TABLE silver.hr_tenure (
 
 
 CREATE TABLE silver.hr_training (
-    employee_id VARCHAR(20) PRIMARY KEY,
+    employee_id VARCHAR(20),
     hours INT,
     date TIMESTAMP,
     position_id VARCHAR(2),
 	date_created TIMESTAMP,
-	date_updated TIMESTAMP
+	date_updated TIMESTAMP,
+	PRIMARY KEY (date, employee_id)
+	
 );
 
 CREATE TABLE silver.hr_safety (
-    employee_id VARCHAR(20) PRIMARY KEY,
+    employee_id VARCHAR(20),
     company_id VARCHAR(6),
     date TIMESTAMP,
     type_of_accident VARCHAR(50),
     safety_man_hours INT,
 	date_created TIMESTAMP,
-	date_updated TIMESTAMP
+	date_updated TIMESTAMP,
+	PRIMARY KEY (date, employee_id)
 );
 
 ALTER TABLE silver.hr_parental_leave ADD FOREIGN KEY (employee_id) REFERENCES silver.hr_demographics(employee_id);
