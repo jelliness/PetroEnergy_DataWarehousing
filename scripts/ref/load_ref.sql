@@ -13,6 +13,29 @@ BEGIN
     SET TIME ZONE 'Asia/Manila';
     RAISE NOTICE 'Session time zone set to %', current_setting('TIMEZONE');
 
+    RAISE NOTICE '>> Resetting company_main table...';
+    
+
+	INSERT INTO ref.company_main (company_id, company_name, parent_company_id, address) VALUES
+	    ('PERC', 'PetroEnergy Resources Corp', NULL, NULL),
+	    ('PGEC', 'PetroGreen Energy Corp', 'PERC', NULL),
+	    ('PSC', 'PetroSolar Corp', 'PGEC', NULL),
+	    ('PWEI', 'PetroWind Energy Inc.', 'PGEC', NULL),
+	    ('MGI', 'Maibarara Geothermal Inc.', 'PGEC', NULL),
+	    ('ESEC', 'EcoSolar Energy Corp', 'PGEC', NULL),
+	    ('RGEC', 'Rizal Green Energy Corp', 'PGEC', NULL),
+	    ('BEP_NL', 'Buhawind Energy Phillippines (Northern Luzon)', 'PGEC', NULL),
+	    ('BEP_NM', 'Buhawind Energy Phillippines (Northern Mindoro)', 'PGEC', NULL),
+	    ('BEP_EP', 'Buhawind Energy Phillippines (East Panay)', 'PGEC', NULL),
+	    ('BGEC', 'Bugallon Green Energy Corp', 'PGEC', NULL),
+	    ('SJGEC', 'San Jose Green Energy Corp', 'PGEC', NULL),
+	    ('DGEC', 'Dagohoy Green Energy Corp', 'PGEC', NULL),
+	    ('BKS', 'BKS Green Energy Corp', 'PGEC', NULL)
+	ON CONFLICT (company_id) DO UPDATE
+	SET company_name = EXCLUDED.company_name,
+	    parent_company_id = EXCLUDED.parent_company_id,
+	    address = EXCLUDED.address;
+
 
     -- ====================
     -- Upsert expenditure_type
@@ -119,7 +142,7 @@ BEGIN
 		    NOW(),
 		    NOW()
 		FROM ref_power_plants pp
-		LEFT JOIN public.company_main com ON com.company_id = pp.company_id
+		LEFT JOIN ref.company_main com ON com.company_id = pp.company_id
 		ON CONFLICT (power_plant_id) DO UPDATE
 		SET 
 		    company_id = EXCLUDED.company_id,

@@ -4,7 +4,16 @@ DDL Script: Create ref Tables
 ===============================================================================
 */
 
-CREATE SCHEMA ref;
+-- CREATE SCHEMA ref;
+DROP TABLE IF EXISTS ref.company_main CASCADE;
+
+CREATE TABLE ref.company_main (
+    company_id VARCHAR(20) PRIMARY KEY,
+    company_name VARCHAR(255) NOT NULL,
+    parent_company_id VARCHAR(20) REFERENCES ref.company_main(company_id) ON DELETE SET NULL,
+    address TEXT
+);
+
 DROP TABLE IF EXISTS ref.expenditure_type CASCADE;
 CREATE TABLE ref.expenditure_type (
     type_id VARCHAR(4) PRIMARY KEY,
@@ -45,7 +54,7 @@ CREATE TABLE ref.ref_power_plants (
 
     -- Foreign Keys
     CONSTRAINT fk_power_plant_company FOREIGN KEY (company_id)
-        REFERENCES public.company_main (company_id) ON DELETE CASCADE,
+        REFERENCES ref.company_main (company_id) ON DELETE CASCADE,
     CONSTRAINT fk_power_plant_emission FOREIGN KEY (ef_id)
         REFERENCES ref.ref_emission_factors (ef_id) ON DELETE SET NULL
 );
