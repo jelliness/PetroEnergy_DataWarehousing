@@ -34,7 +34,7 @@ CREATE TABLE silver.econ_value (
         COALESCE(share_in_net_income_of_associate, 0) +
         COALESCE(miscellaneous_income, 0)
     ) STORED,
-    -- Metadata
+    -- Metadata 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT silver_econ_value_pk PRIMARY KEY (year)
@@ -69,18 +69,19 @@ CREATE TABLE silver.econ_expenditures (
 DROP TABLE IF EXISTS silver.econ_capital_provider_payment;
 CREATE TABLE silver.econ_capital_provider_payment (
     year SMALLINT,
-    interest NUMERIC NOT NULL DEFAULT 0,
+    interest NUMERIC NOT NULL DEFAULT 0, 
     dividends_to_nci NUMERIC NOT NULL DEFAULT 0,
     dividends_to_parent NUMERIC NOT NULL DEFAULT 0,
     -- Derived columns
     total_dividends_interest NUMERIC GENERATED ALWAYS AS (
         COALESCE(interest, 0) +
         COALESCE(dividends_to_nci, 0) +
-        COALESCE(dividends_to_parent, 0)
+        COALESCE(dividends_to_parent, 0) 
     ) STORED,
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    CONSTRAINT silver_econ_capital_provider_payment_pk PRIMARY KEY (year)
 ); 
 
 
