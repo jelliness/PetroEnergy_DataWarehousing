@@ -46,3 +46,12 @@ BEGIN
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE '================================';
+        RAISE NOTICE 'Error occurred while loading data: %', SQLERRM;
+        RAISE NOTICE '================================';
+END;
+$BODY$;
