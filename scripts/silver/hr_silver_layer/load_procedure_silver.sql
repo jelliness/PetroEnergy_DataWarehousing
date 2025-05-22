@@ -154,15 +154,14 @@ BEGIN
     RAISE NOTICE '>> Inserting data into silver.hr_training...';
 
 	DELETE FROM silver.hr_training
-	WHERE (employee_id, month_start, year_start) IN (
-    	SELECT employee_id, month_start, year_start FROM bronze.hr_training
+	WHERE (employee_id, date) IN (
+    	SELECT employee_id, date FROM bronze.hr_training
 	);
 
 	INSERT INTO silver.hr_training (
     	employee_id, 
 		hours, 
-		month_start, 
-		year_start, 
+		date,  
 		position_id, 
 		date_created, 
 		date_updated
@@ -170,8 +169,7 @@ BEGIN
 	SELECT
     	b.employee_id,
     	b.hours,
-    	b.month_start,
-    	b.year_start,
+    	b.date,
     	b.position_id,
     	CURRENT_TIMESTAMP,
     	CURRENT_TIMESTAMP

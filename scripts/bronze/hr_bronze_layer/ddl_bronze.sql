@@ -52,8 +52,7 @@ CREATE TABLE bronze.hr_tenure (
 CREATE TABLE bronze.hr_training (
     employee_id VARCHAR(20),
     hours INT,
-    month_start INT,
-    year_start INT,
+    date TIMESTAMP,
     position_id VARCHAR(2)
 );
 
@@ -64,8 +63,3 @@ CREATE TABLE bronze.hr_safety (
     type_of_accident VARCHAR(50),
     safety_man_hours INT
 );
-
--- ALTER TABLE bronze.hr_parental_leave ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
--- ALTER TABLE bronze.hr_tenure ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
--- ALTER TABLE bronze.hr_training ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);
--- ALTER TABLE bronze.hr_safety ADD FOREIGN KEY (employee_id) REFERENCES bronze.hr_demographics(employee_id);

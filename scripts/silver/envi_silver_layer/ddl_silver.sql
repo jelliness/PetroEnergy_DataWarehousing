@@ -28,34 +28,34 @@ Script Purpose:
 DROP TABLE IF EXISTS silver.envi_company_property;
 CREATE TABLE silver.envi_company_property (
     cp_id      VARCHAR(20) NOT NULL,       -- Example: CP-PSC-001
-    company_id VARCHAR(10) NOT NULL,       -- Referenced to company_info.
+    company_id VARCHAR(10) NOT NULL,       -- Referenced to company_main.
     cp_name    VARCHAR(30),
     cp_type    VARCHAR(15),       -- Example values: Equipment, Vehicle
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_cp_pk PRIMARY KEY (cp_id)
-	--FOREIGN KEY (company_id) REFERENCES company_info(company_id)
+    CONSTRAINT silver_cp_pk PRIMARY KEY (cp_id),
+	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
 );
 
 -- envi_natural_sources
 DROP TABLE IF EXISTS silver.envi_natural_sources;
 CREATE TABLE silver.envi_natural_sources (
     ns_id      VARCHAR(20) NOT NULL,       -- Example: NS-PSC-001
-    company_id VARCHAR(10) NOT NULL,       -- Referenced to company_info.
+    company_id VARCHAR(10) NOT NULL,       -- Referenced to company_main.
     ns_name    VARCHAR(30),
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_ns_pk PRIMARY KEY (ns_id)
-	--FOREIGN KEY (company_id) REFERENCES company_info(company_id)
+    CONSTRAINT silver_ns_pk PRIMARY KEY (ns_id),
+	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
 );
 
 -- envi_water_withdrawal
 DROP TABLE IF EXISTS silver.envi_water_withdrawal;
 CREATE TABLE silver.envi_water_withdrawal (
     ww_id                 	VARCHAR(20) NOT NULL,         -- Example: WW-PSC-2022-002
-    company_id            	VARCHAR(10) NOT NULL,         -- Referenced to company_info.
+    company_id            	VARCHAR(10) NOT NULL,         -- Referenced to company_main.
     ns_id                 	VARCHAR(20),         -- Referenced to natural sources.
     volume                	DOUBLE PRECISION,    -- Allows decimal values (e.g., 123.456)
     unit_of_measurement   	VARCHAR(15),
@@ -65,15 +65,16 @@ CREATE TABLE silver.envi_water_withdrawal (
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_ww_pk PRIMARY KEY (ww_id)
-	--FOREIGN KEY (company_id) REFERENCES company_info(company_id)
+    CONSTRAINT silver_ww_pk PRIMARY KEY (ww_id),
+	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id),
+    FOREIGN KEY (ns_id) REFERENCES silver.envi_natural_sources(ns_id)
 );
 
 -- envi_diesel_consumption
 DROP TABLE IF EXISTS silver.envi_diesel_consumption;
 CREATE TABLE silver.envi_diesel_consumption (
     dc_id                    VARCHAR(20) NOT NULL,            -- Example: EC-PSC-2023-001
-    company_id               VARCHAR(10) NOT NULL,            -- Referenced to company_info.
+    company_id               VARCHAR(10) NOT NULL,            -- Referenced to company_main.
     cp_id                    VARCHAR(20),            -- Referenced to company_property.
     unit_of_measurement      VARCHAR(15),
     consumption              DOUBLE PRECISION,        -- Allows decimal values (e.g., 234.789)
@@ -84,15 +85,16 @@ CREATE TABLE silver.envi_diesel_consumption (
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_dc_pk PRIMARY KEY (dc_id)
-	--FOREIGN KEY (company_id) REFERENCES company_info(company_id)
+    CONSTRAINT silver_dc_pk PRIMARY KEY (dc_id),
+	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id),
+    FOREIGN KEY (cp_id) REFERENCES silver.envi_company_property(cp_id)
 );
 
 -- envi_electric_consumption
 DROP TABLE IF EXISTS silver.envi_electric_consumption;
 CREATE TABLE silver.envi_electric_consumption (
     ec_id                   VARCHAR(20) NOT NULL,            -- Example: EC-PSC-2023-001
-    company_id              VARCHAR(10) NOT NULL,            -- Referenced to company_info.
+    company_id              VARCHAR(10) NOT NULL,            -- Referenced to company_main.
     unit_of_measurement     VARCHAR(15),
     consumption             DOUBLE PRECISION,        -- Allows decimal values (e.g., 234.789)
     quarter                 VARCHAR(2),
@@ -100,15 +102,15 @@ CREATE TABLE silver.envi_electric_consumption (
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_ec_pk PRIMARY KEY (ec_id)
-	--FOREIGN KEY (company_id) REFERENCES company_info(company_id)
+    CONSTRAINT silver_ec_pk PRIMARY KEY (ec_id),
+	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
 ); 
 
 -- envi_non_hazard_waste
 DROP TABLE IF EXISTS silver.envi_non_hazard_waste;
 CREATE TABLE silver.envi_non_hazard_waste (
     nhw_id                  VARCHAR(20) NOT NULL,           -- Example: NHW-PSC-2024-001
-    company_id              VARCHAR(10) NOT NULL,       -- Referenced to company_info.
+    company_id              VARCHAR(10) NOT NULL,       -- Referenced to company_main.
     waste_source            VARCHAR(20),     -- Example: Staff House, Security, Utility
     metrics                 VARCHAR(20),
     unit_of_measurement     VARCHAR(15),
@@ -119,8 +121,8 @@ CREATE TABLE silver.envi_non_hazard_waste (
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_nhw_pk PRIMARY KEY (nhw_id)
-	--FOREIGN KEY (company_id) REFERENCES company_info(company_id)
+    CONSTRAINT silver_nhw_pk PRIMARY KEY (nhw_id),
+	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
 );
 
 
@@ -128,7 +130,7 @@ CREATE TABLE silver.envi_non_hazard_waste (
 DROP TABLE IF EXISTS silver.envi_hazard_waste_generated;
 CREATE TABLE silver.envi_hazard_waste_generated (
     hwg_id                  VARCHAR(20) NOT NULL,             -- Example: HW-PSC-2023-001
-    company_id              VARCHAR(10) NOT NULL,              -- Referenced to company_info.
+    company_id              VARCHAR(10) NOT NULL,              -- Referenced to company_main.
     metrics                 VARCHAR(20),
     unit_of_measurement     VARCHAR(15),
     waste_generated         DOUBLE PRECISION,                 -- Allows decimal values (e.g., 234.789)
@@ -137,15 +139,15 @@ CREATE TABLE silver.envi_hazard_waste_generated (
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_hwg_pk PRIMARY KEY (hwg_id)
-	--FOREIGN KEY (company_id) REFERENCES company_info(company_id)
+    CONSTRAINT silver_hwg_pk PRIMARY KEY (hwg_id),
+	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
 );
 
 -- envi_hazard_waste_disposed
 DROP TABLE IF EXISTS silver.envi_hazard_waste_disposed;
 CREATE TABLE silver.envi_hazard_waste_disposed (
     hwd_id                  VARCHAR(20) NOT NULL,            -- Example: HW-PSC-2023-001
-    company_id              VARCHAR(10) NOT NULL,              -- Referenced to company_info.
+    company_id              VARCHAR(10) NOT NULL,              -- Referenced to company_main.
     metrics                 VARCHAR(20),
     unit_of_measurement     VARCHAR(15),
     waste_disposed          DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
@@ -153,8 +155,8 @@ CREATE TABLE silver.envi_hazard_waste_disposed (
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_hwd_pk PRIMARY KEY (hwd_id)
-	--FOREIGN KEY (company_id) REFERENCES company_info(company_id)
+    CONSTRAINT silver_hwd_pk PRIMARY KEY (hwd_id),
+	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
 );
 
 -- Adding constraints (UNIQUE)
