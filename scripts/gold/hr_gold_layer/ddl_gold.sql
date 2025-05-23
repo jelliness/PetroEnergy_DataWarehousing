@@ -8,6 +8,7 @@ CREATE SCHEMA IF NOT EXISTS gold;
 DROP VIEW IF EXISTS gold.dim_employee_descriptions CASCADE;
 DROP VIEW IF EXISTS gold.dim_employee_training_description;
 DROP VIEW IF EXISTS gold.dim_employee_safety_description;
+DROP VIEW IF EXISTS gold.dim_employee_parental_leave_description;
 
 /*
 ===============================================================================
@@ -70,3 +71,23 @@ CREATE OR REPLACE VIEW gold.dim_employee_safety_description AS
 	FROM silver.hr_safety sft
 	LEFT JOIN gold.dim_employee_descriptions dd ON sft.employee_id = dd.employee_id
 	ORDER BY sft.employee_id;
+
+/*
+===============================================================================
+						PARENTAL LEAVE DESCRIPTION
+===============================================================================
+*/
+CREATE OR REPLACE VIEW gold.dim_employee_parental_leave_description AS
+SELECT
+    d.employee_id,
+    d.company_id,
+    d.company_name,
+    d.gender,
+    d.position_id,
+    pl.date,
+    pl.days,
+    pl.months_availed,
+    pl.type_of_leave
+FROM silver.hr_parental_leave pl
+LEFT JOIN gold.dim_employee_descriptions d ON pl.employee_id = d.employee_id
+ORDER BY pl.employee_id;

@@ -58,7 +58,7 @@ CREATE TABLE bronze.hr_training (
 
 CREATE TABLE bronze.hr_safety (
     employee_id VARCHAR(20),
-    company_id VARCHAR(8),
+    company_id VARCHAR(10),
     date TIMESTAMP,
     type_of_accident VARCHAR(50),
     safety_man_hours INT
