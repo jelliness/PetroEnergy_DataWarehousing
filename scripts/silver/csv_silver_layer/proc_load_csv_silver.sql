@@ -48,66 +48,51 @@ BEGIN
 		    updated_at
 		)
 		SELECT 
-			CAST(
-				'EN-' || 
-				TO_CHAR(TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp, 'YYYYMMDD') || 
-				'-' || 
-				LPAD(
-					ROW_NUMBER() OVER (
-						PARTITION BY TO_CHAR(TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp, 'YYYYMMDD') 
-						ORDER BY TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp
-					)::TEXT, 
-					3, '0'
-				)
-			AS VARCHAR(20)
-			) AS energy_id,
+		energy_id,
+		er.power_plant_id,
+		TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp AS date_generated,
+		ROUND(
+			CASE
+				WHEN unit_of_measurement ILIKE 'MWh' THEN COALESCE(energy_generated, 0) * 1000
+				WHEN unit_of_measurement ILIKE 'GWh' THEN COALESCE(energy_generated, 0) * 1000000
+				WHEN unit_of_measurement ILIKE 'kWh' THEN COALESCE(energy_generated, 0)
+				ELSE 0
+			END,
+			4
+		) AS energy_generated,
 
-			er.power_plant_id,
-
-			TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp AS date_generated,
-
-			ROUND(
+		ROUND(
+			(
 				CASE
 					WHEN unit_of_measurement ILIKE 'MWh' THEN COALESCE(energy_generated, 0) * 1000
 					WHEN unit_of_measurement ILIKE 'GWh' THEN COALESCE(energy_generated, 0) * 1000000
 					WHEN unit_of_measurement ILIKE 'kWh' THEN COALESCE(energy_generated, 0)
 					ELSE 0
-				END,
-				4
-			) AS energy_generated,
-
-			ROUND(
-				(
-					CASE
-						WHEN unit_of_measurement ILIKE 'MWh' THEN COALESCE(energy_generated, 0) * 1000
-						WHEN unit_of_measurement ILIKE 'GWh' THEN COALESCE(energy_generated, 0) * 1000000
-						WHEN unit_of_measurement ILIKE 'kWh' THEN COALESCE(energy_generated, 0)
-						ELSE 0
-					END
-				) * COALESCE(CAST(ef.kg_co2_per_kwh AS NUMERIC), 0) 
-				- 
+				END
+			) * COALESCE(CAST(ef.kg_co2_per_kwh AS NUMERIC), 0) 
+			- 
 				CASE 
 					WHEN ef.generation_source ILIKE 'geothermal' THEN 
 						ROUND(
 							(
-								CASE
-									WHEN unit_of_measurement ILIKE 'MWh' THEN COALESCE(energy_generated, 0) * 1000
-									WHEN unit_of_measurement ILIKE 'GWh' THEN COALESCE(energy_generated, 0) * 1000000
-									WHEN unit_of_measurement ILIKE 'kWh' THEN COALESCE(energy_generated, 0)
-									ELSE 0
-								END
+							CASE
+								WHEN unit_of_measurement ILIKE 'MWh' THEN COALESCE(energy_generated, 0) * 1000
+								WHEN unit_of_measurement ILIKE 'GWh' THEN COALESCE(energy_generated, 0) * 1000000
+								WHEN unit_of_measurement ILIKE 'kWh' THEN COALESCE(energy_generated, 0)
+								ELSE 0
+							END
 							) * COALESCE(ef.co2_emitted_kg, 0),
 						4)
 					ELSE 0
 				END,
-				4
-			) AS co2_avoidance,
-			NOW(),
-			NOW()
-
+			4
+		) AS co2_avoidance,
+		NOW(),
+		NOW()
 		FROM bronze.csv_energy_records er
 		LEFT JOIN ref.ref_power_plants pp ON pp.power_plant_id = er.power_plant_id
 		LEFT JOIN ref.ref_emission_factors ef ON pp.ef_id = ef.ef_id
+		ORDER BY energy_id,date_generated
 
 		ON CONFLICT (energy_id) DO UPDATE
 		SET 

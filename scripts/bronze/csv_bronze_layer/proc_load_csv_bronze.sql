@@ -22,6 +22,7 @@ BEGIN
 
     DROP TABLE IF EXISTS csv_energy_records;
     CREATE TEMP TABLE csv_energy_records (
+        energy_id TEXT,
         power_plant_id TEXT,
         datetime TEXT,
         energy_generated NUMERIC,
@@ -34,12 +35,14 @@ BEGIN
     );
 
     INSERT INTO bronze.csv_energy_records (
-        power_plant_id, datetime, energy_generated, unit_of_measurement
+        energy_id, power_plant_id, datetime, energy_generated, unit_of_measurement
     )
-    SELECT power_plant_id, datetime, energy_generated, unit_of_measurement
+    SELECT energy_id, power_plant_id, datetime, energy_generated, unit_of_measurement
     FROM csv_energy_records
-    ON CONFLICT (power_plant_id, datetime) DO UPDATE
+    ON CONFLICT (energy_id) DO UPDATE
     SET
+        power_plant_id = EXCLUDED.power_plant_id,
+        datetime = EXCLUDED.datetime,
         energy_generated = EXCLUDED.energy_generated,
         unit_of_measurement = EXCLUDED.unit_of_measurement,
         updated_at = CURRENT_TIMESTAMP;
