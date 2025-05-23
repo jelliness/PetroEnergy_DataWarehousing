@@ -27,35 +27,6 @@ BEGIN
     RAISE NOTICE '================================';
 
     BEGIN
-        -- csr_company
-        RAISE NOTICE '------------------------------------------------';
-        RAISE NOTICE 'Loading CSR Company Data...';
-        RAISE NOTICE '------------------------------------------------';
-
-        start_time := CURRENT_TIMESTAMP;
-
-        INSERT INTO silver.csr_company (
-            company_id,
-            company_name,
-            resources,
-            date_created,
-            date_updated
-        )
-        SELECT
-            COALESCE(NULLIF(TRIM(company_id), ''), 'Not Available'),
-            COALESCE(NULLIF(TRIM(company_name), ''), 'Not Available'),
-            COALESCE(NULLIF(TRIM(resources), ''), 'Not Available'),
-            NOW(), NOW()
-        FROM bronze.csr_company
-        ON CONFLICT (company_id) DO UPDATE
-        SET
-            company_name = EXCLUDED.company_name,
-            resources = EXCLUDED.resources,
-            date_updated = CURRENT_TIMESTAMP;
-
-        end_time := CURRENT_TIMESTAMP;
-        RAISE NOTICE '>> Load Duration (csr_company): % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-        RAISE NOTICE '-----------------';
 
         -- csr_programs
         RAISE NOTICE '------------------------------------------------';
@@ -179,3 +150,5 @@ BEGIN
     END;
 END;
 $$;
+
+call silver.load_csr_silver()

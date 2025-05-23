@@ -8,14 +8,6 @@ Script Purpose:
       Run this script to re-define the DDL structure of 'bronze' Tables
 ===============================================================================
 */
-
-DROP TABLE IF EXISTS bronze.csr_company;
-CREATE TABLE bronze.csr_company (
-    company_id VARCHAR(20),
-    company_name VARCHAR(100),
-    resources VARCHAR(20)
-);
-
 DROP TABLE IF EXISTS bronze.csr_programs;
 CREATE TABLE bronze.csr_programs (
 	program_id VARCHAR(5),

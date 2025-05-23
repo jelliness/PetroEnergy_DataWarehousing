@@ -21,6 +21,7 @@ RETURNS TABLE (
     employee_id VARCHAR(20),
     gender VARCHAR(1),
     position_id VARCHAR(2),
+	position_name VARCHAR(20),
     company_id VARCHAR(10),
     company_name VARCHAR(255),
     start_date TIMESTAMP,
@@ -34,6 +35,7 @@ BEGIN
 			d.employee_id,
 			d.gender,
 			d.position_id,
+			d.position_name,
 			d.company_id,
 			d.company_name,
 			d.start_date,
@@ -51,6 +53,7 @@ BEGIN
 			d.employee_id,
 			d.gender,
 			d.position_id,
+			d.position_name,
 			d.company_id,
 			d.company_name,
 			d.start_date,
@@ -70,17 +73,16 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION gold.func_hr_rate_summary (
 	p_gender VARCHAR(1) DEFAULT NULL,
 	p_position_id VARCHAR(2)[] DEFAULT NULL,
-	p_company_id VARCHAR(6)[] DEFAULT NULL,
+	p_company_id VARCHAR(10)[] DEFAULT NULL,
 	p_year INT[] DEFAULT NULL
 	)
 RETURNS TABLE (
 	year INT,
-	company_id VARCHAR(6),
+	company_id VARCHAR(10),
 	company_name VARCHAR(255),
 	total_employees INT,
 	avg_tenure NUMERIC(5,2),
-	resigned_count INT,
-	attrition_rate_percent NUMERIC(5,2)
+	resigned_count INT
 ) AS $$
 BEGIN
 RETURN QUERY
@@ -138,11 +140,7 @@ RETURN QUERY
 		t.company_name,
 		t.total_employees,
 		t.avg_tenure,
-		COALESCE(r.resigned_count::INT, 0) AS resigned_count,
-		CASE
-			WHEN t.total_employees > 0 THEN ROUND((COALESCE(r.resigned_count, 0)::NUMERIC / t.total_employees) * 100, 2)
-			ELSE NULL
-		END AS attrition_rate_percent
+		COALESCE(r.resigned_count::INT, 0) AS resigned_count
 	FROM total_active t
 	LEFT JOIN resignations r ON t.company_id = r.company_id AND t.year = r.year
 	ORDER BY t.year, t.company_id;
@@ -275,6 +273,7 @@ RETURNS TABLE (
     company_name VARCHAR(255),
     gender VARCHAR,
     position_id VARCHAR,
+	type_of_leave VARCHAR,
     total_days INT,
     total_months INT,
     leave_count INT
@@ -290,6 +289,7 @@ BEGIN
         pl.company_name,
         pl.gender,
         pl.position_id,
+		pl.type_of_leave,
         SUM(pl.days)::INT AS total_days,
         SUM(pl.months_availed)::INT AS total_months,
         COUNT(*)::INT AS leave_count
@@ -307,7 +307,8 @@ BEGIN
         pl.company_id,
         pl.company_name,
         pl.gender,
-        pl.position_id
+        pl.position_id,
+		pl.type_of_leave
     ORDER BY
         dd.year, pl.employee_id;
 END;

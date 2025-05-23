@@ -4,13 +4,13 @@ DDL Script: Create ref Tables
 ===============================================================================
 */
 
--- CREATE SCHEMA ref;
+CREATE SCHEMA ref;
 DROP TABLE IF EXISTS ref.company_main CASCADE;
 
 CREATE TABLE ref.company_main (
     company_id VARCHAR(10) PRIMARY KEY,
     company_name VARCHAR(255) NOT NULL,
-    parent_company_id VARCHAR(20) REFERENCES ref.company_main(company_id) ON DELETE SET NULL,
+    parent_company_id VARCHAR(10) REFERENCES ref.company_main(company_id) ON DELETE SET NULL,
     address TEXT
 );
 
@@ -83,4 +83,10 @@ CREATE TABLE ref.ref_hec_factors (
     source_link TEXT,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS ref.hr_position CASCADE;
+CREATE TABLE ref.hr_position (
+	position_id VARCHAR(2) PRIMARY KEY,
+	position_name VARCHAR(20)
 );

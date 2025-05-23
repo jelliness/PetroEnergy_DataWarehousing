@@ -7,14 +7,6 @@
 --     Run this script to re-define the DDL structure of 'silver' Tables
 -- ===============================================================================
 
-DROP TABLE IF EXISTS silver.csr_company;
-CREATE TABLE silver.csr_company (
-    company_id VARCHAR(20) NOT NULL PRIMARY KEY,
-    company_name TEXT,
-    resources VARCHAR(20),
-    date_created TIMESTAMP DEFAULT NOW(),
-    date_updated TIMESTAMP DEFAULT NOW()
-);
 
 DROP TABLE IF EXISTS silver.csr_programs;
 CREATE TABLE silver.csr_programs (
@@ -49,7 +41,7 @@ CREATE TABLE silver.csr_activity (
     date_updated TIMESTAMP DEFAULT NOW(),
 	CONSTRAINT fk_company_name 
 		FOREIGN KEY (company_id)
-		REFERENCES silver.csr_company (company_id) ON DELETE CASCADE,
+		REFERENCES ref.company_main (company_id) ON DELETE CASCADE,
 	CONSTRAINT fk_company_project 
 		FOREIGN KEY (project_id) 
 		REFERENCES silver.csr_projects (project_id) ON DELETE SET NULL

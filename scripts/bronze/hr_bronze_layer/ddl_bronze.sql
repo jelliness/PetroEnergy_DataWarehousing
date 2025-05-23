@@ -29,11 +29,6 @@ CREATE TABLE bronze.hr_demographics (
 	employment_status VARCHAR(20)
 );
 
-CREATE TABLE bronze.hr_position (
-	position_id VARCHAR(2) PRIMARY KEY,
-	position_name VARCHAR(20)
-);
-
 CREATE TABLE bronze.hr_parental_leave (
     employee_id VARCHAR(20),
     type_of_leave VARCHAR(12),
