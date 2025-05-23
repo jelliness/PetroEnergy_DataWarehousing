@@ -25,6 +25,8 @@ CREATE OR REPLACE VIEW gold.dim_employee_descriptions AS
 	    pos.position_name,
 	    comp.company_id,
 	    comp.company_name,
+		demo.employment_status,
+		
 	    ten.start_date,
 	    ten.end_date,
 		ten.tenure_length
