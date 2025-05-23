@@ -45,7 +45,7 @@ LEFT JOIN silver.csr_projects AS cproj
 ON cproj.project_id = act.project_id
 LEFT JOIN silver.csr_programs AS cprog
 ON cproj.program_id = cprog.program_id
-LEFT JOIN silver.csr_company AS comp
+LEFT JOIN ref.company_main AS comp
 ON comp.company_id = act.company_id
 GROUP BY company_name, program_name, project_year, project_name, csr_report, project_metrics, act.company_id, project_expenses
 ORDER BY act.company_id;
@@ -82,7 +82,7 @@ LEFT JOIN silver.csr_projects AS cproj
 ON cact.project_id = cproj.project_id
 LEFT JOIN silver.csr_programs AS cprog
 ON cproj.program_id = cprog.program_id
-LEFT JOIN silver.csr_company AS ccomp
+LEFT JOIN ref.company_main AS ccomp
 ON cact.company_id = ccomp.company_id
 GROUP BY company_name, cprog.program_name
 ORDER BY company_name, "Investments";
