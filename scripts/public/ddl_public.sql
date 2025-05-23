@@ -53,3 +53,18 @@ CREATE TABLE public.attachment (
     record_id VARCHAR(20) PRIMARY KEY,
     attachment_file TEXT NOT NULL
 );
+
+CREATE TABLE public.user_profile (
+    account_id VARCHAR(20) PRIMARY KEY,  -- also serves as profile_id
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    middle_name VARCHAR(50),
+	suffix VARCHAR(5),
+    contact_number VARCHAR(20),
+    address TEXT,
+    birthdate DATE,
+    gender VARCHAR(10),
+    profile_created TIMESTAMP NOT NULL,
+    profile_updated TIMESTAMP NOT NULL,
+    CONSTRAINT fk_user_account FOREIGN KEY (account_id) REFERENCES public.account(account_id)
+);
