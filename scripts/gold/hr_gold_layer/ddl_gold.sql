@@ -31,7 +31,7 @@ CREATE OR REPLACE VIEW gold.dim_employee_descriptions AS
 	    ten.end_date,
 		ten.tenure_length
 	FROM silver.hr_demographics AS demo
-	LEFT JOIN silver.hr_position AS pos ON demo.position_id = pos.position_id
+	LEFT JOIN ref.hr_position AS pos ON demo.position_id = pos.position_id
 	LEFT JOIN ref.company_main AS comp ON demo.company_id = comp.company_id
 	LEFT JOIN silver.hr_tenure AS ten ON demo.employee_id = ten.employee_id;
 
