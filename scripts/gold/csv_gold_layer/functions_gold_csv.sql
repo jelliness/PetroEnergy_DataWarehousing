@@ -267,7 +267,7 @@ BEGIN
       	AND (p_province IS NULL OR fg.province = ANY(p_province))
       	AND (p_start_date IS NULL OR fg.date_generated >= p_start_date)
      	AND (p_end_date IS NULL OR fg.date_generated <= p_end_date)
-    GROUP BY fg.year, lh.hec_id, lh.hec_value
+    GROUP BY fg.year, lh.hec_id, lh.hec_value,fg.power_plant_id,fg.company_id
     ORDER BY fg.year, lh.hec_id;
 END;
 $$ LANGUAGE plpgsql;
