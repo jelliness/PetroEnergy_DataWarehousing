@@ -359,9 +359,9 @@ BEGIN
         demo.position_id,
         demo.company_id,
         CASE
-            WHEN AGE(demo.birthdate) < INTERVAL '30 years' THEN 'Young'
-            WHEN AGE(demo.birthdate) BETWEEN INTERVAL '30 years' AND INTERVAL '50 years' THEN 'Mid'
-            ELSE 'Senior'
+            WHEN AGE(demo.birthdate) < INTERVAL '30 years' THEN 'Under 30'
+            WHEN AGE(demo.birthdate) BETWEEN INTERVAL '30 years' AND INTERVAL '50 years' THEN '30 to 50'
+            ELSE 'Over 50'
         END AS age_category,
         demo.p_np,
         demo.employment_status,
@@ -379,9 +379,9 @@ BEGIN
         AND (
             p_age_category IS NULL OR 
             CASE
-                WHEN AGE(demo.birthdate) < INTERVAL '30 years' THEN 'Young'
-                WHEN AGE(demo.birthdate) BETWEEN INTERVAL '30 years' AND INTERVAL '50 years' THEN 'Mid'
-                ELSE 'Senior'
+                WHEN AGE(demo.birthdate) < INTERVAL '30 years' THEN 'Under 30'
+                WHEN AGE(demo.birthdate) BETWEEN INTERVAL '30 years' AND INTERVAL '50 years' THEN '30 to 50'
+                ELSE 'Over 50'
             END = ANY(p_age_category)
         )
         AND (p_employment_status IS NULL OR demo.employment_status = ANY(p_employment_status))
