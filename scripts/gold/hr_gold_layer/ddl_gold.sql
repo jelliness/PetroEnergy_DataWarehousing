@@ -88,6 +88,7 @@ SELECT
     d.position_id,
     pl.date,
     pl.days,
+	pl.end_date,
     pl.months_availed,
     pl.type_of_leave
 FROM silver.hr_parental_leave pl
