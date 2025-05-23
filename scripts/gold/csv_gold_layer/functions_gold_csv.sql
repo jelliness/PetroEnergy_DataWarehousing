@@ -382,6 +382,75 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- =============================================================================
+-- Create Function for Outages Frequency 
+-- =============================================================================
+
+CREATE OR REPLACE FUNCTION gold.func_outages_frequency(
+    p_power_plant_id VARCHAR(10) DEFAULT NULL,
+    p_company_id VARCHAR(10) DEFAULT NULL,
+    p_generation_source TEXT DEFAULT NULL,
+    p_site_name VARCHAR(50) DEFAULT NULL,
+    p_company_name VARCHAR(255) DEFAULT NULL,
+    p_city_town VARCHAR(30) DEFAULT NULL,
+    p_province VARCHAR(30) DEFAULT NULL,
+    p_year INTEGER DEFAULT NULL,
+    p_month INTEGER DEFAULT NULL,
+    p_month_name TEXT DEFAULT NULL
+)
+RETURNS TABLE (
+    power_plant_id VARCHAR(10),
+    company_id VARCHAR(10),
+    generation_source TEXT,
+    site_name VARCHAR(50),
+    company_name VARCHAR(255),
+    city_town VARCHAR(30),
+    province VARCHAR(30),
+    year INTEGER,
+    month INTEGER,
+    month_name TEXT,
+    outage_count BIGINT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        f.power_plant_id,
+        f.company_id,
+        f.generation_source,
+        f.site_name,
+        f.company_name,
+        f.city_town,
+        f.province,
+        f.year,
+        f.month,
+        f.month_name,
+        COUNT(*) AS outage_count
+    FROM gold.fact_energy_generated f
+    WHERE f.energy_generated_kwh = 0
+      AND (p_power_plant_id IS NULL OR f.power_plant_id = p_power_plant_id)
+      AND (p_company_id IS NULL OR f.company_id = p_company_id)
+      AND (p_generation_source IS NULL OR f.generation_source = p_generation_source)
+      AND (p_site_name IS NULL OR f.site_name = p_site_name)
+      AND (p_company_name IS NULL OR f.company_name = p_company_name)
+      AND (p_city_town IS NULL OR f.city_town = p_city_town)
+      AND (p_province IS NULL OR f.province = p_province)
+      AND (p_year IS NULL OR f.year = p_year)
+      AND (p_month IS NULL OR f.month = p_month)
+      AND (p_month_name IS NULL OR f.month_name = p_month_name)
+    GROUP BY 
+        f.power_plant_id,
+        f.company_id,
+        f.generation_source,
+        f.site_name,
+        f.company_name,
+        f.city_town,
+        f.province,
+        f.year,
+        f.month,
+        f.month_name;
+END;
+$$ LANGUAGE plpgsql;
 
 
 

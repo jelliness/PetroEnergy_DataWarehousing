@@ -146,3 +146,14 @@ GROUP BY
 ORDER BY dd.year desc;
 
 -- select * from gold.fact_fund_allocation_yearly;
+
+-- =============================================================================
+-- Create Fact: gold.fact_outages_frequency 
+-- =============================================================================
+
+DROP VIEW IF EXISTS gold.fact_outages_frequency CASCADE;
+CREATE OR REPLACE VIEW gold.fact_outages_frequency AS
+SELECT power_plant_id, company_id, generation_source,site_name, company_name, city_town, province, year, month, month_name, COUNT(*) 
+FROM gold.fact_energy_generated 
+WHERE energy_generated_kwh = 0
+GROUP BY power_plant_id, company_id, generation_source,site_name, company_name, city_town, province, year, month, month_name
