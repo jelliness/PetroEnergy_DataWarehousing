@@ -49,6 +49,17 @@ BEGIN
 	SET
 	    type_description = EXCLUDED.type_description;
 
+    RAISE NOTICE '>> Upserting hr_positions table...';
+    INSERT INTO ref.hr_position(position_id, position_name)
+    VALUES 
+    ('SM', 'Senior Management'),
+    ('MM', 'Middle Management'),
+    ('RF', 'Rank And File')
+    ON CONFLICT (position_id) DO UPDATE
+	SET
+	    position_name = EXCLUDED.position_name;
+
+
 
 
     
@@ -256,17 +267,3 @@ EXCEPTION
 END;
 $BODY$;
 
-
--- for comparison 
-
--- call ref.load_ref('C:\Users\jetje\Desktop\OJT Files\data\csv');
-
--- SELECT * FROM ref.ref_emission_factors;
--- SELECT * FROM ref.ref_power_plants;
--- SELECT * FROM ref.ref_fa_factors;
--- SELECT * FROM ref.ref_hec_factors;
-
--- select * from silver.csv_emission_factors;
--- select * from silver.csv_power_plants;
--- select * from silver.csv_fa_factors;
--- select * from silver.csv_hec_factors;

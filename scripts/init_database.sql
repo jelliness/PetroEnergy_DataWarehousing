@@ -6,13 +6,14 @@
 
 SELECT pg_terminate_backend(pid)
 FROM pg_stat_activity
-WHERE datname = 'Petroenergy_Data_Warehousing' AND pid <> pg_backend_pid();
+WHERE datname ILIKE  '%Petroenergy_Data_Warehousing%' AND pid <> pg_backend_pid();
+
 
 -- Step 2: Drop the database if it exists
-DROP DATABASE IF EXISTS Petroenergy_Data_Warehousing;
+DROP DATABASE IF EXISTS "PetroEnergy_Data_Warehousing";
 
 -- Step 3: Create the database
-CREATE DATABASE Petroenergy_Data_Warehousing;
+CREATE DATABASE "PetroEnergy_Data_Warehousing";
 
 -- ================================
 -- After connecting to 'Petroenergy_Data_Warehousing', run this part
