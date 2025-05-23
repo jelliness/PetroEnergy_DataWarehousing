@@ -231,6 +231,8 @@ CREATE OR REPLACE FUNCTION gold.func_energy_per_hec_unit_rounded(
 )
 RETURNS TABLE (
     year SMALLINT,
+    power_plant_id VARCHAR(10),
+    company_id VARCHAR(10), 
     monthly_energy_generated NUMERIC,
     hec_value DECIMAL(10,4),
     energy_per_hec_unit_rounded NUMERIC
@@ -248,6 +250,8 @@ BEGIN
     )
     SELECT 
         fg.year::SMALLINT,
+        fg.power_plant_id,
+        fg.company_id,
         SUM(fg.energy_generated_kwh) AS monthly_energy_generated,
         lh.hec_value,
         CASE 
