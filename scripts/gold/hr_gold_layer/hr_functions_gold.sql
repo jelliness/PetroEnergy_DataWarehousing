@@ -1,14 +1,21 @@
-/*
-===============================================================================
-							HR EMPLOYEE FACT TABLE
-===============================================================================
-*/
+
 DROP FUNCTION IF EXISTS gold.func_employee_summary_yearly;
 DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_yearly;
 DROP FUNCTION IF EXISTS gold.func_training_summary_yearly;
 DROP FUNCTION IF EXISTS gold.func_safety_summary_yearly;
 DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_yearly;
 
+DROP FUNCTION IF EXISTS gold.func_employee_summary_monthly;
+DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_monthly;
+DROP FUNCTION IF EXISTS gold.func_training_summary_monthly;
+DROP FUNCTION IF EXISTS gold.func_safety_summary_monthly;
+DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_monthly;
+
+/*
+===============================================================================
+							HR EMPLOYEE FACT TABLE
+===============================================================================
+*/
 CREATE OR REPLACE FUNCTION gold.func_employee_summary_yearly (
     p_employee_id VARCHAR(20) DEFAULT NULL,
     p_gender VARCHAR(1) DEFAULT NULL,
@@ -152,6 +159,7 @@ $$ LANGUAGE plpgsql;
 					HR FUNCTION TRAINING SUMMARY
 ===============================================================================
 */
+/*
 CREATE OR REPLACE FUNCTION gold.func_training_summary_yearly (
     p_employee_id VARCHAR DEFAULT NULL,
     p_gender VARCHAR DEFAULT NULL,
@@ -199,11 +207,13 @@ BEGIN
         dd.year, tr.employee_id;
 END;
 $$;
+*/
 /*
 ===============================================================================
 							HR FUNCTION SAFETY TABLE
 ===============================================================================
 */
+/*
 CREATE OR REPLACE FUNCTION gold.func_safety_summary_yearly (
     p_employee_id VARCHAR DEFAULT NULL,
     p_gender VARCHAR DEFAULT NULL,
@@ -254,6 +264,7 @@ BEGIN
         sft.employee_id;
 END;
 $$;
+*/
 /*
 ===============================================================================
 						HR FUNCTION PARENTAL LEAVE TABLE
@@ -321,8 +332,6 @@ $$;
 						HR FUNCTION EMPLOYEE SUMMARY TABLE
 ===============================================================================
 */
-DROP FUNCTION IF EXISTS gold.func_employee_summary_monthly;
-
 CREATE OR REPLACE FUNCTION gold.func_employee_summary_monthly(
     p_year INT[] DEFAULT NULL,
     p_quarter TEXT[] DEFAULT NULL,
@@ -409,9 +418,11 @@ BEGIN
         employment_status;
 END;
 $$ LANGUAGE plpgsql;
-
-DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_monthly;
-
+/*
+===============================================================================
+						HR FUNCTION PARENTAL SUMMARY TABLE
+===============================================================================
+*/
 CREATE OR REPLACE FUNCTION gold.func_parental_leave_summary_monthly(
     p_year INT[] DEFAULT NULL,
     p_quarter TEXT[] DEFAULT NULL,
@@ -530,8 +541,12 @@ FROM categorized_leaves cl
 END;
 $$ LANGUAGE plpgsql;
 
-DROP FUNCTION IF EXISTS gold.func_training_summary_monthly;
-
+/*
+===============================================================================
+						HR FUNCTION TRAINING SUMMARY TABLE
+===============================================================================
+*/
+/*
 CREATE OR REPLACE FUNCTION gold.func_training_summary_monthly(
     p_year INT[] DEFAULT NULL,
     p_quarter TEXT[] DEFAULT NULL,
@@ -604,10 +619,13 @@ BEGIN
       demo.gender;
 END;
 $$ LANGUAGE plpgsql;
-
-DROP FUNCTION IF EXISTS gold.func_safety_summary_monthly;
-
-
+*/
+/*
+===============================================================================
+						HR FUNCTION SAFETY SUMMARY TABLE
+===============================================================================
+*/
+/*
 CREATE OR REPLACE FUNCTION gold.func_safety_summary_monthly(
     p_year INT[] DEFAULT NULL,
     p_quarter TEXT[] DEFAULT NULL,
@@ -672,3 +690,4 @@ BEGIN
       demo.gender;
 END;
 $$ LANGUAGE plpgsql;
+*/

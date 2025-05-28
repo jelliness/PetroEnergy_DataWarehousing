@@ -84,18 +84,36 @@ BEGIN
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
     RAISE NOTICE '-----------------';
 
-    -- hr_safety
+    -- hr_safety_workdata
     RAISE NOTICE '------------------------------------------------';
-    RAISE NOTICE 'Loading HR Safety Data...';
+    RAISE NOTICE 'Loading HR Safety Workdata...';
     RAISE NOTICE '------------------------------------------------';
 
     start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Truncating table: bronze.hr_safety...';
-    TRUNCATE TABLE bronze.hr_safety;
-    RAISE NOTICE '>> Bulk inserting data into bronze.hr_safety...';
+    RAISE NOTICE '>> Truncating table: bronze.hr_safety_workdata...';
+    TRUNCATE TABLE bronze.hr_safety_workdata;
+    RAISE NOTICE '>> Bulk inserting data into bronze.hr_safety_workdata...';
 
-    COPY bronze.hr_safety
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_safety.csv'  -- Temporary Path. Create a path
+    COPY bronze.hr_safety_workdata
+    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_safety_workdata.csv'  -- Temporary Path. Create a path
+    DELIMITER ',' CSV HEADER;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+    -- hr_occupational_safety_health
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading HR Occupational Safety Health Workdata...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.hr_occupational_safety_health...';
+    TRUNCATE TABLE bronze.hr_occupational_safety_health;
+    RAISE NOTICE '>> Bulk inserting data into bronze.hr_occupational_safety_health...';
+
+    COPY bronze.hr_occupational_safety_health
+    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_occupational_safety_health.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;

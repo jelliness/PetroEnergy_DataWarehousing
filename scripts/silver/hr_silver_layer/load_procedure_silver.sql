@@ -154,23 +154,25 @@ BEGIN
     RAISE NOTICE '>> Inserting data into silver.hr_training...';
 
 	DELETE FROM silver.hr_training
-	WHERE (employee_id, date) IN (
-    	SELECT employee_id, date FROM bronze.hr_training
+	WHERE (company_id, training_title, date, training_hours) IN (
+    	SELECT company_id, training_title, date, training_hours FROM bronze.hr_training
 	);
 
 	INSERT INTO silver.hr_training (
-    	employee_id, 
-		hours, 
-		date,  
-		position_id, 
-		date_created, 
+    	company_id,
+		training_title,
+		date,
+		training_hours,
+		number_of_participants,
+		date_created,
 		date_updated
 	)
 	SELECT
-    	b.employee_id,
-    	b.hours,
-    	b.date,
-    	b.position_id,
+    	b.company_id,
+		b.training_title,
+		b.date,
+		b.training_hours,
+		b.number_of_participants,
     	CURRENT_TIMESTAMP,
     	CURRENT_TIMESTAMP
 	FROM bronze.hr_training b;
@@ -182,37 +184,79 @@ BEGIN
 
 -----------------------------------------------------------------------------------------------------
 
-    -- hr_safety
+    -- hr_safety_workdata
     RAISE NOTICE '------------------------------------------------';
-    RAISE NOTICE 'Loading HR Safety Data...';
+    RAISE NOTICE 'Loading HR Safety Workdata...';
     RAISE NOTICE '------------------------------------------------';
 
     start_time := CURRENT_TIMESTAMP;
-	RAISE NOTICE '>> Inserting data into silver.hr_safety...';
+	RAISE NOTICE '>> Inserting data into silver.hr_safety_workdata...';
 
-	DELETE FROM silver.hr_safety
-	WHERE (employee_id, date) IN (
-    	SELECT employee_id, date FROM bronze.hr_safety
+	DELETE FROM silver.hr_safety_workdata
+	WHERE (company_id, contractor, date) IN (
+    	SELECT company_id, contractor, date FROM bronze.hr_safety_workdata
 	);
 
-	INSERT INTO silver.hr_safety (
-    	employee_id, 
+	INSERT INTO silver.hr_safety_workdata (
 		company_id, 
+		contractor,
 		date, 
-		type_of_accident, 
-		safety_man_hours, 
+		manpower, 
+		manhours, 
 		date_created, 
 		date_updated
 	)
 	SELECT
-    	b.employee_id,
-    	b.company_id,
-    	b.date,
-    	b.type_of_accident,
-    	b.safety_man_hours,
+    	b.company_id, 
+		b.contractor,
+		b.date, 
+		b.manpower, 
+		b.manhours, 
     	CURRENT_TIMESTAMP,
     	CURRENT_TIMESTAMP
-	FROM bronze.hr_safety b;
+	FROM bronze.hr_safety_workdata b;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
+
+-----------------------------------------------------------------------------------------------------
+
+	-- hr_occupational_safety_health
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading HR Occupational Safety Health data...';
+    RAISE NOTICE '------------------------------------------------';
+
+    start_time := CURRENT_TIMESTAMP;
+	RAISE NOTICE '>> Inserting data into silver.hr_occupational_safety_health...';
+
+	DELETE FROM silver.hr_occupational_safety_health
+	WHERE (company_id, workforce_type, lost_time, date, incident_type, incident_title) IN (
+    	SELECT company_id, workforce_type, lost_time, date, incident_type, incident_title FROM bronze.hr_occupational_safety_health
+	);
+
+	INSERT INTO silver.hr_occupational_safety_health (
+		company_id,
+    	workforce_type,
+    	lost_time,
+    	date,
+    	incident_type,
+    	incident_title,
+    	incident_count,
+    	date_created,
+		date_updated
+	)
+	SELECT
+    	b.company_id,
+    	b.workforce_type,
+    	b.lost_time,
+    	b.date,
+    	b.incident_type,
+    	b.incident_title,
+    	b.incident_count,
+    	CURRENT_TIMESTAMP,
+    	CURRENT_TIMESTAMP
+	FROM bronze.hr_occupational_safety_health b;
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);

@@ -11,7 +11,8 @@ Script Purpose:
 
 CREATE SCHEMA IF NOT EXISTS silver;
 
-DROP TABLE IF EXISTS silver.hr_safety;
+DROP TABLE IF EXISTS silver.hr_safety_workdata;
+DROP TABLE IF EXISTS silver.hr_occupational_safety_health;
 DROP TABLE IF EXISTS silver.hr_training;
 DROP TABLE IF EXISTS silver.hr_tenure;
 DROP TABLE IF EXISTS silver.hr_parental_leave;
@@ -52,30 +53,43 @@ CREATE TABLE silver.hr_tenure (
 	PRIMARY KEY (start_date, employee_id)
 );
 
-
 CREATE TABLE silver.hr_training (
-    employee_id VARCHAR(20),
-    hours INT,
+    company_id VARCHAR(10),
+    training_title TEXT,
     date TIMESTAMP,
-    position_id VARCHAR(2),
-	date_created TIMESTAMP,
+    training_hours INT,
+    number_of_participants INT,
+    date_created TIMESTAMP,
 	date_updated TIMESTAMP,
-	PRIMARY KEY (date, employee_id)
-	
+    PRIMARY KEY (company_id, date, training_title)
 );
 
-CREATE TABLE silver.hr_safety (
-    employee_id VARCHAR(20),
+CREATE TABLE silver.hr_safety_workdata (
     company_id VARCHAR(10),
+    contractor TEXT,
     date TIMESTAMP,
-    type_of_accident VARCHAR(50),
-    safety_man_hours INT,
-	date_created TIMESTAMP,
+    manpower INT,
+    manhours INT,
+    date_created TIMESTAMP,
 	date_updated TIMESTAMP,
-	PRIMARY KEY (date, employee_id)
+    PRIMARY KEY (company_id, contractor, date)
+);
+
+CREATE TABLE silver.hr_occupational_safety_health (
+    company_id VARCHAR(10),
+    workforce_type TEXT,
+    lost_time BOOLEAN,
+    date TIMESTAMP,
+    incident_type TEXT,
+    incident_title TEXT,
+    incident_count INT,
+    date_created TIMESTAMP,
+	date_updated TIMESTAMP,
+    PRIMARY KEY (company_id, workforce_type, lost_time, date, incident_type, incident_title)
 );
 
 ALTER TABLE silver.hr_parental_leave ADD FOREIGN KEY (employee_id) REFERENCES silver.hr_demographics(employee_id);
 ALTER TABLE silver.hr_tenure ADD FOREIGN KEY (employee_id) REFERENCES silver.hr_demographics(employee_id);
-ALTER TABLE silver.hr_training ADD FOREIGN KEY (employee_id) REFERENCES silver.hr_demographics(employee_id);
-ALTER TABLE silver.hr_safety ADD FOREIGN KEY (employee_id) REFERENCES silver.hr_demographics(employee_id);
+ALTER TABLE silver.hr_training ADD FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id);
+ALTER TABLE silver.hr_safety_workdata ADD FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id);
+ALTER TABLE silver.hr_occupational_safety_health ADD FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id);
