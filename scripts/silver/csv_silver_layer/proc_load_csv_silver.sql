@@ -123,16 +123,23 @@ BEGIN
 			pp.power_plant_id,
 			ff.ff_id,
 			ROUND(SUM(er.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
-			ROUND(SUM((er.energy_generated_kwh * 0.01) * ff.ff_percentage), 2) AS funds_allocated_peso,
-			NOW(),
-			NOW()
+			ROUND(SUM(
+				CASE 
+					WHEN ff.ff_id IN ('EF', 'DLF', 'RWMHEEF') 
+						THEN er.energy_generated_kwh * 0.01 * ff.ff_percentage
+					ELSE er.energy_generated_kwh * 0.01 * 0.50 * ff.ff_percentage
+				END
+			), 2) AS funds_allocated_peso,
+			NOW() AS created_at,
+			NOW() AS updated_at
 		FROM silver.csv_energy_records er
 		LEFT JOIN ref.ref_power_plants pp ON pp.power_plant_id = er.power_plant_id
 		CROSS JOIN ref.ref_fa_factors ff
 		GROUP BY 
 			DATE_TRUNC('month', er.date_generated),
 			pp.power_plant_id,
-			ff.ff_id
+			ff.ff_id;
+
 
 		ON CONFLICT (month_generated, power_plant_id, ff_id) DO UPDATE
 		SET 
