@@ -1,46 +1,238 @@
-﻿NON_HAZARDOUS_WASTE_ID (PK),COMPANY ID (FK),WASTE_SOURCE,METRICS,UNIT_OF_MEASUREMENT,WASTE,MONTH,YEAR
-NHW-PSC-2024-001,PSC,Staff House,Residual,Kilogram,93,January,2024
-NHW-PSC-2024-002,PSC,Staff House,Residual,Kilogram,87,February,2024
-NHW-PSC-2024-003,PSC,Staff House,Residual,Kilogram,124,March,2024
-NHW-PSC-2024-004,PSC,Staff House,Residual,Kilogram,90,April,2024
-NHW-PSC-2024-005,PSC,Staff House,Residual,Kilogram,93,May,2024
-NHW-PSC-2024-006,PSC,Staff House,Residual,Kilogram,75,June,2024
-NHW-PSC-2024-007,PSC,Staff House,Residual,Kilogram,93,July,2024
-NHW-PSC-2024-008,PSC,Staff House,Residual,Kilogram,77.5,August,2024
-NHW-PSC-2024-009,PSC,Staff House,Residual,Kilogram,60,September,2024
-NHW-PSC-2024-010,PSC,Staff House,Residual,Kilogram,77.5,October,2024
-NHW-PSC-2024-011,PSC,Staff House,Residual,Kilogram,62,November,2024
-NHW-PSC-2024-012,PSC,Staff House,Residual,Kilogram,120,December,2024
-NHW-PSC-2024-013,PSC,Security,Residual,Kilogram,62,January,2024
-NHW-PSC-2024-014,PSC,Security,Residual,Kilogram,29,February,2024
-NHW-PSC-2024-015,PSC,Security,Residual,Kilogram,46.5,March,2024
-NHW-PSC-2024-016,PSC,Security,Residual,Kilogram,45,April,2024
-NHW-PSC-2024-017,PSC,Security,Residual,Kilogram,46.5,May,2024
-NHW-PSC-2024-018,PSC,Security,Residual,Kilogram,45,June,2024
-NHW-PSC-2024-019,PSC,Security,Residual,Kilogram,31,July,2024
-NHW-PSC-2024-020,PSC,Security,Residual,Kilogram,46.5,August,2024
-NHW-PSC-2024-021,PSC,Security,Residual,Kilogram,15,September,2024
-NHW-PSC-2024-022,PSC,Security,Residual,Kilogram,60,October,2024
-NHW-PSC-2024-023,PSC,Security,Residual,Kilogram,77.5,November,2024
-NHW-PSC-2024-024,PSC,Security,Residual,Kilogram,90,December,2024
-NHW-PSC-2024-025,PSC,Utility,Residual,Kilogram,93,January,2024
-NHW-PSC-2024-026,PSC,Utility,Residual,Kilogram,87,February,2024
-NHW-PSC-2024-027,PSC,Utility,Residual,Kilogram,93,March,2024
-NHW-PSC-2024-028,PSC,Utility,Residual,Kilogram,90,April,2024
-NHW-PSC-2024-029,PSC,Utility,Residual,Kilogram,93,May,2024
-NHW-PSC-2024-030,PSC,Utility,Residual,Kilogram,75,June,2024
-NHW-PSC-2024-031,PSC,Utility,Residual,Kilogram,31,July,2024
-NHW-PSC-2024-032,PSC,Utility,Residual,Kilogram,30,August,2024
-NHW-PSC-2024-033,PSC,Utility,Residual,Kilogram,31,September,2024
-NHW-PSC-2024-034,PSC,Utility,Residual,Kilogram,60,October,2024
-NHW-PSC-2024-035,PSC,Utility,Residual,Kilogram,62,November,2024
-NHW-PSC-2024-036,PSC,Utility,Residual,Kilogram,75,December,2024
-NHW-PSC-2025-001,PSC,Staff House,Residual,Kilogram,62,January,2025
-NHW-PSC-2025-002,PSC,Staff House,Residual,Kilogram,84,February,2025
-NHW-PSC-2025-003,PSC,Staff House,Residual,Kilogram,93,March,2025
-NHW-PSC-2025-004,PSC,Security,Residual,Kilogram,62,January,2025
-NHW-PSC-2025-005,PSC,Security,Residual,Kilogram,28,February,2025
-NHW-PSC-2025-006,PSC,Security,Residual,Kilogram,62,March,2025
-NHW-PSC-2025-007,PSC,Utility,Residual,Kilogram,62,January,2025
-NHW-PSC-2025-008,PSC,Utility,Residual,Kilogram,56,February,2025
-NHW-PSC-2025-009,PSC,Utility,Residual,Kilogram,93,March,2025
+﻿NON_HAZARDOUS_WASTE_ID (PK),COMPANY ID (FK),METRICS,UNIT_OF_MEASUREMENT,WASTE,MONTH,QUARTER,YEAR
+NHW-PSC-2024-001,PSC,Residual,Kilogram,93,January,,2024
+NHW-PSC-2024-002,PSC,Residual,Kilogram,87,Febuary,,2024
+NHW-PSC-2024-003,PSC,Residual,Kilogram,124,March,,2024
+NHW-PSC-2024-004,PSC,Residual,Kilogram,90,April,,2024
+NHW-PSC-2024-005,PSC,Residual,Kilogram,93,May,,2024
+NHW-PSC-2024-006,PSC,Residual,Kilogram,75,June,,2024
+NHW-PSC-2024-007,PSC,Residual,Kilogram,93,July,,2024
+NHW-PSC-2024-008,PSC,Residual,Kilogram,77.5,August,,2024
+NHW-PSC-2024-009,PSC,Residual,Kilogram,60,September,,2024
+NHW-PSC-2024-010,PSC,Residual,Kilogram,77.5,October,,2024
+NHW-PSC-2024-011,PSC,Residual,Kilogram,62,November,,2024
+NHW-PSC-2024-012,PSC,Residual,Kilogram,120,December,,2024
+NHW-PSC-2024-013,PSC,Residual,Kilogram,62,January,,2024
+NHW-PSC-2024-014,PSC,Residual,Kilogram,29,Febuary,,2024
+NHW-PSC-2024-015,PSC,Residual,Kilogram,46.5,March,,2024
+NHW-PSC-2024-016,PSC,Residual,Kilogram,45,April,,2024
+NHW-PSC-2024-017,PSC,Residual,Kilogram,46.5,May,,2024
+NHW-PSC-2024-018,PSC,Residual,Kilogram,45,June,,2024
+NHW-PSC-2024-019,PSC,Residual,Kilogram,31,July,,2024
+NHW-PSC-2024-020,PSC,Residual,Kilogram,46.5,August,,2024
+NHW-PSC-2024-021,PSC,Residual,Kilogram,15,September,,2024
+NHW-PSC-2024-022,PSC,Residual,Kilogram,60,October,,2024
+NHW-PSC-2024-023,PSC,Residual,Kilogram,77.5,November,,2024
+NHW-PSC-2024-024,PSC,Residual,Kilogram,90,December,,2024
+NHW-PSC-2024-025,PSC,Residual,Kilogram,93,January,,2024
+NHW-PSC-2024-026,PSC,Residual,Kilogram,87,Febuary,,2024
+NHW-PSC-2024-027,PSC,Residual,Kilogram,93,March,,2024
+NHW-PSC-2024-028,PSC,Residual,Kilogram,90,April,,2024
+NHW-PSC-2024-029,PSC,Residual,Kilogram,93,May,,2024
+NHW-PSC-2024-030,PSC,Residual,Kilogram,75,June,,2024
+NHW-PSC-2024-031,PSC,Residual,Kilogram,31,July,,2024
+NHW-PSC-2024-032,PSC,Residual,Kilogram,30,August,,2024
+NHW-PSC-2024-033,PSC,Residual,Kilogram,31,September,,2024
+NHW-PSC-2024-034,PSC,Residual,Kilogram,60,October,,2024
+NHW-PSC-2024-035,PSC,Residual,Kilogram,62,November,,2024
+NHW-PSC-2024-036,PSC,Residual,Kilogram,75,December,,2024
+NHW-PSC-2025-001,PSC,Residual,Kilogram,62,January,,2025
+NHW-PSC-2025-002,PSC,Residual,Kilogram,84,February,,2025
+NHW-PSC-2025-003,PSC,Residual,Kilogram,93,March,,2025
+NHW-PSC-2025-004,PSC,Residual,Kilogram,62,January,,2025
+NHW-PSC-2025-005,PSC,Residual,Kilogram,28,February,,2025
+NHW-PSC-2025-006,PSC,Residual,Kilogram,62,March,,2025
+NHW-PSC-2025-007,PSC,Residual,Kilogram,62,January,,2025
+NHW-PSC-2025-008,PSC,Residual,Kilogram,56,February,,2025
+NHW-PSC-2025-009,PSC,Residual,Kilogram,93,March,,2025
+NHW-PWEI-2018-001,PWEI,Scrap Metal,Kilogram,0,,Q1,2018
+NHW-PWEI-2018-002,PWEI,Scrap Metal,Kilogram,0,,Q2,2018
+NHW-PWEI-2018-003,PWEI,Scrap Metal,Kilogram,0,,Q3,2018
+NHW-PWEI-2018-004,PWEI,Scrap Metal,Kilogram,0,,Q4,2018
+NHW-PWEI-2018-005,PWEI,Scrap Tires,Pieces,0,,Q1,2018
+NHW-PWEI-2018-006,PWEI,Scrap Tires,Pieces,0,,Q2,2018
+NHW-PWEI-2018-007,PWEI,Scrap Tires,Pieces,22,,Q3,2018
+NHW-PWEI-2018-008,PWEI,Scrap Tires,Pieces,0,,Q4,2018
+NHW-PWEI-2018-009,PWEI,PET Bottles,Kilogram,0,,Q1,2018
+NHW-PWEI-2018-010,PWEI,PET Bottles,Kilogram,0,,Q2,2018
+NHW-PWEI-2018-011,PWEI,PET Bottles,Kilogram,0,,Q3,2018
+NHW-PWEI-2018-012,PWEI,PET Bottles,Kilogram,0,,Q4,2018
+NHW-PWEI-2018-013,PWEI,Residual,Kilogram,270.9,,Q1,2018
+NHW-PWEI-2018-014,PWEI,Residual,Kilogram,273.91,,Q2,2018
+NHW-PWEI-2018-015,PWEI,Residual,Kilogram,276.92,,Q3,2018
+NHW-PWEI-2018-016,PWEI,Residual,Kilogram,276.92,,Q4,2018
+NHW-PWEI-2018-017,PWEI,Compostable,Kilogram,135,,Q1,2018
+NHW-PWEI-2018-018,PWEI,Compostable,Kilogram,136.5,,Q2,2018
+NHW-PWEI-2018-019,PWEI,Compostable,Kilogram,138,,Q3,2018
+NHW-PWEI-2018-020,PWEI,Compostable,Kilogram,138,,Q4,2018
+NHW-PWEI-2018-021,PWEI,Food,Kilogram,162,,Q1,2018
+NHW-PWEI-2018-022,PWEI,Food,Kilogram,163.8,,Q2,2018
+NHW-PWEI-2018-023,PWEI,Food,Kilogram,165.6,,Q3,2018
+NHW-PWEI-2018-024,PWEI,Food,Kilogram,165.6,,Q4,2018
+NHW-PWEI-2019-001,PWEI,Scrap Metal,Kilogram,0,,Q1,2019
+NHW-PWEI-2019-002,PWEI,Scrap Metal,Kilogram,0,,Q2,2019
+NHW-PWEI-2019-003,PWEI,Scrap Metal,Kilogram,0,,Q3,2019
+NHW-PWEI-2019-004,PWEI,Scrap Metal,Kilogram,0,,Q4,2019
+NHW-PWEI-2019-005,PWEI,Scrap Tires,Pieces,0,,Q1,2019
+NHW-PWEI-2019-006,PWEI,Scrap Tires,Pieces,0,,Q2,2019
+NHW-PWEI-2019-007,PWEI,Scrap Tires,Pieces,0,,Q3,2019
+NHW-PWEI-2019-008,PWEI,Scrap Tires,Pieces,24,,Q4,2019
+NHW-PWEI-2019-009,PWEI,PET Bottles,Kilogram,0,,Q1,2019
+NHW-PWEI-2019-010,PWEI,PET Bottles,Kilogram,0,,Q2,2019
+NHW-PWEI-2019-011,PWEI,PET Bottles,Kilogram,0,,Q3,2019
+NHW-PWEI-2019-012,PWEI,PET Bottles,Kilogram,0,,Q4,2019
+NHW-PWEI-2019-013,PWEI,Residual,Kilogram,270.9,,Q1,2019
+NHW-PWEI-2019-014,PWEI,Residual,Kilogram,273.9,,Q2,2019
+NHW-PWEI-2019-015,PWEI,Residual,Kilogram,276.9,,Q3,2019
+NHW-PWEI-2019-016,PWEI,Residual,Kilogram,276.9,,Q4,2019
+NHW-PWEI-2019-017,PWEI,Compostable,Kilogram,135,,Q1,2019
+NHW-PWEI-2019-018,PWEI,Compostable,Kilogram,136.5,,Q2,2019
+NHW-PWEI-2019-019,PWEI,Compostable,Kilogram,138,,Q3,2019
+NHW-PWEI-2019-020,PWEI,Compostable,Kilogram,138,,Q4,2019
+NHW-PWEI-2019-021,PWEI,Food,Kilogram,162,,Q1,2019
+NHW-PWEI-2019-022,PWEI,Food,Kilogram,163.8,,Q2,2019
+NHW-PWEI-2019-023,PWEI,Food,Kilogram,165.6,,Q3,2019
+NHW-PWEI-2019-024,PWEI,Food,Kilogram,165.6,,Q4,2019
+NHW-PWEI-2020-001,PWEI,Scrap Metal,Kilogram,0,,Q1,2020
+NHW-PWEI-2020-002,PWEI,Scrap Metal,Kilogram,0,,Q2,2020
+NHW-PWEI-2020-003,PWEI,Scrap Metal,Kilogram,0,,Q3,2020
+NHW-PWEI-2020-004,PWEI,Scrap Metal,Kilogram,53,,Q4,2020
+NHW-PWEI-2020-005,PWEI,Scrap Tires,Pieces,0,,Q1,2020
+NHW-PWEI-2020-006,PWEI,Scrap Tires,Pieces,12,,Q2,2020
+NHW-PWEI-2020-007,PWEI,Scrap Tires,Pieces,0,,Q3,2020
+NHW-PWEI-2020-008,PWEI,Scrap Tires,Pieces,0,,Q4,2020
+NHW-PWEI-2020-009,PWEI,PET Bottles,Kilogram,0,,Q1,2020
+NHW-PWEI-2020-010,PWEI,PET Bottles,Kilogram,0,,Q2,2020
+NHW-PWEI-2020-011,PWEI,PET Bottles,Kilogram,0,,Q3,2020
+NHW-PWEI-2020-012,PWEI,PET Bottles,Kilogram,63,,Q4,2020
+NHW-PWEI-2020-013,PWEI,Residual,Kilogram,197.1,,Q1,2020
+NHW-PWEI-2020-014,PWEI,Residual,Kilogram,199.29,,Q2,2020
+NHW-PWEI-2020-015,PWEI,Residual,Kilogram,201.48,,Q3,2020
+NHW-PWEI-2020-016,PWEI,Residual,Kilogram,201.48,,Q4,2020
+NHW-PWEI-2020-017,PWEI,Compostable,Kilogram,126,,Q1,2020
+NHW-PWEI-2020-018,PWEI,Compostable,Kilogram,127.4,,Q2,2020
+NHW-PWEI-2020-019,PWEI,Compostable,Kilogram,128.8,,Q3,2020
+NHW-PWEI-2020-020,PWEI,Compostable,Kilogram,128.8,,Q4,2020
+NHW-PWEI-2020-021,PWEI,Food,Kilogram,144,,Q1,2020
+NHW-PWEI-2020-022,PWEI,Food,Kilogram,145.6,,Q2,2020
+NHW-PWEI-2020-023,PWEI,Food,Kilogram,147.2,,Q3,2020
+NHW-PWEI-2020-024,PWEI,Food,Kilogram,147.2,,Q4,2020
+NHW-PWEI-2021-001,PWEI,Scrap Metal,Kilogram,0,,Q1,2021
+NHW-PWEI-2021-002,PWEI,Scrap Metal,Kilogram,197,,Q2,2021
+NHW-PWEI-2021-003,PWEI,Scrap Metal,Kilogram,190,,Q3,2021
+NHW-PWEI-2021-004,PWEI,Scrap Metal,Kilogram,189,,Q4,2021
+NHW-PWEI-2021-005,PWEI,Scrap Tires,Pieces,0,,Q1,2021
+NHW-PWEI-2021-006,PWEI,Scrap Tires,Pieces,0,,Q2,2021
+NHW-PWEI-2021-007,PWEI,Scrap Tires,Pieces,22,,Q3,2021
+NHW-PWEI-2021-008,PWEI,Scrap Tires,Pieces,0,,Q4,2021
+NHW-PWEI-2021-009,PWEI,PET Bottles,Kilogram,0,,Q1,2021
+NHW-PWEI-2021-010,PWEI,PET Bottles,Kilogram,7,,Q2,2021
+NHW-PWEI-2021-011,PWEI,PET Bottles,Kilogram,27,,Q3,2021
+NHW-PWEI-2021-012,PWEI,PET Bottles,Kilogram,34,,Q4,2021
+NHW-PWEI-2021-013,PWEI,Residual,Kilogram,429.03,,Q1,2021
+NHW-PWEI-2021-014,PWEI,Residual,Kilogram,433.79,,Q2,2021
+NHW-PWEI-2021-015,PWEI,Residual,Kilogram,438.84,,Q3,2021
+NHW-PWEI-2021-016,PWEI,Residual,Kilogram,438.56,,Q4,2021
+NHW-PWEI-2021-017,PWEI,Compostable,Kilogram,108,,Q1,2021
+NHW-PWEI-2021-018,PWEI,Compostable,Kilogram,109.2,,Q2,2021
+NHW-PWEI-2021-019,PWEI,Compostable,Kilogram,118.68,,Q3,2021
+NHW-PWEI-2021-020,PWEI,Compostable,Kilogram,118.68,,Q4,2021
+NHW-PWEI-2021-021,PWEI,Food,Kilogram,135,,Q1,2021
+NHW-PWEI-2021-022,PWEI,Food,Kilogram,136.5,,Q2,2021
+NHW-PWEI-2021-023,PWEI,Food,Kilogram,138,,Q3,2021
+NHW-PWEI-2021-024,PWEI,Food,Kilogram,138,,Q4,2021
+NHW-PWEI-2022-001,PWEI,Scrap Metal,Kilogram,0,,Q1,2022
+NHW-PWEI-2022-002,PWEI,Scrap Metal,Kilogram,22,,Q2,2022
+NHW-PWEI-2022-003,PWEI,Scrap Metal,Kilogram,189,,Q3,2022
+NHW-PWEI-2022-004,PWEI,Scrap Metal,Kilogram,0,,Q4,2022
+NHW-PWEI-2022-005,PWEI,Scrap Tires,Pieces,0,,Q1,2022
+NHW-PWEI-2022-006,PWEI,Scrap Tires,Pieces,14,,Q2,2022
+NHW-PWEI-2022-007,PWEI,Scrap Tires,Pieces,0,,Q3,2022
+NHW-PWEI-2022-008,PWEI,Scrap Tires,Pieces,0,,Q4,2022
+NHW-PWEI-2022-009,PWEI,PET Bottles,Kilogram,0,,Q1,2022
+NHW-PWEI-2022-010,PWEI,PET Bottles,Kilogram,130,,Q2,2022
+NHW-PWEI-2022-011,PWEI,PET Bottles,Kilogram,19,,Q3,2022
+NHW-PWEI-2022-012,PWEI,PET Bottles,Kilogram,0,,Q4,2022
+NHW-PWEI-2022-013,PWEI,Residual,Kilogram,190.8,,Q1,2022
+NHW-PWEI-2022-014,PWEI,Residual,Kilogram,191.1,,Q2,2022
+NHW-PWEI-2022-015,PWEI,Residual,Kilogram,195.04,,Q3,2022
+NHW-PWEI-2022-016,PWEI,Residual,Kilogram,202.4,,Q4,2022
+NHW-PWEI-2022-017,PWEI,Compostable,Kilogram,106.2,,Q1,2022
+NHW-PWEI-2022-018,PWEI,Compostable,Kilogram,107.38,,Q2,2022
+NHW-PWEI-2022-019,PWEI,Compostable,Kilogram,109.4,,Q3,2022
+NHW-PWEI-2022-020,PWEI,Compostable,Kilogram,110.4,,Q4,2022
+NHW-PWEI-2022-021,PWEI,Food,Kilogram,130.5,,Q1,2022
+NHW-PWEI-2022-022,PWEI,Food,Kilogram,131.95,,Q2,2022
+NHW-PWEI-2022-023,PWEI,Food,Kilogram,133.4,,Q3,2022
+NHW-PWEI-2022-024,PWEI,Food,Kilogram,133.4,,Q4,2022
+NHW-PWEI-2023-001,PWEI,Scrap Metal,Kilogram,0,,Q1,2023
+NHW-PWEI-2023-002,PWEI,Scrap Metal,Kilogram,0,,Q2,2023
+NHW-PWEI-2023-003,PWEI,Scrap Metal,Kilogram,692,,Q3,2023
+NHW-PWEI-2023-004,PWEI,Scrap Metal,Kilogram,0,,Q4,2023
+NHW-PWEI-2023-005,PWEI,Scrap Tires,Pieces,4,,Q1,2023
+NHW-PWEI-2023-006,PWEI,Scrap Tires,Pieces,8,,Q2,2023
+NHW-PWEI-2023-007,PWEI,Scrap Tires,Pieces,4,,Q3,2023
+NHW-PWEI-2023-008,PWEI,Scrap Tires,Pieces,8,,Q4,2023
+NHW-PWEI-2023-009,PWEI,PET Bottles,Kilogram,0,,Q1,2023
+NHW-PWEI-2023-010,PWEI,PET Bottles,Kilogram,0,,Q2,2023
+NHW-PWEI-2023-011,PWEI,PET Bottles,Kilogram,11,,Q3,2023
+NHW-PWEI-2023-012,PWEI,PET Bottles,Kilogram,0,,Q4,2023
+NHW-PWEI-2023-013,PWEI,Residual,Kilogram,0,,Q1,2023
+NHW-PWEI-2023-014,PWEI,Residual,Kilogram,0,,Q2,2023
+NHW-PWEI-2023-015,PWEI,Residual,Kilogram,0,,Q3,2023
+NHW-PWEI-2023-016,PWEI,Residual,Kilogram,0,,Q4,2023
+NHW-PWEI-2023-017,PWEI,Compostable,Kilogram,0,,Q1,2023
+NHW-PWEI-2023-018,PWEI,Compostable,Kilogram,0,,Q2,2023
+NHW-PWEI-2023-019,PWEI,Compostable,Kilogram,0,,Q3,2023
+NHW-PWEI-2023-020,PWEI,Compostable,Kilogram,0,,Q4,2023
+NHW-PWEI-2023-021,PWEI,Food,Kilogram,0,,Q1,2023
+NHW-PWEI-2023-022,PWEI,Food,Kilogram,0,,Q2,2023
+NHW-PWEI-2023-023,PWEI,Food,Kilogram,0,,Q3,2023
+NHW-PWEI-2023-024,PWEI,Food,Kilogram,0,,Q4,2023
+NHW-PWEI-2024-001,PWEI,Scrap Metal,Kilogram,0,,Q1,2024
+NHW-PWEI-2024-002,PWEI,Scrap Metal,Kilogram,0,,Q2,2024
+NHW-PWEI-2024-003,PWEI,Scrap Metal,Kilogram,0,,Q3,2024
+NHW-PWEI-2024-004,PWEI,Scrap Metal,Kilogram,161,,Q4,2024
+NHW-PWEI-2024-005,PWEI,Scrap Tires,Pieces,4,,Q1,2024
+NHW-PWEI-2024-006,PWEI,Scrap Tires,Pieces,8,,Q2,2024
+NHW-PWEI-2024-007,PWEI,Scrap Tires,Pieces,8,,Q3,2024
+NHW-PWEI-2024-008,PWEI,Scrap Tires,Pieces,4,,Q4,2024
+NHW-PWEI-2024-009,PWEI,PET Bottles,Kilogram,0,,Q1,2024
+NHW-PWEI-2024-010,PWEI,PET Bottles,Kilogram,0,,Q2,2024
+NHW-PWEI-2024-011,PWEI,PET Bottles,Kilogram,0,,Q3,2024
+NHW-PWEI-2024-012,PWEI,PET Bottles,Kilogram,11,,Q4,2024
+NHW-PWEI-2024-013,PWEI,Residual,Kilogram,243,,Q1,2024
+NHW-PWEI-2024-014,PWEI,Residual,Kilogram,245.7,,Q2,2024
+NHW-PWEI-2024-015,PWEI,Residual,Kilogram,248.4,,Q3,2024
+NHW-PWEI-2024-016,PWEI,Residual,Kilogram,253,,Q4,2024
+NHW-PWEI-2024-017,PWEI,Compostable,Kilogram,108,,Q1,2024
+NHW-PWEI-2024-018,PWEI,Compostable,Kilogram,109.2,,Q2,2024
+NHW-PWEI-2024-019,PWEI,Compostable,Kilogram,110.4,,Q3,2024
+NHW-PWEI-2024-020,PWEI,Compostable,Kilogram,110.4,,Q4,2024
+NHW-PWEI-2024-021,PWEI,Food,Kilogram,72,,Q1,2024
+NHW-PWEI-2024-022,PWEI,Food,Kilogram,72.8,,Q2,2024
+NHW-PWEI-2024-023,PWEI,Food,Kilogram,73.6,,Q3,2024
+NHW-PWEI-2024-024,PWEI,Food,Kilogram,73.6,,Q4,2024
+NHW-PWEI-2025-001,PWEI,Scrap Metal,Kilogram,0,,Q1,2025
+NHW-PWEI-2025-002,PWEI,Scrap Metal,Kilogram,0,,Q2,2025
+NHW-PWEI-2025-003,PWEI,Scrap Metal,Kilogram,0,,Q3,2025
+NHW-PWEI-2025-004,PWEI,Scrap Metal,Kilogram,0,,Q4,2025
+NHW-PWEI-2025-005,PWEI,Scrap Tires,Pieces,0,,Q1,2025
+NHW-PWEI-2025-006,PWEI,Scrap Tires,Pieces,0,,Q2,2025
+NHW-PWEI-2025-007,PWEI,Scrap Tires,Pieces,0,,Q3,2025
+NHW-PWEI-2025-008,PWEI,Scrap Tires,Pieces,0,,Q4,2025
+NHW-PWEI-2025-009,PWEI,PET Bottles,Kilogram,0,,Q1,2025
+NHW-PWEI-2025-010,PWEI,PET Bottles,Kilogram,0,,Q2,2025
+NHW-PWEI-2025-011,PWEI,PET Bottles,Kilogram,0,,Q3,2025
+NHW-PWEI-2025-012,PWEI,PET Bottles,Kilogram,0,,Q4,2025
+NHW-PWEI-2025-013,PWEI,Residual,Kilogram,0,,Q1,2025
+NHW-PWEI-2025-014,PWEI,Residual,Kilogram,0,,Q2,2025
+NHW-PWEI-2025-015,PWEI,Residual,Kilogram,0,,Q3,2025
+NHW-PWEI-2025-016,PWEI,Residual,Kilogram,0,,Q4,2025
+NHW-PWEI-2025-017,PWEI,Compostable,Kilogram,0,,Q1,2025
+NHW-PWEI-2025-018,PWEI,Compostable,Kilogram,0,,Q2,2025
+NHW-PWEI-2025-019,PWEI,Compostable,Kilogram,0,,Q3,2025
+NHW-PWEI-2025-020,PWEI,Compostable,Kilogram,0,,Q4,2025
+NHW-PWEI-2025-021,PWEI,Food,Kilogram,0,,Q1,2025
+NHW-PWEI-2025-022,PWEI,Food,Kilogram,0,,Q2,2025
+NHW-PWEI-2025-023,PWEI,Food,Kilogram,0,,Q3,2025
+NHW-PWEI-2025-024,PWEI,Food,Kilogram,0,,Q4,2025
