@@ -20,6 +20,10 @@ DECLARE
     end_time TIMESTAMP;
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
+    r RECORD;
+    last_counter INT := 0;
+    last_company TEXT := '';
+    last_year INT := 0;
 BEGIN
     batch_start_time := CLOCK_TIMESTAMP();
     RAISE NOTICE '================================================';
@@ -57,78 +61,183 @@ BEGIN
         RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
         RAISE NOTICE '>> -------------';
         
-        -- Loading silver.envi_natural_sources
+        -- Loading silver.envi_water_abstraction
         start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Inserting Data Into: silver.envi_natural_sources';
-        INSERT INTO silver.envi_natural_sources (
-            ns_id,
-            company_id,
-            ns_name
-        )
-        SELECT
-            TRIM(ns_id),
-            TRIM(company_id),
-            TRIM(ns_name)
-        FROM bronze.envi_natural_sources
-        ON CONFLICT (ns_id)
-        DO UPDATE SET
-            company_id = EXCLUDED.company_id,
-            ns_name = EXCLUDED.ns_name;
+        RAISE NOTICE '>> Inserting Aggregated Data Into: silver.envi_water_abstraction';
+
+        -- Insert aggregated records where month is NOT NULL
+        FOR r IN
+            SELECT
+                company_id,
+                year,
+                CASE 
+                    WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
+                    WHEN LOWER(TRIM(month)) IN ('april', 'may', 'june') THEN 'Q2'
+                    WHEN LOWER(TRIM(month)) IN ('july', 'august', 'september') THEN 'Q3'
+                    WHEN LOWER(TRIM(month)) IN ('october', 'november', 'december') THEN 'Q4'
+                    ELSE 'Unknown'
+                END AS quarter,
+                SUM(CASE WHEN volume < 0 THEN 0 ELSE volume END) AS total_volume,
+                MAX(unit_of_measurement) AS unit_of_measurement
+            FROM bronze.envi_water_abstraction
+            WHERE month IS NOT NULL
+            GROUP BY company_id, year,
+                    CASE 
+                        WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
+                        WHEN LOWER(TRIM(month)) IN ('april', 'may', 'june') THEN 'Q2'
+                        WHEN LOWER(TRIM(month)) IN ('july', 'august', 'september') THEN 'Q3'
+                        WHEN LOWER(TRIM(month)) IN ('october', 'november', 'december') THEN 'Q4'
+                        ELSE 'Unknown'
+                    END
+            ORDER BY company_id, year, quarter
+        LOOP
+            -- Reset counter for each new company-year
+            IF r.company_id <> last_company OR r.year <> last_year THEN
+                last_counter := 1;
+            ELSE
+                last_counter := last_counter + 1;
+            END IF;
+
+            INSERT INTO silver.envi_water_abstraction (
+                wa_id,
+                company_id,
+                volume,
+                unit_of_measurement,
+                quarter,
+                year
+            )
+            VALUES (
+                'WA-' || r.company_id || '-' || r.year || '-' || LPAD(last_counter::TEXT, 3, '0'),
+                r.company_id,
+                r.total_volume,
+                r.unit_of_measurement,
+                r.quarter,
+                r.year
+            )
+            ON CONFLICT (wa_id) DO UPDATE SET
+                company_id = EXCLUDED.company_id,
+                volume = CASE WHEN EXCLUDED.volume < 0 THEN 0 ELSE EXCLUDED.volume END,
+                unit_of_measurement = EXCLUDED.unit_of_measurement,
+                year = EXCLUDED.year,
+                quarter = EXCLUDED.quarter,
+                updated_at = CURRENT_TIMESTAMP;
+
+            last_company := r.company_id;
+            last_year := r.year;
+        END LOOP;
+
+        RAISE NOTICE '>> Inserting Non-Aggregated Data (month IS NULL)';
+
+        FOR r IN
+            SELECT
+                wa_id,
+                company_id,
+                year,
+                quarter,
+                CASE WHEN volume < 0 THEN 0 ELSE volume END AS volume,
+                unit_of_measurement
+            FROM bronze.envi_water_abstraction
+            WHERE month IS NULL
+        LOOP
+            INSERT INTO silver.envi_water_abstraction (
+                wa_id,
+                company_id,
+                volume,
+                unit_of_measurement,
+                quarter,
+                year
+            )
+            VALUES (
+                r.wa_id,
+                r.company_id,
+                r.volume,
+                r.unit_of_measurement,
+                r.quarter,
+                r.year
+            )
+            ON CONFLICT (wa_id) DO UPDATE SET
+                company_id = EXCLUDED.company_id,
+                volume = CASE WHEN EXCLUDED.volume < 0 THEN 0 ELSE EXCLUDED.volume END,
+                unit_of_measurement = EXCLUDED.unit_of_measurement,
+                year = EXCLUDED.year,
+                quarter = EXCLUDED.quarter,
+                updated_at = CURRENT_TIMESTAMP;
+        END LOOP;
+
 
         end_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
         RAISE NOTICE '>> -------------';
-        
-        -- Loading silver.envi_water_withdrawal
+
+        -- Loading silver.envi_water_discharge
         start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Inserting Data Into: silver.envi_water_withdrawal';
-        INSERT INTO silver.envi_water_withdrawal (
-            ww_id,
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_water_discharge';
+        INSERT INTO silver.envi_water_discharge (
+            wd_id,
             company_id,
-            ns_id,
             volume,
             unit_of_measurement,
-            year,
-            month,
-            quarter
+            quarter,
+            year
         )
         SELECT
-            TRIM(ww_id),
+            TRIM(wd_id),
             TRIM(company_id),
-            TRIM(ns_id),
             CASE
                 WHEN volume < 0 THEN 0  -- Handle negative values
                 ELSE volume
             END AS volume,
             TRIM(unit_of_measurement),
-            year,
-            TRIM(month),
-            CASE 
-		        WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
-		        WHEN LOWER(TRIM(month)) IN ('april', 'may', 'june') THEN 'Q2'
-		        WHEN LOWER(TRIM(month)) IN ('july', 'august', 'september') THEN 'Q3'
-		        WHEN LOWER(TRIM(month)) IN ('october', 'november', 'december') THEN 'Q4'
-		        ELSE 'Unknown'
-		    END AS quarter
-        FROM bronze.envi_water_withdrawal
-        ON CONFLICT (ww_id)
+            TRIM(quarter),
+            year
+        FROM bronze.envi_water_discharge
+        ON CONFLICT (wd_id)
         DO UPDATE SET
             company_id = EXCLUDED.company_id,
-            ns_id = EXCLUDED.ns_id,
             volume = CASE
                 WHEN EXCLUDED.volume < 0 THEN 0  -- Handle negative values
                 ELSE EXCLUDED.volume
             END,
             unit_of_measurement = EXCLUDED.unit_of_measurement,
-            year = EXCLUDED.year,
-            month = EXCLUDED.month,
-            quarter = CASE 
-		        WHEN LOWER(TRIM(EXCLUDED.month)) IN ('january', 'february', 'march') THEN 'Q1'
-		        WHEN LOWER(TRIM(EXCLUDED.month)) IN ('april', 'may', 'june') THEN 'Q2'
-		        WHEN LOWER(TRIM(EXCLUDED.month)) IN ('july', 'august', 'september') THEN 'Q3'
-		        WHEN LOWER(TRIM(EXCLUDED.month)) IN ('october', 'november', 'december') THEN 'Q4'
-		        ELSE 'Unknown'
-		    END;
+            quarter = EXCLUDED.quarter,
+            year = EXCLUDED.year;
+
+        end_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+        RAISE NOTICE '>> -------------';
+
+        -- Loading silver.envi_water_consumption
+        start_time := CLOCK_TIMESTAMP();
+        RAISE NOTICE '>> Inserting Data Into: silver.envi_water_consumption';
+        INSERT INTO silver.envi_water_consumption (
+            wc_id,
+            company_id,
+            volume,
+            unit_of_measurement,
+            quarter,
+            year
+        )
+        SELECT
+            TRIM(wc_id),
+            TRIM(company_id),
+            CASE
+                WHEN volume < 0 THEN 0  -- Handle negative values
+                ELSE volume
+            END AS volume,
+            TRIM(unit_of_measurement),
+            TRIM(quarter),
+            year
+        FROM bronze.envi_water_consumption
+        ON CONFLICT (wc_id)
+        DO UPDATE SET
+            company_id = EXCLUDED.company_id,
+            volume = CASE
+                WHEN EXCLUDED.volume < 0 THEN 0  -- Handle negative values
+                ELSE EXCLUDED.volume
+            END,
+            unit_of_measurement = EXCLUDED.unit_of_measurement,
+            quarter = EXCLUDED.quarter,
+            year = EXCLUDED.year;
 
         end_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
@@ -197,6 +306,7 @@ BEGIN
         INSERT INTO silver.envi_electric_consumption (
 		    ec_id,
 		    company_id,
+			source,
 		    unit_of_measurement,
 		    consumption,
 		    quarter,
@@ -205,6 +315,7 @@ BEGIN
 		SELECT
 		    TRIM(ec_id),
 		    TRIM(company_id),
+			TRIM(source),
 		    TRIM(unit_of_measurement),
 		    CASE
 		        WHEN consumption < 0 THEN 0  -- Handle negative values
@@ -216,6 +327,7 @@ BEGIN
 		ON CONFLICT (ec_id)
 		DO UPDATE SET
 		    company_id = EXCLUDED.company_id,
+			source = EXCLUDED.source,
 		    unit_of_measurement = EXCLUDED.unit_of_measurement,
 		    consumption = CASE
 		        WHEN EXCLUDED.consumption < 0 THEN 0  -- Handle negative values
@@ -232,133 +344,156 @@ BEGIN
         start_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Inserting Data Into: silver.envi_non_hazard_waste';
         INSERT INTO silver.envi_non_hazard_waste (
-            nhw_id,
-            company_id,
-            metrics,
-            unit_of_measurement,
-            waste,
-            month,
-            year,
-            quarter
-        )
-        SELECT
-            TRIM(nhw_id),
-            TRIM(company_id),
-            TRIM(metrics),
-            TRIM(unit_of_measurement),
-            CASE
-                WHEN waste < 0 THEN 0  -- Handle negative values
-                ELSE waste
-            END AS waste,
-            TRIM(month),
-            year,
-            CASE 
+		    nhw_id,
+		    company_id,
+		    metrics,
+		    unit_of_measurement,
+		    waste,
+		    year,
+		    quarter
+		)
+		SELECT
+		    TRIM(nhw_id),
+		    TRIM(company_id),
+		    TRIM(metrics),
+		    TRIM(unit_of_measurement),
+		    CASE
+		        WHEN waste < 0 THEN 0  -- Handle negative values
+		        ELSE waste
+		    END AS waste,
+		    year,
+		    CASE 
 		        WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
 		        WHEN LOWER(TRIM(month)) IN ('april', 'may', 'june') THEN 'Q2'
 		        WHEN LOWER(TRIM(month)) IN ('july', 'august', 'september') THEN 'Q3'
 		        WHEN LOWER(TRIM(month)) IN ('october', 'november', 'december') THEN 'Q4'
-		        ELSE 'Unknown'
+		        ELSE TRIM(quarter)
 		    END AS quarter
-        FROM bronze.envi_non_hazard_waste
-        ON CONFLICT (nhw_id)
-        DO UPDATE SET
-            company_id = EXCLUDED.company_id,
-            metrics = EXCLUDED.metrics,
-            unit_of_measurement = EXCLUDED.unit_of_measurement,
-            waste = CASE
-                WHEN EXCLUDED.waste < 0 THEN 0  -- Handle negative values
-                ELSE EXCLUDED.waste
-            END,
-            month = EXCLUDED.month,
-            year = EXCLUDED.year,
-            quarter = CASE 
-		        WHEN LOWER(TRIM(EXCLUDED.month)) IN ('january', 'february', 'march') THEN 'Q1'
-		        WHEN LOWER(TRIM(EXCLUDED.month)) IN ('april', 'may', 'june') THEN 'Q2'
-		        WHEN LOWER(TRIM(EXCLUDED.month)) IN ('july', 'august', 'september') THEN 'Q3'
-		        WHEN LOWER(TRIM(EXCLUDED.month)) IN ('october', 'november', 'december') THEN 'Q4'
-		        ELSE 'Unknown'
+		FROM bronze.envi_non_hazard_waste
+		ON CONFLICT (nhw_id)
+		DO UPDATE SET
+		    company_id = EXCLUDED.company_id,
+		    metrics = EXCLUDED.metrics,
+		    unit_of_measurement = EXCLUDED.unit_of_measurement,
+		    waste = CASE
+		        WHEN EXCLUDED.waste < 0 THEN 0
+		        ELSE EXCLUDED.waste
+		    END,
+		    year = EXCLUDED.year,
+		    quarter = CASE 
+		        WHEN LOWER(TRIM(EXCLUDED.quarter)) IN ('january', 'february', 'march') THEN 'Q1'
+		        WHEN LOWER(TRIM(EXCLUDED.quarter)) IN ('april', 'may', 'june') THEN 'Q2'
+		        WHEN LOWER(TRIM(EXCLUDED.quarter)) IN ('july', 'august', 'september') THEN 'Q3'
+		        WHEN LOWER(TRIM(EXCLUDED.quarter)) IN ('october', 'november', 'december') THEN 'Q4'
+		        ELSE TRIM(EXCLUDED.quarter)
 		    END;
+
         end_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
         RAISE NOTICE '>> -------------';
         
         -- Loading silver.envi_hazard_waste_generated
-        start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Inserting Data Into: silver.envi_hazard_waste_generated';
-        INSERT INTO silver.envi_hazard_waste_generated (
-            hwg_id,
-            company_id,
-            metrics,
-            unit_of_measurement,
-            waste_generated,
-            quarter,
-            year
-        )
-        SELECT
-            TRIM(hwg_id),
-            TRIM(company_id),
-            TRIM(metrics),
-            TRIM(unit_of_measurement),
-            CASE
-                WHEN waste_generated < 0 THEN 0  -- Handle negative values
-                ELSE waste_generated
-            END AS waste_generated,
-			TRIM(quarter),
-            year
-        FROM bronze.envi_hazard_waste_generated
-        ON CONFLICT (hwg_id)
-        DO UPDATE SET
-            company_id = EXCLUDED.company_id,
-            metrics = EXCLUDED.metrics,
-            unit_of_measurement = EXCLUDED.unit_of_measurement,
-            waste_generated = CASE
-                WHEN EXCLUDED.waste_generated < 0 THEN 0  -- Handle negative values
-                ELSE EXCLUDED.waste_generated
-            END,
-			quarter = EXCLUDED.quarter,
-            year = EXCLUDED.year;
-
-        end_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-        RAISE NOTICE '>> -------------';
-
+		start_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Inserting Data Into: silver.envi_hazard_waste_generated';
+		
+		INSERT INTO silver.envi_hazard_waste_generated (
+		    hwg_id,
+		    company_id,
+		    metrics,
+		    unit_of_measurement,
+		    waste_generated,
+		    quarter,
+		    year
+		)
+		SELECT
+		    TRIM(hwg_id),
+		    TRIM(company_id),
+		    TRIM(metrics),
+		    CASE
+		        WHEN LOWER(TRIM(unit_of_measurement)) = 'ton' THEN
+		            CASE
+		                WHEN TRIM(metrics) IN ('Used Oil', 'Paint/Solvent Based') THEN 'Liter'
+		                ELSE 'Kilogram'
+		            END
+		        ELSE TRIM(unit_of_measurement)
+		    END AS unit_of_measurement,
+		    CASE
+			    WHEN waste_generated < 0 THEN 0
+			    WHEN LOWER(TRIM(unit_of_measurement)) = 'ton' THEN
+			        CASE
+			            WHEN TRIM(metrics) IN ('Used Oil', 'Paint/Solvent Based') THEN waste_generated * 1000 / 0.9
+			            ELSE waste_generated * 1000
+			        END
+			    ELSE waste_generated
+			END AS waste_generated,
+		    TRIM(quarter),
+		    year
+		FROM bronze.envi_hazard_waste_generated
+		ON CONFLICT (hwg_id)
+		DO UPDATE SET
+		    company_id = EXCLUDED.company_id,
+		    metrics = EXCLUDED.metrics,
+		    unit_of_measurement = EXCLUDED.unit_of_measurement,
+		    waste_generated = CASE
+		        WHEN EXCLUDED.waste_generated < 0 THEN 0
+		        ELSE EXCLUDED.waste_generated
+		    END,
+		    quarter = EXCLUDED.quarter,
+		    year = EXCLUDED.year;
+		
+		end_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+		RAISE NOTICE '>> -------------';
 
         -- Loading silver.envi_hazard_waste_disposed
-        start_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Inserting Data Into: silver.envi_hazard_waste_disposed';
-        INSERT INTO silver.envi_hazard_waste_disposed (
-            hwd_id,
-            company_id,
-            metrics,
-            unit_of_measurement,
-            waste_disposed,
-            year
-        )
-        SELECT
-            TRIM(hwd_id),
-            TRIM(company_id),
-            TRIM(metrics),
-            TRIM(unit_of_measurement),
-            CASE
-                WHEN waste_disposed < 0 THEN 0  -- Handle negative values
-                ELSE waste_disposed
-            END AS waste_disposed,
-            year
-        FROM bronze.envi_hazard_waste_disposed
-        ON CONFLICT (hwd_id)
-        DO UPDATE SET
-            company_id = EXCLUDED.company_id,
-            metrics = EXCLUDED.metrics,
-            unit_of_measurement = EXCLUDED.unit_of_measurement,
-            waste_disposed = CASE
-                WHEN EXCLUDED.waste_disposed < 0 THEN 0  -- Handle negative values
-                ELSE EXCLUDED.waste_disposed
-            END,
-            year = EXCLUDED.year;
-            
-        end_time := CLOCK_TIMESTAMP();
-        RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-        RAISE NOTICE '>> -------------';
+		start_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Inserting Data Into: silver.envi_hazard_waste_disposed';
+		
+		INSERT INTO silver.envi_hazard_waste_disposed (
+		    hwd_id,
+		    company_id,
+		    metrics,
+		    unit_of_measurement,
+		    waste_disposed,
+		    year
+		)
+		SELECT
+		    TRIM(hwd_id),
+		    TRIM(company_id),
+		    TRIM(metrics),
+		    CASE
+		        WHEN LOWER(TRIM(unit_of_measurement)) = 'ton' THEN
+		            CASE
+		                WHEN TRIM(metrics) IN ('Used Oil', 'Paint/Solvent Based') THEN 'Liter'
+		                ELSE 'Kilogram'
+		            END
+		        ELSE TRIM(unit_of_measurement)
+		    END AS unit_of_measurement,
+			CASE
+			    WHEN waste_disposed < 0 THEN 0
+			    WHEN LOWER(TRIM(unit_of_measurement)) = 'ton' THEN
+			        CASE
+			            WHEN TRIM(metrics) IN ('Used Oil', 'Paint/Solvent Based') THEN waste_disposed * 1000 / 0.9
+			            ELSE waste_disposed * 1000
+			        END
+			    ELSE waste_disposed
+			END AS waste_disposed,
+		    year
+		FROM bronze.envi_hazard_waste_disposed
+		ON CONFLICT (hwd_id)
+		DO UPDATE SET
+		    company_id = EXCLUDED.company_id,
+		    metrics = EXCLUDED.metrics,
+		    unit_of_measurement = EXCLUDED.unit_of_measurement,
+		    waste_disposed = CASE
+		        WHEN EXCLUDED.waste_disposed < 0 THEN 0
+		        ELSE EXCLUDED.waste_disposed
+		    END,
+		    year = EXCLUDED.year;
+		
+		end_time := CLOCK_TIMESTAMP();
+		RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+		RAISE NOTICE '>> -------------';
 
         
         batch_end_time := CLOCK_TIMESTAMP();
