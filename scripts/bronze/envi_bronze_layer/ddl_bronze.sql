@@ -122,7 +122,7 @@ DROP TABLE IF EXISTS bronze.envi_non_hazard_waste;
 CREATE TABLE bronze.envi_non_hazard_waste (
     nhw_id 					VARCHAR(20),           -- Example: NHW-PSC-2024-001
     company_id 				VARCHAR(10),       -- Referenced to company_info.
-    metrics                 VARCHAR(20),
+    metrics                 VARCHAR(50),
     unit_of_measurement 	VARCHAR(15),
     waste 					DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
     month 					VARCHAR(10),
