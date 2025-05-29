@@ -59,30 +59,34 @@ BEGIN
 
 
 	RAISE NOTICE '------------------------------------------------';
-	RAISE NOTICE 'Loading Natural Sources Data...';
+	RAISE NOTICE 'Loading Water Abstraction Data...';
 	RAISE NOTICE '------------------------------------------------';
 
 
 	start_time := CURRENT_TIMESTAMP; -- Start time for the operation
-	
+
 	-- Create temporary table for naturlal sources
-	CREATE TEMP TABLE temp_natural_sources (LIKE bronze.envi_natural_sources);
+	CREATE TEMP TABLE temp_water_abstraction (LIKE bronze.envi_water_abstraction);
 	
 	-- Load CSV into temporary table
 	EXECUTE format(
-	    'COPY temp_natural_sources FROM %L DELIMITER '','' CSV HEADER',
-	    local_file_path || '\envi_natural_sources.csv'
+	    'COPY temp_water_abstraction FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_water_abstraction.csv'
 	);
 
 	-- Upsert from temporary table to bronze
-    INSERT INTO bronze.envi_natural_sources
-    SELECT * FROM temp_natural_sources
-    ON CONFLICT (ns_id)
+    INSERT INTO bronze.envi_water_abstraction
+    SELECT * FROM temp_water_abstraction
+    ON CONFLICT (wa_id)
     DO UPDATE SET
 		company_id = EXCLUDED.company_id,
-		ns_name = EXCLUDED.ns_name;
+		year = EXCLUDED.year,
+		month = EXCLUDED.month,
+		quarter = EXCLUDED.quarter,
+		volume = EXCLUDED.volume,
+		unit_of_measurement = EXCLUDED.unit_of_measurement;
 
-	DROP TABLE temp_natural_sources;
+	DROP TABLE temp_water_abstraction;
 	
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -90,34 +94,67 @@ BEGIN
 
 
 	RAISE NOTICE '------------------------------------------------';
-	RAISE NOTICE 'Loading Water Withdrawal Data...';
+	RAISE NOTICE 'Loading Water Discharge Data...';
 	RAISE NOTICE '------------------------------------------------';
 
 
 	start_time := CURRENT_TIMESTAMP; -- Start time for the operation
 
 	-- Create temporary table for naturlal sources
-	CREATE TEMP TABLE temp_water_withdrawal (LIKE bronze.envi_water_withdrawal);
+	CREATE TEMP TABLE temp_water_discharge (LIKE bronze.envi_water_discharge);
 	
 	-- Load CSV into temporary table
 	EXECUTE format(
-	    'COPY temp_water_withdrawal FROM %L DELIMITER '','' CSV HEADER',
-	    local_file_path || '\envi_water_withdrawal.csv'
+	    'COPY temp_water_discharge FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_water_discharge.csv'
 	);
 
 	-- Upsert from temporary table to bronze
-    INSERT INTO bronze.envi_water_withdrawal
-    SELECT * FROM temp_water_withdrawal
-    ON CONFLICT (ww_id)
+    INSERT INTO bronze.envi_water_discharge
+    SELECT * FROM temp_water_discharge
+    ON CONFLICT (wd_id)
     DO UPDATE SET
 		company_id = EXCLUDED.company_id,
 		year = EXCLUDED.year,
-		month = EXCLUDED.month,
-		ns_id = EXCLUDED.ns_id,
+		quarter = EXCLUDED.quarter,
 		volume = EXCLUDED.volume,
 		unit_of_measurement = EXCLUDED.unit_of_measurement;
 
-	DROP TABLE temp_water_withdrawal;
+	DROP TABLE temp_water_discharge;
+	
+	end_time := CURRENT_TIMESTAMP; -- End time for the operation
+	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+	RAISE NOTICE '-----------------';
+
+
+	RAISE NOTICE '------------------------------------------------';
+	RAISE NOTICE 'Loading Water Consumption Data...';
+	RAISE NOTICE '------------------------------------------------';
+
+
+	start_time := CURRENT_TIMESTAMP; -- Start time for the operation
+
+	-- Create temporary table for naturlal sources
+	CREATE TEMP TABLE temp_water_consumption (LIKE bronze.envi_water_consumption);
+	
+	-- Load CSV into temporary table
+	EXECUTE format(
+	    'COPY temp_water_consumption FROM %L DELIMITER '','' CSV HEADER',
+	    local_file_path || '\envi_water_consumption.csv'
+	);
+
+	-- Upsert from temporary table to bronze
+    INSERT INTO bronze.envi_water_consumption
+    SELECT * FROM temp_water_consumption
+    ON CONFLICT (wc_id)
+    DO UPDATE SET
+		company_id = EXCLUDED.company_id,
+		year = EXCLUDED.year,
+		quarter = EXCLUDED.quarter,
+		volume = EXCLUDED.volume,
+		unit_of_measurement = EXCLUDED.unit_of_measurement;
+
+	DROP TABLE temp_water_consumption;
 	
 	end_time := CURRENT_TIMESTAMP; -- End time for the operation
 	RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -180,6 +217,7 @@ BEGIN
     ON CONFLICT (ec_id)
     DO UPDATE SET
 		company_id = EXCLUDED.company_id,
+		source = EXCLUDED.source,
 		unit_of_measurement = EXCLUDED.unit_of_measurement,
 		consumption = EXCLUDED.consumption,
 		quarter = EXCLUDED.quarter,
