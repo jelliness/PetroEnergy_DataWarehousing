@@ -131,7 +131,7 @@ DROP TABLE IF EXISTS silver.envi_hazard_waste_generated;
 CREATE TABLE silver.envi_hazard_waste_generated (
     hwg_id                  VARCHAR(20) NOT NULL,             -- Example: HW-PSC-2023-001
     company_id              VARCHAR(10) NOT NULL,              -- Referenced to company_main.
-    metrics                 VARCHAR(20),
+    metrics                 VARCHAR(50),
     unit_of_measurement     VARCHAR(15),
     waste_generated         DOUBLE PRECISION,                 -- Allows decimal values (e.g., 234.789)
     quarter                 VARCHAR(2),               -- Example: 'Q1', 'Q2', 'Q3', 'Q4'
@@ -148,7 +148,7 @@ DROP TABLE IF EXISTS silver.envi_hazard_waste_disposed;
 CREATE TABLE silver.envi_hazard_waste_disposed (
     hwd_id                  VARCHAR(20) NOT NULL,            -- Example: HW-PSC-2023-001
     company_id              VARCHAR(10) NOT NULL,              -- Referenced to company_main.
-    metrics                 VARCHAR(20),
+    metrics                 VARCHAR(50),
     unit_of_measurement     VARCHAR(15),
     waste_disposed          DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
     year                    SMALLINT,

@@ -147,3 +147,10 @@ ALTER TABLE bronze.envi_electric_consumption ADD CONSTRAINT unique_ec_id UNIQUE 
 ALTER TABLE bronze.envi_non_hazard_waste ADD CONSTRAINT unique_nhw_id UNIQUE (nhw_id);
 ALTER TABLE bronze.envi_hazard_waste_generated ADD CONSTRAINT unique_hwg_id UNIQUE (hwg_id);
 ALTER TABLE bronze.envi_hazard_waste_disposed ADD CONSTRAINT unique_hwd_id UNIQUE (hwd_id);
+
+-- Alter Column since the value stored is too long
+ALTER TABLE bronze.envi_hazard_waste_generated
+ALTER COLUMN metrics TYPE VARCHAR(50);
+
+ALTER TABLE bronze.envi_hazard_waste_disposed
+ALTER COLUMN metrics TYPE VARCHAR(50);
