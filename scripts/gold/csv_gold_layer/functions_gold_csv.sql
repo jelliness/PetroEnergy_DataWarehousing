@@ -225,7 +225,10 @@ CREATE OR REPLACE FUNCTION gold.func_household_powered(
     p_power_plant_id VARCHAR(10)[] DEFAULT NULL,
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_generation_source TEXT[] DEFAULT NULL,
-    p_province VARCHAR(30)[] DEFAULT NULL
+    p_province VARCHAR(30)[] DEFAULT NULL,
+    p_month INT[] DEFAULT NULL,
+    p_quarter INT[] DEFAULT NULL,
+    p_year INT[] DEFAULT NULL
 )
 RETURNS TABLE (
     year SMALLINT,
@@ -259,9 +262,12 @@ BEGIN
         SUM(fg.household_powered)::BIGINT AS est_house_powered
     FROM gold.fact_household_powered fg
     WHERE (p_power_plant_id IS NULL OR fg.power_plant_id = ANY(p_power_plant_id))
-      AND (p_company_id IS NULL OR fg.company_id = ANY(p_company_id))
-      AND (p_generation_source IS NULL OR fg.generation_source = ANY(p_generation_source))
-      AND (p_province IS NULL OR fg.province = ANY(p_province))
+        AND (p_company_id IS NULL OR fg.company_id = ANY(p_company_id))
+        AND (p_generation_source IS NULL OR fg.generation_source = ANY(p_generation_source))
+        AND (p_province IS NULL OR fg.province = ANY(p_province))
+        AND (p_month IS NULL OR fg.month = ANY(p_month))   
+        AND (p_quarter IS NULL OR fg.quarter = ANY(p_quarter))   
+        AND (p_year IS NULL OR fg.year = ANY(p_year))
     GROUP BY 
         fg.year,
         fg.power_plant_id,
@@ -394,6 +400,7 @@ CREATE OR REPLACE FUNCTION gold.func_outages_frequency(
     p_city_town VARCHAR(30) DEFAULT NULL,
     p_province VARCHAR(30) DEFAULT NULL,
     p_year INTEGER DEFAULT NULL,
+    p_quarter INTEGER DEFAULT NULL,
     p_month INTEGER DEFAULT NULL,
     p_month_name TEXT DEFAULT NULL
 )
@@ -406,6 +413,7 @@ RETURNS TABLE (
     city_town VARCHAR(30),
     province VARCHAR(30),
     year INTEGER,
+    quarter INT,
     month INTEGER,
     month_name TEXT,
     outage_count BIGINT
@@ -422,6 +430,7 @@ BEGIN
         f.city_town,
         f.province,
         f.year,
+        f.quarter,
         f.month,
         f.month_name,
         COUNT(*) AS outage_count
@@ -435,6 +444,7 @@ BEGIN
       AND (p_city_town IS NULL OR f.city_town = p_city_town)
       AND (p_province IS NULL OR f.province = p_province)
       AND (p_year IS NULL OR f.year = p_year)
+      AND (p_quarter IS NULL OR f.quarter = p_quarter)
       AND (p_month IS NULL OR f.month = p_month)
       AND (p_month_name IS NULL OR f.month_name = p_month_name)
     GROUP BY 
@@ -446,6 +456,7 @@ BEGIN
         f.city_town,
         f.province,
         f.year,
+        f.quarter,
         f.month,
         f.month_name;
 END;
@@ -479,11 +490,15 @@ FROM gold.func_fund_alloc_year(
 -- =============================================================================
 
 SELECT * FROM gold.fact_energy_generated;
+
 SELECT * FROM gold.func_energy_per_hec_unit_rounded();
 SELECT * FROM gold.func_fact_energy();
 SELECT * FROM gold.func_fact_energy_monthly();
 SELECT * FROM gold.func_fact_energy_quarterly();
 SELECT * FROM gold.func_fact_energy_yearly();
+SELECT * FROM gold.func_fund_alloc();
+SELECT * FROM gold.func_fund_alloc_year();
+SELECT * FROM gold.func_outages_frequency();
 
 ------------------------------------------------ daily ------------------------------------------------
 SELECT * FROM gold.func_fact_energy();
