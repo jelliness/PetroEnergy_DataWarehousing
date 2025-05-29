@@ -1,14 +1,14 @@
 
 DROP FUNCTION IF EXISTS gold.func_employee_summary_yearly;
 DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_yearly;
-DROP FUNCTION IF EXISTS gold.func_training_summary_yearly;
-DROP FUNCTION IF EXISTS gold.func_safety_summary_yearly;
+DROP FUNCTION IF EXISTS gold.func_training_summary;
+DROP FUNCTION IF EXISTS gold.func_safety_workdata_summary;
 DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_yearly;
 
 DROP FUNCTION IF EXISTS gold.func_employee_summary_monthly;
 DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_monthly;
-DROP FUNCTION IF EXISTS gold.func_training_summary_monthly;
-DROP FUNCTION IF EXISTS gold.func_safety_summary_monthly;
+--DROP FUNCTION IF EXISTS gold.func_training_summary_monthly;
+--DROP FUNCTION IF EXISTS gold.func_safety_summary_monthly;
 DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_monthly;
 
 /*
@@ -159,112 +159,138 @@ $$ LANGUAGE plpgsql;
 					HR FUNCTION TRAINING SUMMARY
 ===============================================================================
 */
-/*
-CREATE OR REPLACE FUNCTION gold.func_training_summary_yearly (
-    p_employee_id VARCHAR DEFAULT NULL,
-    p_gender VARCHAR DEFAULT NULL,
-    p_position_id VARCHAR[] DEFAULT NULL,
-    p_company_id VARCHAR[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+CREATE OR REPLACE FUNCTION gold.func_training_summary(
+    p_year INT[] DEFAULT NULL,
+    p_quarter TEXT[] DEFAULT NULL,
+    p_month INT[] DEFAULT NULL,
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_training_title TEXT[] DEFAULT NULL
 )
 RETURNS TABLE (
-    year INT,
-    employee_id VARCHAR,
-    company_id VARCHAR,
     company_name VARCHAR(255),
-    gender VARCHAR,
-    position_id VARCHAR,
-    total_hours INT
+    training_title TEXT,
+    month_value INT,
+    month_name TEXT,
+    year INT,
+    quarter TEXT,
+    training_hours INT,
+    number_of_participants INT,
+    total_training_hours INT
 )
-LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
     SELECT
-        dd.year,
-        tr.employee_id,
-        tr.company_id,
         tr.company_name,
-        tr.gender,
-        tr.position_id,
-        SUM(tr.hours)::INT AS total_hours
+        tr.training_title,
+        dd.month AS month_value,
+        TRIM(dd.month_name) AS month_name,
+        dd.year,
+        CONCAT('Q', dd.quarter::TEXT) AS quarter,
+        SUM(tr.training_hours)::INT AS training_hours,
+        SUM(tr.number_of_participants)::INT AS number_of_participants,
+        SUM(tr.total_training_hours)::INT AS total_training_hours
     FROM gold.dim_employee_training_description tr
-    JOIN gold.dim_date dd ON dd.date_id = tr.date
+    JOIN gold.dim_date dd ON dd.date_id = tr.date::DATE
     WHERE 
-        (p_employee_id IS NULL OR tr.employee_id = p_employee_id)
-        AND (p_gender IS NULL OR tr.gender = p_gender)
-        AND (p_position_id IS NULL OR tr.position_id = ANY(p_position_id))
-        AND (p_company_id IS NULL OR tr.company_id = ANY(p_company_id))
-        AND (p_year IS NULL OR dd.year = ANY(p_year))
+        (p_year IS NULL OR dd.year = ANY(p_year)) AND
+        (p_quarter IS NULL OR CONCAT('Q', dd.quarter::TEXT) = ANY(p_quarter)) AND
+        (p_month IS NULL OR dd.month = ANY(p_month)) AND
+        (p_company_id IS NULL OR tr.company_id = ANY(p_company_id)) AND
+        (p_training_title IS NULL OR tr.training_title = ANY(p_training_title))
     GROUP BY
-        dd.year,
-        tr.employee_id,
-        tr.company_id,
         tr.company_name,
-        tr.gender,
-        tr.position_id
+        tr.training_title,
+        dd.month,
+        dd.month_name,
+        dd.year,
+        dd.quarter
     ORDER BY
-        dd.year, tr.employee_id;
+        company_name, year, month_value;
 END;
-$$;
-*/
+$$ LANGUAGE plpgsql;
+
 /*
 ===============================================================================
 							HR FUNCTION SAFETY TABLE
 ===============================================================================
 */
-/*
-CREATE OR REPLACE FUNCTION gold.func_safety_summary_yearly (
-    p_employee_id VARCHAR DEFAULT NULL,
-    p_gender VARCHAR DEFAULT NULL,
-    p_position_id VARCHAR[] DEFAULT NULL,
-    p_company_id VARCHAR[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+CREATE OR REPLACE FUNCTION gold.func_safety_workdata_summary(
+    p_year INT[] DEFAULT NULL,
+    p_quarter TEXT[] DEFAULT NULL,
+    p_month INT[] DEFAULT NULL,
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_contractor TEXT[] DEFAULT NULL
 )
 RETURNS TABLE (
-    year INT,
-    employee_id VARCHAR,
-    company_id VARCHAR,
     company_name VARCHAR(255),
-    gender VARCHAR,
-    position_id VARCHAR,
-    total_accidents INT,
-    total_safety_man_hours INT
+    contractor TEXT,
+    month_value INT,
+    month_name TEXT,
+    year INT,
+    quarter TEXT,
+    manpower INT,
+    manhours INT,
+    previous_manhours BIGINT,
+    cumulative_manhours BIGINT
 )
-LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
+    WITH filtered AS (
+        SELECT
+            sft.company_name,
+            sft.contractor,
+            dd.month AS month_value,
+            TRIM(dd.month_name) AS month_name,
+            dd.year,
+            CONCAT('Q', dd.quarter::TEXT) AS quarter,
+            sft.manpower,
+            sft.manhours,
+            sft.date
+        FROM gold.dim_employee_safety_manhours_description sft
+        JOIN gold.dim_date dd ON dd.date_id = sft.date::DATE
+        WHERE
+            (p_year IS NULL OR dd.year = ANY(p_year)) AND
+            (p_quarter IS NULL OR CONCAT('Q', dd.quarter::TEXT) = ANY(p_quarter)) AND
+            (p_month IS NULL OR dd.month = ANY(p_month)) AND
+            (p_company_id IS NULL OR sft.company_id = ANY(p_company_id)) AND
+            (p_contractor IS NULL OR sft.contractor = ANY(p_contractor))
+    )
     SELECT
-        dd.year,
-        sft.employee_id,
-        sft.company_id,
-        sft.company_name,
-        sft.gender,
-        sft.position_id,
-        COUNT(*)::INT AS total_accidents,
-        COALESCE(SUM(sft.safety_man_hours), 0)::INT AS total_safety_man_hours
-    FROM gold.dim_employee_safety_description sft
-    JOIN gold.dim_date dd ON dd.date_id = sft.date::date
-    WHERE
-        (p_employee_id IS NULL OR sft.employee_id = p_employee_id)
-        AND (p_gender IS NULL OR sft.gender = p_gender)
-        AND (p_position_id IS NULL OR sft.position_id = ANY(p_position_id))
-        AND (p_company_id IS NULL OR sft.company_id = ANY(p_company_id))
-        AND (p_year IS NULL OR dd.year = ANY(p_year))
-    GROUP BY
-        dd.year,
-        sft.employee_id,
-        sft.company_id,
-        sft.company_name,
-        sft.gender,
-        sft.position_id
-    ORDER BY
-        dd.year,
-        sft.employee_id;
+        filtered.company_name,
+        filtered.contractor,
+        filtered.month_value,
+        filtered.month_name,
+        filtered.year,
+        filtered.quarter,
+        filtered.manpower,
+        filtered.manhours,
+        COALESCE(
+            SUM(filtered.manhours) OVER (
+                PARTITION BY filtered.company_name, filtered.contractor
+                ORDER BY filtered.date
+                ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
+            ), 0
+        ) AS previous_manhours,
+        SUM(filtered.manhours) OVER (
+            PARTITION BY filtered.company_name, filtered.contractor
+            ORDER BY filtered.date
+            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS cumulative_manhours
+    FROM filtered
+    ORDER BY filtered.company_name, filtered.year, filtered.month_value, filtered.contractor, filtered.date;
 END;
-$$;
+$$ LANGUAGE plpgsql;
+
+/*
+===============================================================================
+					HR OCCUPATIONAL SAFETY HEALTH TABLE
+===============================================================================
 */
+
+
+
 /*
 ===============================================================================
 						HR FUNCTION PARENTAL LEAVE TABLE
@@ -289,7 +315,6 @@ RETURNS TABLE (
     total_months INT,
     leave_count INT
 )
-LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
@@ -323,7 +348,7 @@ BEGIN
     ORDER BY
         dd.year, pl.employee_id;
 END;
-$$;
+$$ LANGUAGE plpgsql;
 
 
 
@@ -540,154 +565,3 @@ FROM categorized_leaves cl
 
 END;
 $$ LANGUAGE plpgsql;
-
-/*
-===============================================================================
-						HR FUNCTION TRAINING SUMMARY TABLE
-===============================================================================
-*/
-/*
-CREATE OR REPLACE FUNCTION gold.func_training_summary_monthly(
-    p_year INT[] DEFAULT NULL,
-    p_quarter TEXT[] DEFAULT NULL,
-    p_month INT[] DEFAULT NULL,
-    p_company_id VARCHAR(6)[] DEFAULT NULL,
-    p_position_id VARCHAR(2)[] DEFAULT NULL,
-    p_gender VARCHAR(1) DEFAULT NULL
-)
-RETURNS TABLE (
-    hours INT,
-    position_id VARCHAR(2),
-    month_value INT,
-    month_name TEXT,
-    year INT,
-    quarter TEXT,
-    company_id VARCHAR(6),
-    p_np VARCHAR(2),
-    demo_position_id VARCHAR(2),
-    gender VARCHAR(1),
-    training_count BIGINT
-)
-AS $$
-BEGIN
-    RETURN QUERY
-    SELECT 
-      tr.hours,
-      tr.position_id,
-
-      dd.month AS month_value,
-      TRIM(dd.month_name) AS month_name,
-      dd.year,
-      dd.quarter::TEXT AS quarter,
-
-      demo.company_id,
-      demo.p_np,
-      demo.position_id AS demo_position_id,
-      demo.gender,
-
-      COUNT(*)::BIGINT AS training_count
-    FROM gold.dim_employee_training_description tr
-    LEFT JOIN gold.dim_employee_descriptions demo 
-      ON demo.employee_id = tr.employee_id
-    LEFT JOIN gold.dim_date dd 
-      ON dd.date_id = DATE(tr.date)
-    WHERE
-      (p_year IS NULL OR dd.year = ANY(p_year)) AND
-      (p_quarter IS NULL OR dd.quarter::TEXT = ANY(p_quarter)) AND
-      (p_month IS NULL OR dd.month = ANY(p_month)) AND
-      (p_company_id IS NULL OR demo.company_id = ANY(p_company_id)) AND
-      (p_position_id IS NULL OR tr.position_id = ANY(p_position_id)) AND
-      (p_gender IS NULL OR demo.gender = p_gender)
-    GROUP BY 
-      tr.hours,
-      dd.year,
-      dd.month,
-      dd.month_name,
-      dd.quarter,
-      tr.position_id,
-      demo.company_id,
-      demo.p_np,
-      demo.position_id,
-      demo.gender
-    ORDER BY 
-      dd.year DESC,
-      dd.month DESC,
-      month_name,
-      demo.company_id,
-      demo.p_np,
-      demo.position_id,
-      demo.gender;
-END;
-$$ LANGUAGE plpgsql;
-*/
-/*
-===============================================================================
-						HR FUNCTION SAFETY SUMMARY TABLE
-===============================================================================
-*/
-/*
-CREATE OR REPLACE FUNCTION gold.func_safety_summary_monthly(
-    p_year INT[] DEFAULT NULL,
-    p_quarter TEXT[] DEFAULT NULL,
-    p_month INT[] DEFAULT NULL,
-    p_company_id VARCHAR(10)[] DEFAULT NULL,
-    p_position_id VARCHAR(2)[] DEFAULT NULL,
-    p_gender VARCHAR(1) DEFAULT NULL
-)
-RETURNS TABLE (
-    safety_man_hours INT,
-    month INT,
-    month_name TEXT,
-    year INT,
-    quarter TEXT,
-    company_id VARCHAR(10),
-    p_np VARCHAR(2),
-    position_id VARCHAR(2),
-    gender VARCHAR(1),
-    safety_count BIGINT
-)
-AS $$
-BEGIN
-    RETURN QUERY
-    SELECT
-      sft.safety_man_hours,
-      dd.month,
-      TRIM(dd.month_name),
-      dd.year,
-      dd.quarter::TEXT,
-      demo.company_id,
-      demo.p_np,
-      demo.position_id,
-      demo.gender,
-      COUNT(*)::BIGINT AS safety_count
-    FROM gold.dim_employee_safety_description sft
-    LEFT JOIN gold.dim_employee_descriptions demo ON demo.employee_id = sft.employee_id
-    LEFT JOIN gold.dim_date dd ON dd.date_id = DATE(sft.date)
-    WHERE
-      (p_year IS NULL OR dd.year = ANY(p_year)) AND
-      (p_quarter IS NULL OR dd.quarter::TEXT = ANY(p_quarter)) AND
-      (p_month IS NULL OR dd.month = ANY(p_month)) AND
-      (p_company_id IS NULL OR demo.company_id = ANY(p_company_id)) AND
-      (p_position_id IS NULL OR demo.position_id = ANY(p_position_id)) AND
-      (p_gender IS NULL OR demo.gender = p_gender)
-    GROUP BY
-      sft.safety_man_hours,
-      dd.year,
-      dd.month,
-      dd.month_name,
-      dd.quarter,
-      demo.company_id,
-      demo.p_np,
-      demo.position_id,
-      demo.gender
-    ORDER BY
-      dd.year DESC,
-      dd.month DESC,
-      dd.month_name,
-      demo.company_id,
-      demo.p_np,
-      demo.position_id,
-      demo.gender;
-END;
-$$ LANGUAGE plpgsql;
-*/

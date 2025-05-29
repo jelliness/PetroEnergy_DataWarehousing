@@ -59,6 +59,7 @@ CREATE TABLE silver.hr_training (
     date TIMESTAMP,
     training_hours INT,
     number_of_participants INT,
+    total_training_hours INT, -- derived by multiplying training_hours by number_of_participants
     date_created TIMESTAMP,
 	date_updated TIMESTAMP,
     PRIMARY KEY (company_id, date, training_title)
