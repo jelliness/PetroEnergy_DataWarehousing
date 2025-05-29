@@ -3,6 +3,7 @@ DROP FUNCTION IF EXISTS gold.func_employee_summary_yearly;
 DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_yearly;
 DROP FUNCTION IF EXISTS gold.func_training_summary;
 DROP FUNCTION IF EXISTS gold.func_safety_workdata_summary;
+DROP FUNCTION IF EXISTS gold.func_occupational_safety_health_summary;
 DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_yearly;
 
 DROP FUNCTION IF EXISTS gold.func_employee_summary_monthly;
@@ -288,8 +289,57 @@ $$ LANGUAGE plpgsql;
 					HR OCCUPATIONAL SAFETY HEALTH TABLE
 ===============================================================================
 */
-
-
+CREATE OR REPLACE FUNCTION gold.func_occupational_safety_health_summary(
+    p_year INT[] DEFAULT NULL,
+    p_quarter TEXT[] DEFAULT NULL,
+    p_month INT[] DEFAULT NULL,
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_workforce_type TEXT[] DEFAULT NULL,
+    p_lost_time BOOLEAN DEFAULT NULL,
+    p_incident_type TEXT[] DEFAULT NULL,
+    p_incident_title TEXT[] DEFAULT NULL
+)
+RETURNS TABLE (
+    company_name VARCHAR(255),
+    workforce_type TEXT,
+    month_value INT,
+    month_name TEXT,
+    year INT,
+    quarter TEXT,
+    lost_time BOOLEAN,
+    incident_type TEXT,
+    incident_title TEXT,
+    incident_count INT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        osh.company_name,
+        osh.workforce_type,
+        dd.month AS month_value,
+        TRIM(dd.month_name) AS month_name,
+        dd.year,
+        CONCAT('Q', dd.quarter::TEXT) AS quarter,
+        osh.lost_time,
+        osh.incident_type,
+        osh.incident_title,
+        osh.incident_count
+    FROM gold.dim_occupational_safety_health osh
+    JOIN gold.dim_date dd ON dd.date_id = osh.date::DATE
+    WHERE
+        (p_year IS NULL OR dd.year = ANY(p_year)) AND
+        (p_quarter IS NULL OR CONCAT('Q', dd.quarter::TEXT) = ANY(p_quarter)) AND
+        (p_month IS NULL OR dd.month = ANY(p_month)) AND
+        (p_company_id IS NULL OR osh.company_id = ANY(p_company_id)) AND
+        (p_workforce_type IS NULL OR osh.workforce_type = ANY(p_workforce_type)) AND
+        (p_lost_time IS NULL OR osh.lost_time = p_lost_time) AND
+        (p_incident_type IS NULL OR osh.incident_type = ANY(p_incident_type)) AND
+        (p_incident_title IS NULL OR osh.incident_title = ANY(p_incident_title))
+    ORDER BY
+        company_name, year, month_value, workforce_type;
+END;
+$$ LANGUAGE plpgsql;
 
 /*
 ===============================================================================
@@ -349,8 +399,6 @@ BEGIN
         dd.year, pl.employee_id;
 END;
 $$ LANGUAGE plpgsql;
-
-
 
 /*
 ===============================================================================
