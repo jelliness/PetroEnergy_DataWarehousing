@@ -157,3 +157,46 @@ SELECT power_plant_id, company_id, generation_source,site_name, company_name, ci
 FROM gold.fact_energy_generated 
 WHERE energy_generated_kwh = 0
 GROUP BY power_plant_id, company_id, generation_source,site_name, company_name, city_town, province, year, month, month_name
+
+-- =============================================================================
+-- Create Fact: gold.fact_household_powered 
+-- =============================================================================
+CREATE OR REPLACE VIEW gold.fact_household_powered AS
+WITH latest_hec AS (
+        SELECT DISTINCT ON (hec_id)
+            chf.hec_id,
+            chf.hec_value,
+            chf.hec_year
+        FROM ref.ref_hec_factors chf
+        ORDER BY hec_id, hec_year DESC
+    )
+    SELECT 
+        fg.year::SMALLINT,
+        fg.power_plant_id,
+        fg.company_id,
+        fg.generation_source,
+        fg.site_name,
+        fg.company_name,
+        fg.province,
+        fg.month,
+        fg.month_name,
+        fg.quarter,
+        SUM(fg.energy_generated_kwh) AS energy_generated,
+        lh.hec_value,
+		ROUND((SUM(fg.energy_generated_kwh) / 12) / NULLIF(lh.hec_value, 0), -2) as household_powered
+    FROM gold.fact_energy_generated fg
+    CROSS JOIN latest_hec lh
+    GROUP BY 
+        fg.year,
+        fg.power_plant_id,
+        fg.company_id,
+        fg.site_name,
+        fg.company_name,
+        fg.generation_source,
+        fg.province,
+        fg.month,
+        fg.month_name,
+        fg.quarter,
+        lh.hec_id,
+        lh.hec_value
+    ORDER BY fg.year, lh.hec_id;

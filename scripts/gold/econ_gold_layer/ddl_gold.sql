@@ -36,6 +36,7 @@ CREATE VIEW gold.vw_economic_value_distributed AS
 WITH expenditure_totals AS (
     SELECT
         year,
+        SUM(subtotal_distribution) as total_economic_value_distributed,
         SUM(government_payments) as total_government_payments,
         SUM(supplier_spending_local) as total_local_supplier_spending,
         SUM(supplier_spending_abroad) as total_foreign_supplier_spending,
@@ -58,11 +59,7 @@ SELECT
     et.total_depletion,
     et.total_other_expenditures,
     COALESCE(cpp.total_dividends_interest, 0) as total_capital_provider_payments,
-    (et.total_government_payments + 
-     et.total_local_supplier_spending + 
-     et.total_foreign_supplier_spending + 
-     et.total_employee_wages_benefits + 
-     et.total_community_investments + 
+    (et.total_economic_value_distributed + 
      COALESCE(cpp.total_dividends_interest, 0)) as total_economic_value_distributed
 FROM expenditure_totals et
 LEFT JOIN silver.econ_capital_provider_payment cpp ON et.year = cpp.year;
@@ -98,11 +95,7 @@ SELECT
     SUM(ex.depreciation) as depreciation,
     SUM(ex.depletion) as depletion,
     SUM(ex.others) as other_expenditures,
-    (SUM(ex.government_payments) + 
-     SUM(ex.supplier_spending_local) + 
-     SUM(ex.supplier_spending_abroad) + 
-     SUM(ex.employee_wages_benefits) + 
-     SUM(ex.community_investments)) as total_distributed_value_by_company
+    SUM(ex.subtotal_distribution) as total_distributed_value_by_company
 FROM silver.econ_expenditures ex
 JOIN ref.company_main cm ON ex.company_id = cm.company_id
 JOIN ref.expenditure_type et ON ex.type_id = et.type_id
@@ -127,11 +120,7 @@ WITH company_totals AS (
         SUM(ex.depreciation) as total_depreciation,
         SUM(ex.depletion) as total_depletion,
         SUM(ex.others) as total_other_expenditures,
-        (SUM(ex.government_payments) + 
-         SUM(ex.supplier_spending_local) + 
-         SUM(ex.supplier_spending_abroad) + 
-         SUM(ex.employee_wages_benefits) + 
-         SUM(ex.community_investments)) as total_economic_value_distributed_by_company
+        SUM(ex.subtotal_distribution) as total_economic_value_distributed_by_company
     FROM silver.econ_expenditures ex
     JOIN ref.company_main cm ON ex.company_id = cm.company_id
     GROUP BY ex.year, ex.company_id, cm.company_name
@@ -140,11 +129,7 @@ year_totals AS (
     -- Calculate overall totals per year across all companies
     SELECT
         year,
-        SUM(government_payments + 
-            supplier_spending_local + 
-            supplier_spending_abroad + 
-            employee_wages_benefits + 
-            community_investments) as year_total_distribution
+        SUM(subtotal_distribution) as year_total_distribution
     FROM silver.econ_expenditures
     GROUP BY year
 )

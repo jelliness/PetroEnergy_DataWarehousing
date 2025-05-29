@@ -11,7 +11,8 @@ Script Purpose:
 
 CREATE SCHEMA IF NOT EXISTS bronze;
 
-DROP TABLE IF EXISTS bronze.hr_safety;
+DROP TABLE IF EXISTS bronze.hr_safety_workdata;
+DROP TABLE IF EXISTS bronze.hr_occupational_safety_health;
 DROP TABLE IF EXISTS bronze.hr_training;
 DROP TABLE IF EXISTS bronze.hr_tenure;
 DROP TABLE IF EXISTS bronze.hr_parental_leave;
@@ -45,16 +46,27 @@ CREATE TABLE bronze.hr_tenure (
 
 
 CREATE TABLE bronze.hr_training (
-    employee_id VARCHAR(20),
-    hours INT,
+    company_id VARCHAR(10),
+    training_title TEXT,
     date TIMESTAMP,
-    position_id VARCHAR(2)
+    training_hours INT,
+    number_of_participants INT
 );
 
-CREATE TABLE bronze.hr_safety (
-    employee_id VARCHAR(20),
+CREATE TABLE bronze.hr_safety_workdata (
     company_id VARCHAR(10),
+    contractor TEXT,
     date TIMESTAMP,
-    type_of_accident VARCHAR(50),
-    safety_man_hours INT
+    manpower INT,
+    manhours INT
+);
+
+CREATE TABLE bronze.hr_occupational_safety_health (
+    company_id VARCHAR(10),
+    workforce_type TEXT,
+    lost_time BOOLEAN,
+    date TIMESTAMP,
+    incident_type TEXT,
+    incident_title TEXT,
+    incident_count INT
 );

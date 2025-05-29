@@ -40,6 +40,7 @@ CREATE OR REPLACE VIEW gold.dim_employee_descriptions AS
 							TRAINING DESCRIPTION
 ===============================================================================
 */
+/*
 CREATE OR REPLACE VIEW gold.dim_employee_training_description AS
 	SELECT
 		dd.employee_id,
@@ -53,11 +54,13 @@ CREATE OR REPLACE VIEW gold.dim_employee_training_description AS
 	FROM silver.hr_training tr
 	LEFT JOIN gold.dim_employee_descriptions dd ON tr.employee_id = dd.employee_id
 	ORDER BY dd.employee_id;
+	*/
 /*
 ===============================================================================
 							SAFETY DESCRIPTION
 ===============================================================================
 */
+/*
 CREATE OR REPLACE VIEW gold.dim_employee_safety_description AS
 	SELECT
 		dd.employee_id,
@@ -73,7 +76,7 @@ CREATE OR REPLACE VIEW gold.dim_employee_safety_description AS
 	FROM silver.hr_safety sft
 	LEFT JOIN gold.dim_employee_descriptions dd ON sft.employee_id = dd.employee_id
 	ORDER BY sft.employee_id;
-
+	*/
 /*
 ===============================================================================
 						PARENTAL LEAVE DESCRIPTION

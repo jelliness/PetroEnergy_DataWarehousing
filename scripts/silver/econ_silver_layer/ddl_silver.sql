@@ -59,6 +59,23 @@ CREATE TABLE silver.econ_expenditures (
         COALESCE(supplier_spending_local, 0) +
         COALESCE(supplier_spending_abroad, 0)
     ) STORED,
+    subtotal_distribution NUMERIC GENERATED ALWAYS AS (
+        COALESCE(government_payments, 0) +
+        COALESCE(supplier_spending_local, 0) +
+        COALESCE(supplier_spending_abroad, 0) +
+        COALESCE(employee_wages_benefits, 0) +
+        COALESCE(community_investments, 0)
+    ) STORED,
+    total_expenditures NUMERIC GENERATED ALWAYS AS (
+        COALESCE(government_payments, 0) +
+        COALESCE(supplier_spending_local, 0) +
+        COALESCE(supplier_spending_abroad, 0) +
+        COALESCE(employee_wages_benefits, 0) +
+        COALESCE(community_investments, 0) +
+        COALESCE(depreciation, 0) +
+        COALESCE(depletion, 0) +
+        COALESCE(others, 0)
+    ) STORED,
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
