@@ -83,7 +83,7 @@ CREATE TABLE bronze.envi_water_discharge (
     unit_of_measurement   VARCHAR(15)
 );
 
--- envi_water_discharge
+-- envi_water_consumption
 DROP TABLE IF EXISTS bronze.envi_water_consumption;
 CREATE TABLE bronze.envi_water_consumption (
     wc_id                 VARCHAR(20),         -- Example: WW-PSC-2022-002

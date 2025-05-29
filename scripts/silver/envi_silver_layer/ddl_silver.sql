@@ -131,7 +131,6 @@ CREATE TABLE silver.envi_non_hazard_waste (
     metrics                 VARCHAR(50),
     unit_of_measurement     VARCHAR(15),
     waste                   DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
-    month                   VARCHAR(10),
     year                    SMALLINT,
     quarter                 VARCHAR(2),
     -- Metadata
