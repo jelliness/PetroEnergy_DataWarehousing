@@ -38,36 +38,52 @@ CREATE TABLE silver.envi_company_property (
 	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
 );
 
--- envi_natural_sources
-DROP TABLE IF EXISTS silver.envi_natural_sources;
-CREATE TABLE silver.envi_natural_sources (
-    ns_id      VARCHAR(20) NOT NULL,       -- Example: NS-PSC-001
-    company_id VARCHAR(10) NOT NULL,       -- Referenced to company_main.
-    ns_name    VARCHAR(30),
-    -- Metadata
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_ns_pk PRIMARY KEY (ns_id),
-	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
-);
-
--- envi_water_withdrawal
-DROP TABLE IF EXISTS silver.envi_water_withdrawal;
-CREATE TABLE silver.envi_water_withdrawal (
-    ww_id                 	VARCHAR(20) NOT NULL,         -- Example: WW-PSC-2022-002
+-- envi_water_abstraction
+DROP TABLE IF EXISTS silver.envi_water_abstraction;
+CREATE TABLE silver.envi_water_abstraction (
+    wa_id                 	VARCHAR(20) NOT NULL,         -- Example: WW-PSC-2022-002
     company_id            	VARCHAR(10) NOT NULL,         -- Referenced to company_main.
-    ns_id                 	VARCHAR(20),         -- Referenced to natural sources.
     volume                	DOUBLE PRECISION,    -- Allows decimal values (e.g., 123.456)
     unit_of_measurement   	VARCHAR(15),
-    month                 	VARCHAR(10),
     quarter					VARCHAR(2),
     year					SMALLINT,
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT silver_ww_pk PRIMARY KEY (ww_id),
-	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id),
-    FOREIGN KEY (ns_id) REFERENCES silver.envi_natural_sources(ns_id)
+    CONSTRAINT silver_wa_pk PRIMARY KEY (wa_id),
+	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
+);
+
+-- envi_water_discharge
+DROP TABLE IF EXISTS silver.envi_water_discharge;
+CREATE TABLE silver.envi_water_discharge (
+    wd_id                 	VARCHAR(20) NOT NULL,         -- Example: WW-PSC-2022-002
+    company_id            	VARCHAR(10) NOT NULL,         -- Referenced to company_main.
+    volume                	DOUBLE PRECISION,    -- Allows decimal values (e.g., 123.456)
+    unit_of_measurement   	VARCHAR(15),
+    quarter					VARCHAR(2),
+    year					SMALLINT,
+    -- Metadata
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT silver_wd_pk PRIMARY KEY (wd_id),
+    FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
+);
+
+-- envi_water_consumption
+DROP TABLE IF EXISTS silver.envi_water_consumption;
+CREATE TABLE silver.envi_water_consumption (
+    wc_id                  VARCHAR(20) NOT NULL,         -- Example: WW-PSC-2022-002
+    company_id             VARCHAR(10) NOT NULL,         -- Referenced to company_main.
+    volume                 DOUBLE PRECISION,    -- Allows decimal values (e.g., 123.456)
+    unit_of_measurement    VARCHAR(15),
+    quarter                VARCHAR(2),
+    year                   SMALLINT,
+    -- Metadata
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT silver_wc_pk PRIMARY KEY (wc_id),
+    FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
 );
 
 -- envi_diesel_consumption
@@ -95,6 +111,7 @@ DROP TABLE IF EXISTS silver.envi_electric_consumption;
 CREATE TABLE silver.envi_electric_consumption (
     ec_id                   VARCHAR(20) NOT NULL,            -- Example: EC-PSC-2023-001
     company_id              VARCHAR(10) NOT NULL,            -- Referenced to company_main.
+    source                  VARCHAR(20),            -- Example: Logistics Station, Control Building
     unit_of_measurement     VARCHAR(15),
     consumption             DOUBLE PRECISION,        -- Allows decimal values (e.g., 234.789)
     quarter                 VARCHAR(2),
@@ -161,8 +178,9 @@ CREATE TABLE silver.envi_hazard_waste_disposed (
 
 -- Adding constraints (UNIQUE)
 ALTER TABLE silver.envi_company_property ADD CONSTRAINT unique_cp_id UNIQUE (cp_id);
-ALTER TABLE silver.envi_natural_sources ADD CONSTRAINT unique_ns_id UNIQUE (ns_id);
-ALTER TABLE silver.envi_water_withdrawal ADD CONSTRAINT unique_ww_id UNIQUE (ww_id);
+ALTER TABLE silver.envi_water_abstraction ADD CONSTRAINT unique_wa_id UNIQUE (wa_id);
+ALTER TABLE silver.envi_water_discharge ADD CONSTRAINT unique_wd_id UNIQUE (wd_id);
+ALTER TABLE silver.envi_water_consumption ADD CONSTRAINT unique_wc_id UNIQUE (wc_id);
 ALTER TABLE silver.envi_diesel_consumption ADD CONSTRAINT unique_dc_id UNIQUE (dc_id);
 ALTER TABLE silver.envi_electric_consumption ADD CONSTRAINT unique_ec_id UNIQUE (ec_id);
 ALTER TABLE silver.envi_non_hazard_waste ADD CONSTRAINT unique_nhw_id UNIQUE (nhw_id);
