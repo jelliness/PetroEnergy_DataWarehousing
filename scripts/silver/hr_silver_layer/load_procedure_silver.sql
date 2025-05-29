@@ -164,6 +164,7 @@ BEGIN
 		date,
 		training_hours,
 		number_of_participants,
+		total_training_hours, -- derived column
 		date_created,
 		date_updated
 	)
@@ -173,6 +174,7 @@ BEGIN
 		b.date,
 		b.training_hours,
 		b.number_of_participants,
+		(b.training_hours * b.number_of_participants) AS total_training_hours, -- derived column
     	CURRENT_TIMESTAMP,
     	CURRENT_TIMESTAMP
 	FROM bronze.hr_training b;

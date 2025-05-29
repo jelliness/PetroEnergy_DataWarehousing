@@ -40,43 +40,57 @@ CREATE OR REPLACE VIEW gold.dim_employee_descriptions AS
 							TRAINING DESCRIPTION
 ===============================================================================
 */
-/*
 CREATE OR REPLACE VIEW gold.dim_employee_training_description AS
 	SELECT
-		dd.employee_id,
-		dd.company_id,
-		dd.company_name,
-		dd.gender,
-		dd.position_id,
-		tr.hours,
-		tr.date
+		tr.company_id,
+		comp.company_name,
+		tr.date,
+		tr.training_title,
+		tr.training_hours,
+		tr.number_of_participants,
+		tr.total_training_hours
 	
 	FROM silver.hr_training tr
-	LEFT JOIN gold.dim_employee_descriptions dd ON tr.employee_id = dd.employee_id
-	ORDER BY dd.employee_id;
-	*/
+	LEFT JOIN ref.company_main AS comp ON tr.company_id = comp.company_id
+	ORDER BY tr.date;
 /*
 ===============================================================================
-							SAFETY DESCRIPTION
+							SAFETY MANHOURS DESCRIPTION
 ===============================================================================
 */
-/*
-CREATE OR REPLACE VIEW gold.dim_employee_safety_description AS
+
+CREATE OR REPLACE VIEW gold.dim_employee_safety_manhours_description AS
 	SELECT
-		dd.employee_id,
-		dd.company_id,
-		dd.company_name,
-		dd.gender,
-		dd.position_id,
-		
+		sft.company_id,
+		comp.company_name,
+		sft.contractor,
 		sft.date,
-		sft.type_of_accident,
-		sft.safety_man_hours
+		sft.manpower,
+		sft.manhours
 		
-	FROM silver.hr_safety sft
-	LEFT JOIN gold.dim_employee_descriptions dd ON sft.employee_id = dd.employee_id
-	ORDER BY sft.employee_id;
-	*/
+	FROM silver.hr_safety_workdata sft
+	LEFT JOIN ref.company_main AS comp ON sft.company_id = comp.company_id
+	ORDER BY sft.date;
+/*
+===============================================================================
+					OCCUPATIONAL SAFETY HEALTH DESCRIPTION
+===============================================================================
+*/
+CREATE OR REPLACE VIEW gold.dim_occupational_safety_health AS
+	SELECT
+		osh.company_id,
+		comp.company_name,
+		osh.workforce_type,
+		osh.lost_time,
+		osh.date,
+		osh.incident_type,
+		osh.incident_title,
+		osh.incident_count
+		
+	FROM silver.hr_occupational_safety_health osh
+	LEFT JOIN ref.company_main AS comp ON osh.company_id = comp.company_id
+	ORDER BY osh.date;
+
 /*
 ===============================================================================
 						PARENTAL LEAVE DESCRIPTION
