@@ -214,11 +214,11 @@ BEGIN
     ON CONFLICT (nhw_id)
     DO UPDATE SET
 		company_id = EXCLUDED.company_id,
-		waste_source = EXCLUDED.waste_source,
 		metrics = EXCLUDED.metrics,
 		unit_of_measurement = EXCLUDED.unit_of_measurement,
 		waste = EXCLUDED.waste,
 		month = EXCLUDED.month,
+		quarter = EXCLUDED.quarter,
 		year = EXCLUDED.year;
 
 	DROP TABLE temp_non_hazard_waste;
