@@ -234,7 +234,6 @@ BEGIN
         INSERT INTO silver.envi_non_hazard_waste (
             nhw_id,
             company_id,
-            waste_source,
             metrics,
             unit_of_measurement,
             waste,
@@ -245,7 +244,6 @@ BEGIN
         SELECT
             TRIM(nhw_id),
             TRIM(company_id),
-            TRIM(waste_source),
             TRIM(metrics),
             TRIM(unit_of_measurement),
             CASE
@@ -265,7 +263,6 @@ BEGIN
         ON CONFLICT (nhw_id)
         DO UPDATE SET
             company_id = EXCLUDED.company_id,
-            waste_source = EXCLUDED.waste_source,
             metrics = EXCLUDED.metrics,
             unit_of_measurement = EXCLUDED.unit_of_measurement,
             waste = CASE

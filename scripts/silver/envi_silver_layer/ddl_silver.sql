@@ -128,7 +128,6 @@ DROP TABLE IF EXISTS silver.envi_non_hazard_waste;
 CREATE TABLE silver.envi_non_hazard_waste (
     nhw_id                  VARCHAR(20) NOT NULL,           -- Example: NHW-PSC-2024-001
     company_id              VARCHAR(10) NOT NULL,       -- Referenced to company_main.
-    waste_source            VARCHAR(20),     -- Example: Staff House, Security, Utility
     metrics                 VARCHAR(20),
     unit_of_measurement     VARCHAR(15),
     waste                   DOUBLE PRECISION,     -- Allows decimal values (e.g., 234.789)
