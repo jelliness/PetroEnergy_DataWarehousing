@@ -125,7 +125,7 @@ BEGIN
 			ROUND(SUM(er.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
 			ROUND(SUM(
 				CASE 
-					WHEN ff.ff_id IN ('EF', 'DLF', 'RWMHEEF') 
+					WHEN ff.ff_category = 'allocation'
 						THEN er.energy_generated_kwh * 0.01 * ff.ff_percentage
 					ELSE er.energy_generated_kwh * 0.01 * 0.50 * ff.ff_percentage
 				END
@@ -138,7 +138,7 @@ BEGIN
 		GROUP BY 
 			DATE_TRUNC('month', er.date_generated),
 			pp.power_plant_id,
-			ff.ff_id;
+			ff.ff_id
 
 
 		ON CONFLICT (month_generated, power_plant_id, ff_id) DO UPDATE

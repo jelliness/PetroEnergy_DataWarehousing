@@ -290,7 +290,8 @@ CREATE OR REPLACE FUNCTION gold.func_fund_alloc(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_ff_id VARCHAR(10)[] DEFAULT NULL,
     p_month INT[] DEFAULT NULL,
-    p_year INT[] DEFAULT NULL
+    p_year INT[] DEFAULT NULL,
+    p_ff_category VARCHAR(20) DEFAULT NULL
 )
 RETURNS TABLE (
     month_name TEXT,
@@ -323,6 +324,7 @@ BEGIN
         AND (p_ff_id IS NULL OR ff.ff_id = ANY(p_ff_id))
         AND (p_month IS NULL OR dd.month = ANY(p_month))
         AND (p_year IS NULL OR dd.year = ANY(p_year))
+        AND (p_ff_category IS NULL OR ff.ff_category = p_ff_category)
     GROUP BY 
         dd.month_name,
         dd.month,
@@ -335,7 +337,6 @@ BEGIN
     ORDER BY dd.month DESC;
 END;
 $$ LANGUAGE plpgsql;
-
 
 
 
@@ -459,6 +460,157 @@ BEGIN
         f.quarter,
         f.month,
         f.month_name;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- ===================================================================================
+-- Create Function: gold.func_co2_equivalence
+-- ===================================================================================
+
+DROP FUNCTION IF EXISTS gold.func_co2_equivalence;
+
+CREATE OR REPLACE FUNCTION gold.func_co2_equivalence(
+    p_power_plant_id VARCHAR(10)[] DEFAULT NULL,
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_generation_source TEXT[] DEFAULT NULL,
+    p_province VARCHAR(30)[] DEFAULT NULL,
+    p_month INT[] DEFAULT NULL,
+    p_quarter INT[] DEFAULT NULL,
+    p_year INT[] DEFAULT NULL
+)
+RETURNS TABLE (
+    energy_generated NUMERIC,
+    co2_avoided NUMERIC,
+    conversion_value NUMERIC,
+    co2_equivalent NUMERIC,
+    metric VARCHAR(100),
+    equivalence_category TEXT,
+    equivalence_label TEXT,
+    power_plant_id VARCHAR(10),
+    company_id VARCHAR(10), 
+    generation_source TEXT,
+    site_name VARCHAR(50),
+    company_name VARCHAR(255),
+    province VARCHAR(30),
+    year INT,
+    quarter INT,
+    month INT,
+    month_name TEXT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    WITH co2_equivalent AS (
+        SELECT 
+            rc.equivalence_category,
+            rc.equivalence_label,
+            rc.metric,
+            rc.equivalent_value_co2_emissions
+        FROM ref.ref_co2_equivalence rc
+    )
+    SELECT
+        SUM(fe.energy_generated_kwh) AS energy_generated,
+        SUM(fe.co2_avoidance_tons) AS co2_avoided,
+        ce.equivalent_value_co2_emissions AS conversion_value,
+        ROUND(SUM(fe.co2_avoidance_tons) / ce.equivalent_value_co2_emissions, 4) AS co2_equivalent,
+        ce.metric,
+        ce.equivalence_category,
+        ce.equivalence_label,
+        fe.power_plant_id,
+        fe.company_id,
+        fe.generation_source,
+        fe.site_name,
+        fe.company_name,
+        fe.province,
+        fe.year,
+        fe.quarter,
+        fe.month,
+        fe.month_name
+    FROM gold.fact_energy_generated fe
+    CROSS JOIN co2_equivalent ce
+    WHERE (p_power_plant_id IS NULL OR fe.power_plant_id = ANY(p_power_plant_id))
+      AND (p_company_id IS NULL OR fe.company_id = ANY(p_company_id))
+      AND (p_generation_source IS NULL OR fe.generation_source = ANY(p_generation_source))
+      AND (p_province IS NULL OR fe.province = ANY(p_province))
+      AND (p_month IS NULL OR fe.month = ANY(p_month))
+      AND (p_quarter IS NULL OR fe.quarter = ANY(p_quarter))
+      AND (p_year IS NULL OR fe.year = ANY(p_year))
+    GROUP BY 
+        ce.equivalence_category,
+        ce.equivalence_label,
+        ce.metric,
+        ce.equivalent_value_co2_emissions,
+        fe.power_plant_id,
+        fe.company_id,
+        fe.generation_source,
+        fe.site_name,
+        fe.company_name,
+        fe.province,
+        fe.year,
+        fe.quarter,
+        fe.month,
+        fe.month_name;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ===================================================================================
+-- Create Function: gold.func_co2_equivalence_per_metric
+-- ===================================================================================
+
+DROP FUNCTION IF EXISTS gold.func_co2_equivalence_per_metric;
+
+CREATE OR REPLACE FUNCTION gold.func_co2_equivalence_per_metric(
+    p_power_plant_id VARCHAR(10)[] DEFAULT NULL,
+    p_company_id VARCHAR(10)[] DEFAULT NULL,
+    p_generation_source TEXT[] DEFAULT NULL,
+    p_province VARCHAR(30)[] DEFAULT NULL,
+    p_month INT[] DEFAULT NULL,
+    p_quarter INT[] DEFAULT NULL,
+    p_year INT[] DEFAULT NULL
+)
+RETURNS TABLE (
+    energy_generated NUMERIC,
+    co2_avoided NUMERIC,
+    conversion_value NUMERIC,
+    co2_equivalent NUMERIC,
+    metric VARCHAR(100),
+    equivalence_category TEXT,
+    equivalence_label TEXT
+)
+AS $$
+BEGIN
+    RETURN QUERY
+    WITH co2_equivalent AS (
+        SELECT 
+            rc.equivalence_category,
+            rc.equivalence_label,
+            rc.metric,
+            rc.equivalent_value_co2_emissions
+        FROM ref.ref_co2_equivalence rc
+    )
+    SELECT
+        SUM(fe.energy_generated_kwh) AS energy_generated,
+        SUM(fe.co2_avoidance_tons) AS co2_avoided,
+        ce.equivalent_value_co2_emissions AS conversion_value,
+        ROUND(SUM(fe.co2_avoidance_tons) / ce.equivalent_value_co2_emissions, 4) AS co2_equivalent,
+        ce.metric,
+        ce.equivalence_category,
+        ce.equivalence_label
+    FROM gold.fact_energy_generated fe
+    CROSS JOIN co2_equivalent ce
+    WHERE (p_power_plant_id IS NULL OR fe.power_plant_id = ANY(p_power_plant_id))
+      AND (p_company_id IS NULL OR fe.company_id = ANY(p_company_id))
+      AND (p_generation_source IS NULL OR fe.generation_source = ANY(p_generation_source))
+      AND (p_province IS NULL OR fe.province = ANY(p_province))
+      AND (p_month IS NULL OR fe.month = ANY(p_month))
+      AND (p_quarter IS NULL OR fe.quarter = ANY(p_quarter))
+      AND (p_year IS NULL OR fe.year = ANY(p_year))
+    GROUP BY 
+        ce.equivalence_category,
+        ce.equivalence_label,
+        ce.metric,
+        ce.equivalent_value_co2_emissions;
 END;
 $$ LANGUAGE plpgsql;
 
