@@ -4,27 +4,56 @@ DDL Script: Create Gold Views for Environment Data
 ===============================================================================
 */
 
--- DROP VIEW IF EXISTS gold.vw_environment_water_withdrawal;
-DROP VIEW IF EXISTS gold.vw_environment_water_withdrawal;
-
+-- DROP VIEW IF EXISTS gold.vw_environment_water_abstraction;
+DROP VIEW IF EXISTS gold.vw_environment_water_abstraction;
 -- Now create our new views
 -- =============================================================================
--- Create View: gold.vw_environment_water_withdrawal
+-- Create View: gold.vw_environment_water_abstraction
 -- =============================================================================
 
--- VIEW for gold environtment water withdrawal
-CREATE OR REPLACE VIEW gold.vw_environment_water_withdrawal AS
+-- VIEW for gold environment electric vw_environment_water_abstraction
+CREATE OR REPLACE VIEW gold.vw_environment_water_abstraction AS
 SELECT
-    eww.ww_id                        AS water_withdrawal_id,
-    eww.company_id                    AS company_id,
-    ens.ns_name                        AS natural_sources,
-    eww.volume                        AS water_volume,
-    eww.unit_of_measurement,
-    eww.month,
-    eww.quarter,
-    eww.year                        
-FROM silver.envi_natural_sources ens
-RIGHT JOIN silver.envi_water_withdrawal eww ON eww.ns_id = ens.ns_id;
+    wa.company_id,
+	CAST(volume AS NUMERIC(10,2)),
+	wa.unit_of_measurement		AS unit,
+	wa.quarter,
+	wa.year
+FROM silver.envi_water_abstraction wa;
+
+-- DROP VIEW IF EXISTS gold.vw_environment_water_discharge;
+DROP VIEW IF EXISTS gold.vw_environment_water_discharge;
+-- Now create our new views
+-- =============================================================================
+-- Create View: gold.vw_environment_water_discharge
+-- =============================================================================
+
+-- VIEW for gold environment electric vw_environment_water_discharge
+CREATE OR REPLACE VIEW gold.vw_environment_water_discharge AS
+SELECT
+    wd.company_id,
+	CAST(volume AS NUMERIC(10,2)),
+	wd.unit_of_measurement		AS unit,
+	wd.quarter,
+	wd.year
+FROM silver.envi_water_discharge wd;
+
+-- DROP VIEW IF EXISTS gold.vw_environment_water_consumption;
+DROP VIEW IF EXISTS gold.vw_environment_water_consumption;
+-- Now create our new views
+-- =============================================================================
+-- Create View: gold.vw_environment_water_consumption
+-- =============================================================================
+
+-- VIEW for gold environment electric vw_environment_water_consumption
+CREATE OR REPLACE VIEW gold.vw_environment_water_consumption AS
+SELECT
+    wc.company_id,
+	CAST(volume AS NUMERIC(10,2)),
+	wc.unit_of_measurement		AS unit,
+	wc.quarter,
+	wc.year
+FROM silver.envi_water_consumption wc;
 
 -- DROP VIEW IF EXISTS gold.vw_environment_diesel_consumption;
 DROP VIEW IF EXISTS gold.vw_environment_diesel_consumption;
@@ -62,6 +91,7 @@ CREATE OR REPLACE VIEW gold.vw_environment_electric_consumption AS
 SELECT
     ec.ec_id                    AS electric_consumption_id,
     ec.company_id                AS company_id,
+    ec.source                  AS consumption_source,
     ec.unit_of_measurement,
     ec.consumption,
     ec.quarter,
@@ -80,11 +110,9 @@ CREATE OR REPLACE VIEW gold.vw_environment_non_hazard_waste AS
 SELECT
     nhw.nhw_id                    AS non_hazardous_waste_id,
     nhw.company_id                AS company_id,
-    nhw.waste_source,      
     nhw.metrics,             
     nhw.unit_of_measurement,
     nhw.waste,               
-    nhw.month,
     nhw.quarter,
     nhw.year
 FROM silver.envi_non_hazard_waste nhw;
@@ -99,11 +127,11 @@ DROP VIEW IF EXISTS gold.vw_environment_hazard_waste_generated;
 -- VIEW for gold environment hazard waste generated
 CREATE VIEW gold.vw_environment_hazard_waste_generated AS
 SELECT
-    ehwg.hwg_id                           AS hazard_waste_generated_id,
-    ehwg.company_id                     AS company_id,
-    ehwg.metrics                        AS waste_type,
-    ehwg.unit_of_measurement            AS unit,
-    ehwg.waste_generated                AS generate,                        
+    ehwg.hwg_id                    AS hazard_waste_generated_id,
+    ehwg.company_id                AS company_id,
+    ehwg.metrics                AS waste_type,
+    ehwg.unit_of_measurement    AS unit,
+    ehwg.waste_generated        AS generate,                        
     ehwg.quarter,                                                                    
     ehwg.year                               
 FROM silver.envi_hazard_waste_generated ehwg;
@@ -118,10 +146,10 @@ DROP VIEW IF EXISTS gold.vw_environment_hazard_waste_disposed;
 -- VIEW for gold environment hazard waste disposed
 CREATE VIEW gold.vw_environment_hazard_waste_disposed AS
 SELECT
-    ehwd.hwd_id                            AS hazard_waste_generated_id,
-    ehwd.company_id                     AS company_id,
-    ehwd.metrics                        AS waste_type,
-    ehwd.unit_of_measurement            AS unit,
-    ehwd.waste_disposed                    AS disposed,
+    ehwd.hwd_id                    AS hazard_waste_generated_id,
+    ehwd.company_id                AS company_id,
+    ehwd.metrics                AS waste_type,
+    ehwd.unit_of_measurement    AS unit,
+    ehwd.waste_disposed            AS disposed,
     ehwd.year
 FROM silver.envi_hazard_waste_disposed ehwd;
