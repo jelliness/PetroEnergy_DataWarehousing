@@ -1,0 +1,13 @@
+equivalence_category,equivalence_label,metric,equivalent_value_co2_emissions
+greenhouse gas emissions,gasoline-powered passenger vehicles driven for one year,metric tons CO2e/vehicle /year,4.282366568
+greenhouse gas emissions,electric-powered passenger vehicles driven for one year,metric tons CO2e/vehicle/year,1.132201193
+greenhouse gas emissions,miles driven by an average gasoline-powered passenger vehicle,metric tons CO2e/miles,0.000392619
+CO2 emissions,gallons of gasoline consumed,metric tons CO2/gallon of gasoline,0.00889
+CO2 emissions,gallons of diesel consumed,metric tons CO2/gallon of diesel,0.01018
+CO2 emissions,coal-fired power plants in one year,metric tons CO2/power plant,3790003.683
+CO2 emissions,number of smartphones charged,metric tons CO2/smartphone charged,1.21114E-05
+greenhouse gas emissions avoided,tons of waste recycled instead of landfilled,metric tons CO2 equivalent/ton of waste recycled instead of landfilled,2.83
+greenhouse gas emissions avoided,trash bags of waste recycled instead of landfilled,metric tons CO2 equivalent/trash bag of waste recycled instead of landfilled,0.011763813
+greenhouse gas emissions avoided,garbage trucks of waste recycled instead of landfilled,metric tons CO2e/garbage truck of waste recycled instead of landfilled,19.81
+greenhouse gas emissions avoided,wind turbines running for a year,metric tons CO2/year/wind turbine installed,3345.354017
+carbon sequestered,tree seedlings grown for 10 years,metric ton CO2 per urban tree planted per year,0.060540083

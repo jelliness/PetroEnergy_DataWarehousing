@@ -1,4 +1,10 @@
-ff_id,ff_name,ff_percentage
-EF,Electrification Fund,0.5
-DLF,Development and Livelihood,0.25
-RWMHEEF,"Reforestation, Watershed, Environment, etc.",0.25
+ff_id,ff_name,ff_percentage,ff_category
+EF,Electrification Fund,0.5,allocation
+DLF,Development and Livelihood,0.25,allocation
+RWMHEEF,"Reforestation, Watershed, Environment, etc.",0.25,allocation
+CP,Community and People Affected,0.05,beneficiaries
+BRGY,Barangay,0.2,beneficiaries
+MUNI,Municipality,0.35,beneficiaries
+PROV,Province,0.3,beneficiaries
+HIP,Host IPs,0.05,beneficiaries
+HREG,Host Region,0.05,beneficiaries

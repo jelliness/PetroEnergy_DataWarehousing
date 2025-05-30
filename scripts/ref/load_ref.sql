@@ -179,7 +179,8 @@ BEGIN
     CREATE TEMP TABLE ref_fa_factors (
         ff_id TEXT,
         ff_name TEXT,
-        ff_percentage NUMERIC
+        ff_percentage NUMERIC,
+        ff_category VARCHAR(20)
     );
 
     EXECUTE format(
@@ -191,6 +192,7 @@ BEGIN
 			ff_id,
 			ff_name,
 			ff_percentage,
+            ff_category,
 			create_at,
 			updated_at
 		)
@@ -198,6 +200,7 @@ BEGIN
 			(ff_id)::VARCHAR(20),
 			ff_name,
 			(ff_percentage)::DECIMAL(5,4),
+            ff_category,
 			CURRENT_TIMESTAMP,
 			CURRENT_TIMESTAMP
 		FROM ref_fa_factors
@@ -205,6 +208,7 @@ BEGIN
 		SET 
 			ff_name = EXCLUDED.ff_name,
 			ff_percentage = EXCLUDED.ff_percentage,
+            ff_category = EXCLUDED.ff_category,
 			updated_at = CURRENT_TIMESTAMP;
 
     end_time := CURRENT_TIMESTAMP;
@@ -255,6 +259,51 @@ BEGIN
 			source_name = EXCLUDED.source_name,
 			source_link = EXCLUDED.source_link,
 			updated_at = CURRENT_TIMESTAMP;
+
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+
+    -- =============================
+    -- Load ref_co2_equivalence
+    -- =============================
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Loading ref_co2_equivalence with UPSERT...';
+
+    DROP TABLE IF EXISTS ref_co2_equivalence_temp;
+    CREATE TEMP TABLE ref_co2_equivalence_temp (
+        equivalence_category TEXT,
+        equivalence_label TEXT,
+        metric VARCHAR(100),
+        equivalent_value_co2_emissions DECIMAL(20, 10)
+    );
+
+    EXECUTE format(
+        'COPY ref_co2_equivalence_temp FROM %L DELIMITER '','' CSV HEADER',
+        local_file_path || '/ref_equivalence.csv'
+    );
+
+    INSERT INTO ref.ref_co2_equivalence (
+        equivalence_category,
+        equivalence_label,
+        metric,
+        equivalent_value_co2_emissions,
+        create_at,
+        updated_at
+    )
+    SELECT
+        t.equivalence_category,
+        t.equivalence_label,
+        t.metric,
+        t.equivalent_value_co2_emissions,
+        NOW(),
+        NOW()
+    FROM ref_co2_equivalence_temp t
+    ON CONFLICT (equivalence_label) DO UPDATE
+    SET
+        equivalence_category = EXCLUDED.equivalence_category,
+        metric = EXCLUDED.metric,
+        equivalent_value_co2_emissions = EXCLUDED.equivalent_value_co2_emissions,
+        updated_at = EXCLUDED.updated_at;
 
     end_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);

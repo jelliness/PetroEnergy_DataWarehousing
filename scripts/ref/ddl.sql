@@ -67,6 +67,7 @@ CREATE TABLE ref.ref_fa_factors (
     ff_id VARCHAR(10) PRIMARY KEY,
     ff_name TEXT,
     ff_percentage DECIMAL(5,4),
+    ff_category VARCHAR(20),
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -85,8 +86,22 @@ CREATE TABLE ref.ref_hec_factors (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ======================================
+-- Table: ref.ref_co2_equivalence
+-- ======================================
+DROP TABLE IF EXISTS ref.ref_co2_equivalence CASCADE;
+CREATE TABLE ref.ref_co2_equivalence (
+    equivalence_category TEXT,
+    equivalence_label TEXT,
+    metric VARCHAR(100),
+    equivalent_value_co2_emissions DECIMAL(20, 10),
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 DROP TABLE IF EXISTS ref.hr_position CASCADE;
 CREATE TABLE ref.hr_position (
 	position_id VARCHAR(2) PRIMARY KEY,
 	position_name VARCHAR(20)
 );
+
