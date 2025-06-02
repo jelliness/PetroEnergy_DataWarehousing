@@ -14,6 +14,7 @@ DROP VIEW IF EXISTS gold.vw_environment_water_abstraction;
 -- VIEW for gold environment electric vw_environment_water_abstraction
 CREATE OR REPLACE VIEW gold.vw_environment_water_abstraction AS
 SELECT
+	wa.wa_id,
     wa.company_id,
 	CAST(volume AS NUMERIC(10,2)),
 	wa.unit_of_measurement		AS unit,
@@ -31,6 +32,7 @@ DROP VIEW IF EXISTS gold.vw_environment_water_discharge;
 -- VIEW for gold environment electric vw_environment_water_discharge
 CREATE OR REPLACE VIEW gold.vw_environment_water_discharge AS
 SELECT
+	wd.wd_id,
     wd.company_id,
 	CAST(volume AS NUMERIC(10,2)),
 	wd.unit_of_measurement		AS unit,
@@ -48,6 +50,7 @@ DROP VIEW IF EXISTS gold.vw_environment_water_consumption;
 -- VIEW for gold environment electric vw_environment_water_consumption
 CREATE OR REPLACE VIEW gold.vw_environment_water_consumption AS
 SELECT
+	wc.wc_id,
     wc.company_id,
 	CAST(volume AS NUMERIC(10,2)),
 	wc.unit_of_measurement		AS unit,
