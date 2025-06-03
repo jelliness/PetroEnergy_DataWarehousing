@@ -20,31 +20,12 @@ DECLARE
     batch_end_time TIMESTAMP;
 BEGIN
     -- Set the local file path here for easy directory changes
-    local_file_path := 'C:\Users\Rafael\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr';
+    local_file_path := 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr';
     
     batch_start_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '================================';
     RAISE NOTICE 'Loading Bronze Layer Data...';
     RAISE NOTICE '================================';
-
-    -- csr_company
-    RAISE NOTICE '------------------------------------------------';
-    RAISE NOTICE 'Loading CSR Company Information Data...';
-    RAISE NOTICE '------------------------------------------------';
-
-    start_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Truncating table: bronze.csr_company...';
-    TRUNCATE TABLE bronze.csr_company;
-    RAISE NOTICE '>> Bulk inserting data into bronze.csr_company...';
-
-    EXECUTE format(
-        'COPY bronze.csr_company FROM %L DELIMITER '','' CSV HEADER',
-        local_file_path || '\csr_company.csv'
-    );
-
-    end_time := CURRENT_TIMESTAMP;
-    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-    RAISE NOTICE '-----------------';
 
     -- csr_programs
     RAISE NOTICE '------------------------------------------------';
