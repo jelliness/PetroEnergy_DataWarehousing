@@ -174,6 +174,19 @@ CREATE TABLE silver.envi_hazard_waste_disposed (
 	FOREIGN KEY (company_id) REFERENCES ref.company_main(company_id)
 );
 
+CREATE TABLE silver.wa_id_mapping (
+    wa_id_bronze VARCHAR(20) NOT NULL,
+    wa_id_silver VARCHAR(20) NOT NULL,
+    mapped_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT wa_id_mapping_pk PRIMARY KEY (wa_id_bronze, wa_id_silver),
+    CONSTRAINT fk_wa_id_bronze FOREIGN KEY (wa_id_bronze)
+        REFERENCES bronze.envi_water_abstraction(wa_id),
+    CONSTRAINT fk_wa_id_silver FOREIGN KEY (wa_id_silver)
+        REFERENCES silver.envi_water_abstraction(wa_id)
+);
+
+
 -- Adding constraints (UNIQUE)
 ALTER TABLE silver.envi_company_property ADD CONSTRAINT unique_cp_id UNIQUE (cp_id);
 ALTER TABLE silver.envi_water_abstraction ADD CONSTRAINT unique_wa_id UNIQUE (wa_id);

@@ -24,6 +24,8 @@ DECLARE
     last_counter INT := 0;
     last_company TEXT := '';
     last_year INT := 0;
+    generated_wa_id TEXT;
+    bronze_wa_id TEXT;
 BEGIN
     batch_start_time := CLOCK_TIMESTAMP();
     RAISE NOTICE '================================================';
@@ -78,7 +80,9 @@ BEGIN
                     ELSE 'Unknown'
                 END AS quarter,
                 SUM(CASE WHEN volume < 0 THEN 0 ELSE volume END) AS total_volume,
-                MAX(unit_of_measurement) AS unit_of_measurement
+                MAX(unit_of_measurement) AS unit_of_measurement,
+                -- Collect all bronze wa_ids for mapping
+                ARRAY_AGG(wa_id) AS bronze_wa_ids
             FROM bronze.envi_water_abstraction
             WHERE month IS NOT NULL
             GROUP BY company_id, year,
@@ -98,6 +102,9 @@ BEGIN
                 last_counter := last_counter + 1;
             END IF;
 
+            -- Generate the silver wa_id
+            generated_wa_id := 'WA-' || r.company_id || '-' || r.year || '-' || LPAD(last_counter::TEXT, 3, '0');
+
             INSERT INTO silver.envi_water_abstraction (
                 wa_id,
                 company_id,
@@ -107,7 +114,7 @@ BEGIN
                 year
             )
             VALUES (
-                'WA-' || r.company_id || '-' || r.year || '-' || LPAD(last_counter::TEXT, 3, '0'),
+                generated_wa_id,
                 r.company_id,
                 r.total_volume,
                 r.unit_of_measurement,
@@ -121,6 +128,20 @@ BEGIN
                 year = EXCLUDED.year,
                 quarter = EXCLUDED.quarter,
                 updated_at = CURRENT_TIMESTAMP;
+
+            -- Insert mappings for all bronze wa_ids that contributed to this aggregated record
+            FOREACH bronze_wa_id IN ARRAY r.bronze_wa_ids
+            LOOP
+                INSERT INTO silver.wa_id_mapping (
+                    wa_id_bronze,
+                    wa_id_silver
+                )
+                VALUES (
+                    bronze_wa_id,
+                    generated_wa_id
+                )
+                ON CONFLICT (wa_id_bronze, wa_id_silver) DO NOTHING;
+            END LOOP;
 
             last_company := r.company_id;
             last_year := r.year;
@@ -162,8 +183,18 @@ BEGIN
                 year = EXCLUDED.year,
                 quarter = EXCLUDED.quarter,
                 updated_at = CURRENT_TIMESTAMP;
-        END LOOP;
 
+            -- For non-aggregated records, create a 1:1 mapping
+            INSERT INTO silver.wa_id_mapping (
+                wa_id_bronze,
+                wa_id_silver
+            )
+            VALUES (
+                r.wa_id,
+                r.wa_id
+            )
+            ON CONFLICT (wa_id_bronze, wa_id_silver) DO NOTHING;
+        END LOOP;
 
         end_time := CLOCK_TIMESTAMP();
         RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));

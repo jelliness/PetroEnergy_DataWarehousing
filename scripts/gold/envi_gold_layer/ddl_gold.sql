@@ -15,6 +15,7 @@ DROP VIEW IF EXISTS gold.vw_environment_water_abstraction;
 CREATE OR REPLACE VIEW gold.vw_environment_water_abstraction AS
 SELECT
     wa.wa_id AS water_abstraction_id,
+	cm.company_id,
     cm.company_name,
     CAST(wa.volume AS NUMERIC(10,2)),
     wa.unit_of_measurement AS unit,
@@ -45,6 +46,7 @@ DROP VIEW IF EXISTS gold.vw_environment_water_discharge;
 CREATE OR REPLACE VIEW gold.vw_environment_water_discharge AS
 SELECT
     wd.wd_id AS water_discharge_id,
+	cm.company_id,
     cm.company_name,
     CAST(wd.volume AS NUMERIC(10,2)),
     wd.unit_of_measurement AS unit,
@@ -75,6 +77,7 @@ DROP VIEW IF EXISTS gold.vw_environment_water_consumption;
 CREATE OR REPLACE VIEW gold.vw_environment_water_consumption AS
 SELECT
     wc.wc_id AS water_consumption_id,
+	cm.company_id,
     cm.company_name,
     CAST(wc.volume AS NUMERIC(10,2)),
     wc.unit_of_measurement AS unit,
@@ -106,6 +109,7 @@ DROP VIEW IF EXISTS gold.vw_environment_diesel_consumption;
 CREATE OR REPLACE VIEW gold.vw_environment_diesel_consumption AS
 SELECT
     edc.dc_id AS diesel_consumption_id,
+	cm.company_id,
     cm.company_name,
     ecp.cp_name AS company_property_name,
     ecp.cp_type AS company_property_type,
@@ -141,6 +145,7 @@ DROP VIEW IF EXISTS gold.vw_environment_electric_consumption;
 CREATE OR REPLACE VIEW gold.vw_environment_electric_consumption AS
 SELECT
     ec.ec_id AS electric_consumption_id,
+	cm.company_id,
     cm.company_name,
     ec.source AS consumption_source,
     ec.unit_of_measurement,
@@ -172,6 +177,7 @@ DROP VIEW IF EXISTS gold.vw_environment_non_hazard_waste;
 CREATE OR REPLACE VIEW gold.vw_environment_non_hazard_waste AS
 SELECT
     nhw.nhw_id AS non_hazardous_waste_id,
+	cm.company_id,
     cm.company_name,
     nhw.metrics,
     nhw.unit_of_measurement,
@@ -203,6 +209,7 @@ DROP VIEW IF EXISTS gold.vw_environment_hazard_waste_generated;
 CREATE OR REPLACE VIEW gold.vw_environment_hazard_waste_generated AS
 SELECT
     ehwg.hwg_id AS hazard_waste_generated_id,
+	cm.company_id,
     cm.company_name,
     ehwg.metrics AS waste_type,
     ehwg.unit_of_measurement AS unit,
@@ -234,6 +241,7 @@ DROP VIEW IF EXISTS gold.vw_environment_hazard_waste_disposed;
 CREATE OR REPLACE VIEW gold.vw_environment_hazard_waste_disposed AS
 SELECT
     ehwd.hwd_id AS hazard_waste_disposed_id,
+	cm.company_id,
     cm.company_name,
     ehwd.metrics AS waste_type,
     ehwd.unit_of_measurement AS unit,
