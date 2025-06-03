@@ -84,6 +84,7 @@ BEGIN
 
 
 	INSERT INTO silver.hr_parental_leave (
+		parental_leave_id,
     	employee_id, 
 		type_of_leave, 
 		date, days, 
@@ -93,6 +94,7 @@ BEGIN
 		date_updated
 	)
 	SELECT
+		'PL' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY employee_id, date)::TEXT, 3, '0') AS parental_leave_id,
     	b.employee_id,
     	b.type_of_leave,
     	b.date,
@@ -170,7 +172,7 @@ BEGIN
 		date_updated
 	)
 	SELECT
-	    'TR' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, training_title, date)::TEXT, 3, '0') AS training_id, -- derived training_id
+	    'TR' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, training_title, date)::TEXT, 3, '0') AS training_id,
     	b.company_id,
 		b.training_title,
 		b.date,
@@ -212,7 +214,7 @@ BEGIN
 		date_updated
 	)
 	SELECT
-		'SWD' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, contractor, date)::TEXT, 3, '0') AS safety_workdata_id, -- derived training_id
+		'SWD' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, contractor, date)::TEXT, 3, '0') AS safety_workdata_id,
     	b.company_id, 
 		b.contractor,
 		b.date, 
@@ -254,7 +256,7 @@ BEGIN
 		date_updated
 	)
 	SELECT
-		'OSH' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, workforce_type, lost_time, date, incident_type, incident_title)::TEXT, 3, '0') AS osh_id, -- derived training_id
+		'OSH' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, workforce_type, lost_time, date, incident_type, incident_title)::TEXT, 3, '0') AS osh_id,
     	b.company_id,
     	b.workforce_type,
     	b.lost_time,
