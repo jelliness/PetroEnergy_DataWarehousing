@@ -50,7 +50,12 @@ BEGIN
 		SELECT 
 		energy_id,
 		er.power_plant_id,
-		TO_TIMESTAMP(REPLACE(datetime, '-', '/'), 'FMMM/FMDD/YYYY HH24:MI')::timestamp AS date_generated,
+		CASE
+		    WHEN datetime ~ '^\d{1,2}/\d{1,2}/\d{4} \d{2}:\d{2}$' THEN 
+		        TO_TIMESTAMP(datetime, 'FMMM/FMDD/YYYY HH24:MI')
+		    ELSE 
+		        datetime::timestamp
+		END AS date_generated,
 		ROUND(
 			CASE
 				WHEN unit_of_measurement ILIKE 'MWh' THEN COALESCE(energy_generated, 0) * 1000

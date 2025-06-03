@@ -64,7 +64,7 @@ CREATE TABLE public.audit_trail (
 DROP TABLE IF EXISTS public.checker_status_log CASCADE;
 CREATE TABLE public.checker_status_log (
     cs_id VARCHAR(20) PRIMARY KEY,
-    checker_id VARCHAR(20) NOT NULL,
+    checker_id CHAR(26) NOT NULL,
     record_id VARCHAR(20) NOT NULL,
     status_id VARCHAR(3) NOT NULL,
     status_timestamp TIMESTAMP NOT NULL,
