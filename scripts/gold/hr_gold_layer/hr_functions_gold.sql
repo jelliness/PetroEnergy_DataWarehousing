@@ -8,8 +8,6 @@ DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_yearly;
 
 DROP FUNCTION IF EXISTS gold.func_employee_summary_monthly;
 DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_monthly;
---DROP FUNCTION IF EXISTS gold.func_training_summary_monthly;
---DROP FUNCTION IF EXISTS gold.func_safety_summary_monthly;
 DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_monthly;
 
 /*

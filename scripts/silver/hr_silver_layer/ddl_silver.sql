@@ -11,6 +11,23 @@ Script Purpose:
 
 CREATE SCHEMA IF NOT EXISTS silver;
 
+DROP VIEW IF EXISTS gold.dim_employee_descriptions CASCADE;
+DROP VIEW IF EXISTS gold.dim_employee_training_description;
+DROP VIEW IF EXISTS gold.dim_employee_safety_manhours_description;
+DROP VIEW IF EXISTS gold.dim_occupational_safety_health;
+DROP VIEW IF EXISTS gold.dim_employee_parental_leave_description;
+
+DROP FUNCTION IF EXISTS gold.func_employee_summary_yearly;
+DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_yearly;
+DROP FUNCTION IF EXISTS gold.func_training_summary;
+DROP FUNCTION IF EXISTS gold.func_safety_workdata_summary;
+DROP FUNCTION IF EXISTS gold.func_occupational_safety_health_summary;
+DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_yearly;
+
+DROP FUNCTION IF EXISTS gold.func_employee_summary_monthly;
+DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_monthly;
+DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_monthly;
+
 DROP TABLE IF EXISTS silver.hr_safety_workdata;
 DROP TABLE IF EXISTS silver.hr_occupational_safety_health;
 DROP TABLE IF EXISTS silver.hr_training;
@@ -54,6 +71,7 @@ CREATE TABLE silver.hr_tenure (
 );
 
 CREATE TABLE silver.hr_training (
+    training_id VARCHAR(20),
     company_id VARCHAR(10),
     training_title TEXT,
     date TIMESTAMP,
@@ -62,10 +80,11 @@ CREATE TABLE silver.hr_training (
     total_training_hours INT, -- derived by multiplying training_hours by number_of_participants
     date_created TIMESTAMP,
 	date_updated TIMESTAMP,
-    PRIMARY KEY (company_id, date, training_title)
+    PRIMARY KEY (training_id, company_id, date, training_title)
 );
 
 CREATE TABLE silver.hr_safety_workdata (
+    safety_workdata_id VARCHAR(20),
     company_id VARCHAR(10),
     contractor TEXT,
     date TIMESTAMP,
@@ -73,10 +92,11 @@ CREATE TABLE silver.hr_safety_workdata (
     manhours INT,
     date_created TIMESTAMP,
 	date_updated TIMESTAMP,
-    PRIMARY KEY (company_id, contractor, date)
+    PRIMARY KEY (safety_workdata_id, company_id, contractor, date)
 );
 
 CREATE TABLE silver.hr_occupational_safety_health (
+    osh_id VARCHAR(20),
     company_id VARCHAR(10),
     workforce_type TEXT,
     lost_time BOOLEAN,
@@ -86,7 +106,7 @@ CREATE TABLE silver.hr_occupational_safety_health (
     incident_count INT,
     date_created TIMESTAMP,
 	date_updated TIMESTAMP,
-    PRIMARY KEY (company_id, workforce_type, lost_time, date, incident_type, incident_title)
+    PRIMARY KEY (osh_id, company_id, workforce_type, lost_time, date, incident_type, incident_title)
 );
 
 ALTER TABLE silver.hr_parental_leave ADD FOREIGN KEY (employee_id) REFERENCES silver.hr_demographics(employee_id);

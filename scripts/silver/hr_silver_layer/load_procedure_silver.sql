@@ -159,6 +159,7 @@ BEGIN
 	);
 
 	INSERT INTO silver.hr_training (
+		training_id,
     	company_id,
 		training_title,
 		date,
@@ -169,6 +170,7 @@ BEGIN
 		date_updated
 	)
 	SELECT
+	    'TR' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, training_title, date)::TEXT, 3, '0') AS training_id, -- derived training_id
     	b.company_id,
 		b.training_title,
 		b.date,
@@ -200,6 +202,7 @@ BEGIN
 	);
 
 	INSERT INTO silver.hr_safety_workdata (
+		safety_workdata_id,
 		company_id, 
 		contractor,
 		date, 
@@ -209,6 +212,7 @@ BEGIN
 		date_updated
 	)
 	SELECT
+		'SWD' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, contractor, date)::TEXT, 3, '0') AS safety_workdata_id, -- derived training_id
     	b.company_id, 
 		b.contractor,
 		b.date, 
@@ -238,6 +242,7 @@ BEGIN
 	);
 
 	INSERT INTO silver.hr_occupational_safety_health (
+		osh_id,
 		company_id,
     	workforce_type,
     	lost_time,
@@ -249,6 +254,7 @@ BEGIN
 		date_updated
 	)
 	SELECT
+		'OSH' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, workforce_type, lost_time, date, incident_type, incident_title)::TEXT, 3, '0') AS osh_id, -- derived training_id
     	b.company_id,
     	b.workforce_type,
     	b.lost_time,
