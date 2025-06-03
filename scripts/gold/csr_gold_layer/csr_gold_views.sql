@@ -102,3 +102,25 @@ LEFT JOIN silver.csr_programs AS cprog
 ON cproj.program_id = cprog.program_id
 GROUP BY (cprog.program_name)
 ORDER BY "Investments"
+
+-- =============================================================================
+-- Create Fact: gold.vw_help_report
+-- =============================================================================
+CREATE OR REPLACE VIEW gold.vw_help_report
+AS
+SELECT 
+	csr_id,
+	company_id,
+	project_id,
+	project_year,
+	csr_report,
+	project_expenses,
+	CASE 
+        WHEN csl.status_id = 'HAP' THEN 'Head Approved'
+        ELSE csl.status_id
+    END AS status_id
+FROM silver.csr_activity AS csr
+LEFT JOIN public.checker_status_log AS csl
+ON csl.record_id = csr.csr_id
+WHERE project_id NOT LIKE 'RE%' 
+	AND project_id NOT LIKE 'AW%'
