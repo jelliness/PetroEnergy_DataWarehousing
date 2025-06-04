@@ -1,154 +1,101 @@
-/*
-===============================================================================
-Stored Procedure: Insert Trimmed Data from Bronze to Silver
-===============================================================================
-Script Purpose:
-    This procedure transfers data from bronze tables to silver tables,
-    trimming string values and handling data transformation.
-    
-    The procedure follows the standard ETL pattern with detailed logging
-    of execution times and error handling.
-===============================================================================
-*/
+-- This script is used to create a stored procedure that performs the following tasks:
 
--- Create schema if not exists
-CREATE OR REPLACE PROCEDURE silver.load_csr_silver()
+-- UTILIZATION: 'EXEC bronze.load_csr_bronze;'
+
+-- This script is used to create a stored procedure that performs the following tasks:
+-- 1. Truncates the existing tables in the bronze layer.
+-- 2. Bulk inserts data from CSV files into the bronze layer tables.
+-- 3. The script includes the necessary configurations for the bulk insert operation.
+-- 4. The script also includes error handling to catch any errors that occur during the execution of the procedure.
+-- 5. The script prints the start and end time of each operation, as well as the total duration of the batch operation.
+
+CREATE OR REPLACE PROCEDURE bronze.load_csr_bronze()
 LANGUAGE plpgsql
 AS $$
 DECLARE
+	local_file_path TEXT;
     start_time TIMESTAMP;
     end_time TIMESTAMP;
     batch_start_time TIMESTAMP;
     batch_end_time TIMESTAMP;
 BEGIN
+    -- Set the local file path here for easy directory changes
+    local_file_path := 'C:\Users\CJ Dumlao\Documents\GitHub\PetroEnergy_DataWarehousing\datasets\source_csr';
+    
     batch_start_time := CURRENT_TIMESTAMP;
     RAISE NOTICE '================================';
-    RAISE NOTICE 'Loading Silver Layer Data...';
+    RAISE NOTICE 'Loading Bronze Layer Data...';
     RAISE NOTICE '================================';
 
-    BEGIN
+    -- csr_programs
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Programs Data...';
+    RAISE NOTICE '------------------------------------------------';
 
-        -- csr_programs
-        RAISE NOTICE '------------------------------------------------';
-        RAISE NOTICE 'Loading CSR Programs Data...';
-        RAISE NOTICE '------------------------------------------------';
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.csr_programs...';
+    TRUNCATE TABLE bronze.csr_programs;
+    RAISE NOTICE '>> Bulk inserting data into bronze.csr_programs...';
 
-        start_time := CURRENT_TIMESTAMP;
+    EXECUTE format(
+        'COPY bronze.csr_programs FROM %L DELIMITER '','' CSV HEADER',
+        local_file_path || '\csr_programs.csv'
+    );
 
-        INSERT INTO silver.csr_programs (
-            program_id,
-            program_name,
-            date_created,
-            date_updated
-        )
-        SELECT
-            COALESCE(NULLIF(TRIM(program_id), ''), 'Not Available'),
-            COALESCE(NULLIF(TRIM(program_name), ''), 'Not Available'),
-            NOW(), NOW()
-        FROM bronze.csr_programs
-        ON CONFLICT (program_id) DO UPDATE
-        SET
-            program_name = EXCLUDED.program_name,
-            date_updated = CURRENT_TIMESTAMP;
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
 
-        end_time := CURRENT_TIMESTAMP;
-        RAISE NOTICE '>> Load Duration (csr_programs): % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-        RAISE NOTICE '-----------------';
+    -- csr_projects
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Projects Data...';
+    RAISE NOTICE '------------------------------------------------';
 
-        -- csr_projects
-        RAISE NOTICE '------------------------------------------------';
-        RAISE NOTICE 'Loading CSR Projects Data...';
-        RAISE NOTICE '------------------------------------------------';
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.csr_projects...';
+    TRUNCATE TABLE bronze.csr_projects;
+    RAISE NOTICE '>> Bulk inserting data into bronze.csr_projects...';
 
-        start_time := CURRENT_TIMESTAMP;
+    EXECUTE format(
+        'COPY bronze.csr_projects FROM %L DELIMITER '','' CSV HEADER',
+        local_file_path || '\csr_projects.csv'
+    );
 
-        INSERT INTO silver.csr_projects (
-            project_id,
-            program_id,
-            project_name,
-            project_metrics,
-            date_created,
-            date_updated
-        )
-        SELECT
-            COALESCE(NULLIF(TRIM(project_id), ''), 'Not Available'),
-            COALESCE(NULLIF(TRIM(program_id), ''), 'Not Available'),
-            COALESCE(NULLIF(TRIM(project_name), ''), 'Not Available'),
-            COALESCE(NULLIF(TRIM(project_metrics), ''), 'Not Available'),
-            NOW(), NOW()
-        FROM bronze.csr_projects
-        ON CONFLICT (project_id) DO UPDATE
-        SET
-            program_id = EXCLUDED.program_id,
-            project_name = EXCLUDED.project_name,
-            project_metrics = EXCLUDED.project_metrics,
-            date_updated = CURRENT_TIMESTAMP;
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
 
-        end_time := CURRENT_TIMESTAMP;
-        RAISE NOTICE '>> Load Duration (csr_projects): % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-        RAISE NOTICE '-----------------';
+    -- csr_activity
+    RAISE NOTICE '------------------------------------------------';
+    RAISE NOTICE 'Loading CSR Activity Data...';
+    RAISE NOTICE '------------------------------------------------';
 
-        -- csr_activity
-        RAISE NOTICE '------------------------------------------------';
-        RAISE NOTICE 'Loading CSR Activity Data...';
-        RAISE NOTICE '------------------------------------------------';
+    start_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Truncating table: bronze.csr_activity...';
+    TRUNCATE TABLE bronze.csr_activity;
+    RAISE NOTICE '>> Bulk inserting data into bronze.csr_activity...';
 
-        start_time := CURRENT_TIMESTAMP;
+    EXECUTE format(
+        'COPY bronze.csr_activity FROM %L DELIMITER '','' CSV HEADER',
+        local_file_path || '\csr_activity.csv'
+    );
 
-        INSERT INTO silver.csr_activity (
-            csr_id,
-            company_id,
-            project_id,
-            project_year,
-            csr_report,
-            project_expenses,
-            date_created,
-            date_updated
-        )
-        SELECT
-            COALESCE(NULLIF(TRIM(csr_id), ''), 'Not Available'),
-            COALESCE(NULLIF(TRIM(company_id), ''), 'Not Available'),
-            COALESCE(NULLIF(TRIM(project_id), ''), 'Not Available'),
-            CASE
-                WHEN project_year IS NULL THEN NULL
-                ELSE project_year
-            END,
-            CASE
-                WHEN csr_report IS NULL THEN NULL
-                ELSE csr_report
-            END,
-			CASE
-                WHEN project_expenses IS NULL THEN NULL
-                ELSE project_expenses
-            END,
-            NOW(), NOW()
-        FROM bronze.csr_activity
-        ON CONFLICT (csr_id) DO UPDATE
-        SET
-            company_id = EXCLUDED.company_id,
-            project_id = EXCLUDED.project_id,
-            project_year = EXCLUDED.project_year,
-            csr_report = EXCLUDED.csr_report,
-            project_expenses = EXCLUDED.project_expenses,
-            date_updated = CURRENT_TIMESTAMP;
+    end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
+    RAISE NOTICE '-----------------';
 
-        end_time := CURRENT_TIMESTAMP;
-        RAISE NOTICE '>> Load Duration (csr_activity): % seconds', EXTRACT(EPOCH FROM end_time - start_time);
-        RAISE NOTICE '-----------------';
+    batch_end_time := CURRENT_TIMESTAMP;
+    RAISE NOTICE '================================';
+    RAISE NOTICE 'Loading CSR Bronze Layer is Completed';
+    RAISE NOTICE '     - Total Load Duration: % seconds', EXTRACT(EPOCH FROM batch_end_time - batch_start_time);
+    RAISE NOTICE '================================';
 
-        batch_end_time := CURRENT_TIMESTAMP;
-        RAISE NOTICE '================================';
-        RAISE NOTICE 'Loading CSR Silver Layer is Completed';
-        RAISE NOTICE '     - Total Load Duration: % seconds', EXTRACT(EPOCH FROM batch_end_time - batch_start_time);
-        RAISE NOTICE '================================';
-
-    EXCEPTION
-        WHEN OTHERS THEN
-            RAISE NOTICE '================================';
-            RAISE NOTICE 'Error occurred while loading silver data: %', SQLERRM;
-            RAISE NOTICE '================================';
-    END;
+EXCEPTION
+    WHEN OTHERS THEN
+	RAISE NOTICE '================================';
+	RAISE NOTICE 'Error occurred while loading data: %', SQLERRM;
+	RAISE NOTICE '================================';
 END;
 $$;
 
-CALL silver.load_csr_silver()
+call bronze.load_csr_bronze()
