@@ -24,9 +24,7 @@ SELECT
     ev.interest_income,
     ev.share_in_net_income_of_associate,
     ev.miscellaneous_income,
-    (ev.electricity_sales + ev.oil_revenues + ev.other_revenues + 
-     ev.interest_income + ev.share_in_net_income_of_associate + 
-     ev.miscellaneous_income) as total_economic_value_generated
+    ev.total_revenue as total_economic_value_generated
 FROM silver.econ_value ev;
 
 -- =============================================================================
