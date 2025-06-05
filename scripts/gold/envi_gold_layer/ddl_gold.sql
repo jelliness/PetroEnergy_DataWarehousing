@@ -15,13 +15,26 @@ DROP VIEW IF EXISTS gold.vw_environment_water_abstraction;
 CREATE OR REPLACE VIEW gold.vw_environment_water_abstraction AS
 SELECT
     wa.wa_id AS water_abstraction_id,
-	cm.company_id,
+    cm.company_id,
     cm.company_name,
     CAST(wa.volume AS NUMERIC(10,2)),
     wa.unit_of_measurement AS unit,
     wa.quarter,
     wa.year,
-    COALESCE(latest_status.status_name, 'Head Approved') AS status_name
+    -- Prioritize 'PND' if any of the related bronze records have it
+    COALESCE(
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 
+                FROM silver.wa_id_mapping map
+                JOIN public.checker_status_log csl_bronze ON map.wa_id_bronze = csl_bronze.record_id
+                WHERE map.wa_id_silver = wa.wa_id AND csl_bronze.status_id = 'PND'
+            )
+            THEN 'Pending'
+            ELSE latest_status.status_name
+        END,
+        'Head Approved'
+    ) AS status_name
 FROM silver.envi_water_abstraction wa
 LEFT JOIN (
     SELECT DISTINCT ON (record_id)
