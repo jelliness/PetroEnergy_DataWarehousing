@@ -28,7 +28,7 @@ SELECT
                 SELECT 1 
                 FROM silver.wa_id_mapping map
                 JOIN public.checker_status_log csl_bronze ON map.wa_id_bronze = csl_bronze.record_id
-                WHERE map.wa_id_silver = wa.wa_id AND csl_bronze.status_id = 'PND'
+                WHERE map.wa_id_silver = wa.wa_id AND csl_bronze.status_id <> 'HAP'
             )
             THEN 'Pending'
             ELSE latest_status.status_name
