@@ -41,7 +41,6 @@ BEGIN
 			p_np,
 			company_id,
 			employment_status,
-			date_created,
 			date_updated
 		)
 		SELECT
@@ -54,8 +53,7 @@ BEGIN
 			b.p_np,
 			b.company_id,
 			b.employment_status,
-			CURRENT_TIMESTAMP, -- date_created
-			CURRENT_TIMESTAMP  -- date_updated
+			CURRENT_TIMESTAMP
 		FROM bronze.hr_demographics b
 		ON CONFLICT (employee_id)
 		DO UPDATE SET
@@ -97,8 +95,7 @@ BEGIN
 			type_of_leave, 
 			date, days, 
 			end_date, 
-			months_availed, 
-			date_created, 
+			months_availed,
 			date_updated
 		)
 		SELECT
@@ -109,7 +106,6 @@ BEGIN
 			b.days,
 			b.date + (b.days || ' days')::INTERVAL,
 			FLOOR(b.days / 30),
-			CURRENT_TIMESTAMP,
 			CURRENT_TIMESTAMP
 		FROM bronze.hr_parental_leave b;
 
@@ -135,8 +131,7 @@ BEGIN
 			start_date, 
 			end_date, 
 			-- is_active, 
-			tenure_length, 
-			date_created, 
+			tenure_length,
 			date_updated
 		)
 		SELECT
@@ -144,8 +139,7 @@ BEGIN
 			b.start_date,
 			b.end_date,
 			-- b.end_date IS NULL,
-			ROUND(EXTRACT(DAY FROM COALESCE(b.end_date, CURRENT_DATE) - b.start_date) / 365.0, 2), -- TO BE UPDATED
-			CURRENT_TIMESTAMP,
+			ROUND(EXTRACT(DAY FROM COALESCE(b.end_date, CURRENT_DATE) - b.start_date) / 365.0, 2),
 			CURRENT_TIMESTAMP
 		FROM bronze.hr_tenure b;
 		
@@ -180,7 +174,6 @@ BEGIN
 			training_hours,
 			number_of_participants,
 			total_training_hours, -- derived column
-			date_created,
 			date_updated
 		)
 		SELECT
@@ -191,7 +184,6 @@ BEGIN
 			b.training_hours,
 			b.number_of_participants,
 			(b.training_hours * b.number_of_participants) AS total_training_hours, -- derived column
-			CURRENT_TIMESTAMP,
 			CURRENT_TIMESTAMP
 		FROM bronze.hr_training b;
 
@@ -223,8 +215,7 @@ BEGIN
 			contractor,
 			date, 
 			manpower, 
-			manhours, 
-			date_created, 
+			manhours,
 			date_updated
 		)
 		SELECT
@@ -234,7 +225,6 @@ BEGIN
 			b.date, 
 			b.manpower, 
 			b.manhours, 
-			CURRENT_TIMESTAMP,
 			CURRENT_TIMESTAMP
 		FROM bronze.hr_safety_workdata b;
 
@@ -268,7 +258,6 @@ BEGIN
 			incident_type,
 			incident_title,
 			incident_count,
-			date_created,
 			date_updated
 		)
 		SELECT
@@ -280,7 +269,6 @@ BEGIN
 			b.incident_type,
 			b.incident_title,
 			b.incident_count,
-			CURRENT_TIMESTAMP,
 			CURRENT_TIMESTAMP
 		FROM bronze.hr_occupational_safety_health b;
 
