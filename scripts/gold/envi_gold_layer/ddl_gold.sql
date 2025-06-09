@@ -28,12 +28,12 @@ SELECT
                 SELECT 1 
                 FROM silver.wa_id_mapping map
                 JOIN public.checker_status_log csl_bronze ON map.wa_id_bronze = csl_bronze.record_id
-                WHERE map.wa_id_silver = wa.wa_id AND csl_bronze.status_id <> 'HAP'
+                WHERE map.wa_id_silver = wa.wa_id AND csl_bronze.status_id <> 'APP'
             )
-            THEN 'Pending'
+            THEN 'For Revision (Site)'
             ELSE latest_status.status_name
         END,
-        'Head Approved'
+        'Approved'
     ) AS status_name
 FROM silver.envi_water_abstraction wa
 LEFT JOIN (
@@ -65,7 +65,7 @@ SELECT
     wd.unit_of_measurement AS unit,
     wd.quarter,
     wd.year,
-    COALESCE(latest_status.status_name, 'Head Approved') AS status_name
+    COALESCE(latest_status.status_name, 'Approved') AS status_name
 FROM silver.envi_water_discharge wd
 LEFT JOIN (
     SELECT DISTINCT ON (record_id)
@@ -96,7 +96,7 @@ SELECT
     wc.unit_of_measurement AS unit,
     wc.quarter,
     wc.year,
-    COALESCE(latest_status.status_name, 'Head Approved') AS status_name
+    COALESCE(latest_status.status_name, 'Approved') AS status_name
 FROM silver.envi_water_consumption wc
 LEFT JOIN (
     SELECT DISTINCT ON (record_id)
@@ -121,7 +121,7 @@ DROP VIEW IF EXISTS gold.vw_environment_diesel_consumption;
 -- VIEW for gold environment diesel consumption
 CREATE OR REPLACE VIEW gold.vw_environment_diesel_consumption AS
 SELECT
-    edc.dc_id AS diesel_consumption_id,
+	edc.dc_id AS diesel_consumption_id,
 	cm.company_id,
     cm.company_name,
     ecp.cp_name AS company_property_name,
@@ -132,18 +132,12 @@ SELECT
     edc.year,
     edc.quarter,
     edc.date,
-    COALESCE(latest_status.status_name, 'Head Approved') AS status_name
-FROM silver.envi_company_property ecp
-RIGHT JOIN silver.envi_diesel_consumption edc ON edc.cp_id = ecp.cp_id
-LEFT JOIN (
-    SELECT DISTINCT ON (record_id)
-        record_id,
-        s.status_name
-    FROM public.checker_status_log csl
-    LEFT JOIN public.status s ON csl.status_id = s.status_id
-    ORDER BY record_id, csl.status_timestamp DESC
-) latest_status ON edc.cp_id = latest_status.record_id
-LEFT JOIN ref.company_main cm ON edc.company_id = cm.company_id
+    s.status_name
+FROM silver.envi_diesel_consumption edc
+JOIN checker_status_log csl ON edc.dc_id = csl.record_id
+JOIN status s ON csl.status_id = s.status_id
+JOIN silver.envi_company_property ecp ON edc.cp_id = ecp.cp_id
+JOIN ref.company_main cm ON edc.company_id = cm.company_id
 ORDER BY edc.year DESC;
 
 
@@ -165,7 +159,7 @@ SELECT
     ec.consumption,
     ec.quarter,
     ec.year,
-    COALESCE(latest_status.status_name, 'Head Approved') AS status_name
+    COALESCE(latest_status.status_name, 'Approved') AS status_name
 FROM silver.envi_electric_consumption ec
 LEFT JOIN (
     SELECT DISTINCT ON (record_id)
@@ -197,7 +191,7 @@ SELECT
     nhw.waste,
     nhw.quarter,
     nhw.year,
-    COALESCE(latest_status.status_name, 'Head Approved') AS status_name
+    COALESCE(latest_status.status_name, 'Approved') AS status_name
 FROM silver.envi_non_hazard_waste nhw
 LEFT JOIN (
     SELECT DISTINCT ON (record_id)
@@ -229,7 +223,7 @@ SELECT
     ehwg.waste_generated AS waste_generated,
     ehwg.quarter,
     ehwg.year,
-    COALESCE(latest_status.status_name, 'Head Approved') AS status_name
+    COALESCE(latest_status.status_name, 'Approved') AS status_name
 FROM silver.envi_hazard_waste_generated ehwg
 LEFT JOIN (
     SELECT DISTINCT ON (record_id)
@@ -260,7 +254,7 @@ SELECT
     ehwd.unit_of_measurement AS unit,
     ehwd.waste_disposed AS waste_disposed,
     ehwd.year,
-    COALESCE(latest_status.status_name, 'Head Approved') AS status_name
+    COALESCE(latest_status.status_name, 'Approved') AS status_name
 FROM silver.envi_hazard_waste_disposed ehwd
 LEFT JOIN (
     SELECT DISTINCT ON (record_id)
