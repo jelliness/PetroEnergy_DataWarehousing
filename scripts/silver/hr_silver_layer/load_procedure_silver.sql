@@ -4,7 +4,8 @@ CREATE OR REPLACE PROCEDURE silver.load_hr_silver(
     load_parental_leave BOOLEAN DEFAULT TRUE,
     load_training BOOLEAN DEFAULT TRUE,
     load_safety_workdata BOOLEAN DEFAULT TRUE,
-    load_occupational_safety_health BOOLEAN DEFAULT TRUE
+    load_occupational_safety_health BOOLEAN DEFAULT TRUE,
+	load_from_sql BOOLEAN DEFAULT TRUE
 )
 LANGUAGE plpgsql
 AS $$
@@ -93,10 +94,12 @@ BEGIN
 			WHERE SUBSTRING(parental_leave_id, 3, 8) = today_str;
 
 			-- DELETE duplicates
-			DELETE FROM silver.hr_parental_leave
-			WHERE (employee_id, date) IN (
-				SELECT employee_id, date FROM bronze.hr_parental_leave
-			);
+			IF load_from_sql THEN
+				DELETE FROM silver.hr_parental_leave
+				WHERE (employee_id, date) IN (
+					SELECT employee_id, date FROM bronze.hr_parental_leave
+				);
+			END IF;
 
 			INSERT INTO silver.hr_parental_leave (
 				parental_leave_id,
@@ -132,8 +135,10 @@ BEGIN
 		RAISE NOTICE 'Loading HR Tenure Data...';
 		RAISE NOTICE '------------------------------------------------';
 
-		DELETE FROM silver.hr_tenure
-		WHERE employee_id IN (SELECT employee_id FROM bronze.hr_tenure);
+		IF load_from_sql THEN
+			DELETE FROM silver.hr_tenure
+			WHERE employee_id IN (SELECT employee_id FROM bronze.hr_tenure);
+		END IF;
 
 		INSERT INTO silver.hr_tenure (
 			employee_id, 
@@ -179,10 +184,12 @@ BEGIN
 			FROM silver.hr_training
 			WHERE SUBSTRING(training_id, 3, 8) = today_str;
 
-			DELETE FROM silver.hr_training
-			WHERE (company_id, training_title, date, training_hours) IN (
-				SELECT company_id, training_title, date, training_hours FROM bronze.hr_training
-			);
+			IF load_from_sql THEN
+				DELETE FROM silver.hr_training
+				WHERE (company_id, training_title, date, training_hours) IN (
+					SELECT company_id, training_title, date, training_hours FROM bronze.hr_training
+				);
+			END IF;
 
 			INSERT INTO silver.hr_training (
 				training_id,
@@ -282,10 +289,12 @@ BEGIN
 			FROM silver.hr_occupational_safety_health
 			WHERE SUBSTRING(osh_id, 4, 8) = today_str;
 
-			DELETE FROM silver.hr_occupational_safety_health
-			WHERE (company_id, workforce_type, lost_time, date, incident_type, incident_title) IN (
-				SELECT company_id, workforce_type, lost_time, date, incident_type, incident_title FROM bronze.hr_occupational_safety_health
-			);
+			IF load_from_sql THEN
+				DELETE FROM silver.hr_occupational_safety_health
+				WHERE (company_id, workforce_type, lost_time, date, incident_type, incident_title) IN (
+					SELECT company_id, workforce_type, lost_time, date, incident_type, incident_title FROM bronze.hr_occupational_safety_health
+				);
+			END IF;
 
 			INSERT INTO silver.hr_occupational_safety_health (
 				osh_id,
