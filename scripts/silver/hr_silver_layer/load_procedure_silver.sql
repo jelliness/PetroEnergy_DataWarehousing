@@ -82,33 +82,42 @@ BEGIN
 		start_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Inserting Data into silver.hr_parental_leave...';
 
-		-- REMOVES DUPLICATE
-		DELETE FROM silver.hr_parental_leave
-		WHERE (employee_id, date) IN (
-			SELECT employee_id, date FROM bronze.hr_parental_leave
-		);
+		-- Declare and compute latest sequence
+		DECLARE
+			today_str TEXT := TO_CHAR(CURRENT_DATE, 'YYYYMMDD');
+			latest_pl_sequence INT;
+		BEGIN
+			SELECT COALESCE(MAX(CAST(SUBSTRING(parental_leave_id, 11, 4) AS INT)), 0)
+			INTO latest_pl_sequence
+			FROM silver.hr_parental_leave
+			WHERE SUBSTRING(parental_leave_id, 3, 8) = today_str;
 
+			-- DELETE duplicates
+			DELETE FROM silver.hr_parental_leave
+			WHERE (employee_id, date) IN (
+				SELECT employee_id, date FROM bronze.hr_parental_leave
+			);
 
-		INSERT INTO silver.hr_parental_leave (
-			parental_leave_id,
-			employee_id, 
-			type_of_leave, 
-			date, days, 
-			end_date, 
-			months_availed,
-			date_updated
-		)
-		SELECT
-			'PL' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY employee_id, date)::TEXT, 3, '0') AS parental_leave_id,
-			b.employee_id,
-			b.type_of_leave,
-			b.date,
-			b.days,
-			b.date + (b.days || ' days')::INTERVAL,
-			FLOOR(b.days / 30),
-			CURRENT_TIMESTAMP
-		FROM bronze.hr_parental_leave b;
-
+			INSERT INTO silver.hr_parental_leave (
+				parental_leave_id,
+				employee_id, 
+				type_of_leave, 
+				date, days, 
+				end_date, 
+				months_availed,
+				date_updated
+			)
+			SELECT
+				'PL' || today_str || LPAD((latest_pl_sequence + ROW_NUMBER() OVER (ORDER BY employee_id, date))::TEXT, 4, '0'),
+				b.employee_id,
+				b.type_of_leave,
+				b.date,
+				b.days,
+				b.date + (b.days || ' days')::INTERVAL,
+				FLOOR(b.days / 30),
+				CURRENT_TIMESTAMP
+			FROM bronze.hr_parental_leave b;
+		END;
 
 		end_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -161,32 +170,41 @@ BEGIN
 
 		RAISE NOTICE '>> Inserting data into silver.hr_training...';
 
-		DELETE FROM silver.hr_training
-		WHERE (company_id, training_title, date, training_hours) IN (
-			SELECT company_id, training_title, date, training_hours FROM bronze.hr_training
-		);
+		DECLARE
+			today_str TEXT := TO_CHAR(CURRENT_DATE, 'YYYYMMDD');
+			latest_tr_sequence INT;
+		BEGIN
+			SELECT COALESCE(MAX(CAST(SUBSTRING(training_id, 11, 4) AS INT)), 0)
+			INTO latest_tr_sequence
+			FROM silver.hr_training
+			WHERE SUBSTRING(training_id, 3, 8) = today_str;
 
-		INSERT INTO silver.hr_training (
-			training_id,
-			company_id,
-			training_title,
-			date,
-			training_hours,
-			number_of_participants,
-			total_training_hours, -- derived column
-			date_updated
-		)
-		SELECT
-			'TR' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, training_title, date)::TEXT, 3, '0') AS training_id,
-			b.company_id,
-			b.training_title,
-			b.date,
-			b.training_hours,
-			b.number_of_participants,
-			(b.training_hours * b.number_of_participants) AS total_training_hours, -- derived column
-			CURRENT_TIMESTAMP
-		FROM bronze.hr_training b;
+			DELETE FROM silver.hr_training
+			WHERE (company_id, training_title, date, training_hours) IN (
+				SELECT company_id, training_title, date, training_hours FROM bronze.hr_training
+			);
 
+			INSERT INTO silver.hr_training (
+				training_id,
+				company_id,
+				training_title,
+				date,
+				training_hours,
+				number_of_participants,
+				total_training_hours,
+				date_updated
+			)
+			SELECT
+				'TR' || today_str || LPAD((latest_tr_sequence + ROW_NUMBER() OVER (ORDER BY company_id, training_title, date))::TEXT, 4, '0'),
+				b.company_id,
+				b.training_title,
+				b.date,
+				b.training_hours,
+				b.number_of_participants,
+				b.training_hours * b.number_of_participants,
+				CURRENT_TIMESTAMP
+			FROM bronze.hr_training b;
+		END;
 
 		end_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -202,36 +220,47 @@ BEGIN
 		RAISE NOTICE '------------------------------------------------';
 
 		start_time := CURRENT_TIMESTAMP;
+
 		RAISE NOTICE '>> Inserting data into silver.hr_safety_workdata...';
 
-		DELETE FROM silver.hr_safety_workdata
-		WHERE (company_id, contractor, date) IN (
-			SELECT company_id, contractor, date FROM bronze.hr_safety_workdata
-		);
+		DECLARE
+			today_str TEXT := TO_CHAR(CURRENT_DATE, 'YYYYMMDD');
+			latest_sequence INT;
+		BEGIN
+			SELECT
+				COALESCE(MAX(CAST(SUBSTRING(safety_workdata_id, 12, 4) AS INT)), 0)
+			INTO latest_sequence
+			FROM silver.hr_safety_workdata
+			WHERE SUBSTRING(safety_workdata_id, 4, 8) = today_str;
 
-		INSERT INTO silver.hr_safety_workdata (
-			safety_workdata_id,
-			company_id, 
-			contractor,
-			date, 
-			manpower, 
-			manhours,
-			date_updated
-		)
-		SELECT
-			'SWD' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, contractor, date)::TEXT, 3, '0') AS safety_workdata_id,
-			b.company_id, 
-			b.contractor,
-			b.date, 
-			b.manpower, 
-			b.manhours, 
-			CURRENT_TIMESTAMP
-		FROM bronze.hr_safety_workdata b;
-
+			-- Insert with new 4-digit padded IDs
+			INSERT INTO silver.hr_safety_workdata (
+				safety_workdata_id,
+				company_id, 
+				contractor,
+				date, 
+				manpower, 
+				manhours,
+				date_updated
+			)
+			SELECT
+				'SWD' || today_str || LPAD((latest_sequence + ROW_NUMBER() OVER (ORDER BY company_id, contractor, date))::TEXT, 4, '0'),
+				b.company_id, 
+				b.contractor,
+				b.date, 
+				b.manpower, 
+				b.manhours, 
+				CURRENT_TIMESTAMP
+			FROM bronze.hr_safety_workdata b;
+			-- ON CONFLICT (safety_workdata_id) DO NOTHING;
+		END;
+		
 		end_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
 		RAISE NOTICE '-----------------';
 	END IF;
+
+		
 
 -----------------------------------------------------------------------------------------------------
 
@@ -244,33 +273,43 @@ BEGIN
 		start_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Inserting data into silver.hr_occupational_safety_health...';
 
-		DELETE FROM silver.hr_occupational_safety_health
-		WHERE (company_id, workforce_type, lost_time, date, incident_type, incident_title) IN (
-			SELECT company_id, workforce_type, lost_time, date, incident_type, incident_title FROM bronze.hr_occupational_safety_health
-		);
+		DECLARE
+			today_str TEXT := TO_CHAR(CURRENT_DATE, 'YYYYMMDD');
+			latest_osh_sequence INT;
+		BEGIN
+			SELECT COALESCE(MAX(CAST(SUBSTRING(osh_id, 12, 4) AS INT)), 0)
+			INTO latest_osh_sequence
+			FROM silver.hr_occupational_safety_health
+			WHERE SUBSTRING(osh_id, 4, 8) = today_str;
 
-		INSERT INTO silver.hr_occupational_safety_health (
-			osh_id,
-			company_id,
-			workforce_type,
-			lost_time,
-			date,
-			incident_type,
-			incident_title,
-			incident_count,
-			date_updated
-		)
-		SELECT
-			'OSH' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || LPAD(ROW_NUMBER() OVER (ORDER BY company_id, workforce_type, lost_time, date, incident_type, incident_title)::TEXT, 3, '0') AS osh_id,
-			b.company_id,
-			b.workforce_type,
-			b.lost_time,
-			b.date,
-			b.incident_type,
-			b.incident_title,
-			b.incident_count,
-			CURRENT_TIMESTAMP
-		FROM bronze.hr_occupational_safety_health b;
+			DELETE FROM silver.hr_occupational_safety_health
+			WHERE (company_id, workforce_type, lost_time, date, incident_type, incident_title) IN (
+				SELECT company_id, workforce_type, lost_time, date, incident_type, incident_title FROM bronze.hr_occupational_safety_health
+			);
+
+			INSERT INTO silver.hr_occupational_safety_health (
+				osh_id,
+				company_id,
+				workforce_type,
+				lost_time,
+				date,
+				incident_type,
+				incident_title,
+				incident_count,
+				date_updated
+			)
+			SELECT
+				'OSH' || today_str || LPAD((latest_osh_sequence + ROW_NUMBER() OVER (ORDER BY company_id, workforce_type, lost_time, date, incident_type, incident_title))::TEXT, 4, '0'),
+				b.company_id,
+				b.workforce_type,
+				b.lost_time,
+				b.date,
+				b.incident_type,
+				b.incident_title,
+				b.incident_count,
+				CURRENT_TIMESTAMP
+			FROM bronze.hr_occupational_safety_health b;
+		END;
 
 		end_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);

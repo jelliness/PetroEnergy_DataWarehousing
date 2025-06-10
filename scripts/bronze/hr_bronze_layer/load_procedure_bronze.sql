@@ -23,7 +23,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_demographics...';
 
     COPY bronze.hr_demographics
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_demographics.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/PetroEnergy_DataWarehousing/datasets/source_hr/hr_demographics.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -41,7 +41,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_parental_leave...';
 
     COPY bronze.hr_parental_leave
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_parental_leave.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/PetroEnergy_DataWarehousing/datasets/source_hr/hr_parental_leave.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -59,7 +59,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_tenure...';
 
     COPY bronze.hr_tenure
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_tenure.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/PetroEnergy_DataWarehousing/datasets/source_hr/hr_tenure.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -77,7 +77,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_training...';
 
     COPY bronze.hr_training
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_training.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/PetroEnergy_DataWarehousing/datasets/source_hr/hr_training.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -95,7 +95,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_safety_workdata...';
 
     COPY bronze.hr_safety_workdata
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_safety_workdata.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/PetroEnergy_DataWarehousing/datasets/source_hr/hr_safety_workdata.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;
@@ -113,7 +113,7 @@ BEGIN
     RAISE NOTICE '>> Bulk inserting data into bronze.hr_occupational_safety_health...';
 
     COPY bronze.hr_occupational_safety_health
-    FROM 'C:/Github/G/PetroEnergy_DataWarehousing/datasets/source_hr/hr_occupational_safety_health.csv'  -- Temporary Path. Create a path
+    FROM 'C:/Github/PetroEnergy_DataWarehousing/datasets/source_hr/hr_occupational_safety_health.csv'  -- Temporary Path. Create a path
     DELIMITER ',' CSV HEADER;
 
     end_time := CURRENT_TIMESTAMP;

@@ -27,10 +27,10 @@ SELECT
             WHEN EXISTS (
                 SELECT 1 
                 FROM silver.wa_id_mapping map
-                JOIN public.checker_status_log csl_bronze ON map.wa_id_bronze = csl_bronze.record_id
+                JOIN public.record_status csl_bronze ON map.wa_id_bronze = csl_bronze.record_id
                 WHERE map.wa_id_silver = wa.wa_id AND csl_bronze.status_id <> 'APP'
             )
-            THEN 'For Revision (Site)'
+            THEN 'Under review (site)'
             ELSE latest_status.status_name
         END,
         'Approved'
@@ -40,7 +40,7 @@ LEFT JOIN (
     SELECT DISTINCT ON (record_id)
         record_id,
         s.status_name
-    FROM public.checker_status_log csl
+    FROM public.record_status csl
     LEFT JOIN public.status s ON csl.status_id = s.status_id
     ORDER BY record_id, csl.status_timestamp DESC
 ) latest_status ON wa.wa_id = latest_status.record_id
@@ -71,7 +71,7 @@ LEFT JOIN (
     SELECT DISTINCT ON (record_id)
         record_id,
         s.status_name
-    FROM public.checker_status_log csl
+    FROM public.record_status csl
     LEFT JOIN public.status s ON csl.status_id = s.status_id
     ORDER BY record_id, csl.status_timestamp DESC
 ) latest_status ON wd.wd_id = latest_status.record_id
@@ -102,7 +102,7 @@ LEFT JOIN (
     SELECT DISTINCT ON (record_id)
         record_id,
         s.status_name
-    FROM public.checker_status_log csl
+    FROM public.record_status csl
     LEFT JOIN public.status s ON csl.status_id = s.status_id
     ORDER BY record_id, csl.status_timestamp DESC
 ) latest_status ON wc.wc_id = latest_status.record_id
@@ -134,7 +134,7 @@ SELECT
     edc.date,
     s.status_name
 FROM silver.envi_diesel_consumption edc
-JOIN checker_status_log csl ON edc.dc_id = csl.record_id
+JOIN record_status csl ON edc.dc_id = csl.record_id
 JOIN status s ON csl.status_id = s.status_id
 JOIN silver.envi_company_property ecp ON edc.cp_id = ecp.cp_id
 JOIN ref.company_main cm ON edc.company_id = cm.company_id
@@ -165,7 +165,7 @@ LEFT JOIN (
     SELECT DISTINCT ON (record_id)
         record_id,
         s.status_name
-    FROM public.checker_status_log csl
+    FROM public.record_status csl
     LEFT JOIN public.status s ON csl.status_id = s.status_id
     ORDER BY record_id, csl.status_timestamp DESC
 ) latest_status ON ec.ec_id = latest_status.record_id
@@ -197,7 +197,7 @@ LEFT JOIN (
     SELECT DISTINCT ON (record_id)
         record_id,
         s.status_name
-    FROM public.checker_status_log csl
+    FROM public.record_status csl
     LEFT JOIN public.status s ON csl.status_id = s.status_id
     ORDER BY record_id, csl.status_timestamp DESC
 ) latest_status ON nhw.nhw_id = latest_status.record_id
@@ -229,7 +229,7 @@ LEFT JOIN (
     SELECT DISTINCT ON (record_id)
         record_id,
         s.status_name
-    FROM public.checker_status_log csl
+    FROM public.record_status csl
     LEFT JOIN public.status s ON csl.status_id = s.status_id
     ORDER BY record_id, csl.status_timestamp DESC
 ) latest_status ON ehwg.hwg_id = latest_status.record_id
@@ -260,7 +260,7 @@ LEFT JOIN (
     SELECT DISTINCT ON (record_id)
         record_id,
         s.status_name
-    FROM public.checker_status_log csl
+    FROM public.record_status csl
     LEFT JOIN public.status s ON csl.status_id = s.status_id
     ORDER BY record_id, csl.status_timestamp DESC
 ) latest_status ON ehwd.hwd_id = latest_status.record_id
