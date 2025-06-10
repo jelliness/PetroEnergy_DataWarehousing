@@ -50,8 +50,8 @@ BEGIN
         feg.month_name,
         feg.year,
         feg.quarter,
-        CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(10,2)) AS energy_generated_kwh,
-        CAST(SUM(feg.co2_avoidance_tons) AS NUMERIC(10,2)) AS co2_avoidance_tons
+        CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(1000,2)) AS energy_generated_kwh,
+        CAST(SUM(feg.co2_avoidance_tons) AS NUMERIC(1000,2)) AS co2_avoidance_tons
     FROM gold.fact_energy_generated feg
     WHERE (p_power_plant_id IS NULL OR feg.power_plant_id = ANY(p_power_plant_id))
         AND (p_company_id IS NULL OR feg.company_id = ANY(p_company_id))
@@ -77,8 +77,6 @@ BEGIN
 
 END;
 $$ LANGUAGE plpgsql;
-
-
 -- ===================================================================================
 -- Create Functions for gold.func_fact_energy_monthly (monthly)
 -- ===================================================================================
