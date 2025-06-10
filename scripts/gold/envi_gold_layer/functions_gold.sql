@@ -37,6 +37,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewa.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewa.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewa.quarter = ANY(p_quarter))
+      AND ewa.status_name = 'Approved'
     GROUP BY 
         ewa.company_id, 
         ewa.year,
@@ -77,6 +78,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewa.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewa.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewa.quarter = ANY(p_quarter))
+      AND ewa.status_name = 'Approved'
     GROUP BY 
         ewa.company_id, 
         ewa.year,
@@ -115,6 +117,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewa.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewa.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewa.quarter = ANY(p_quarter))
+      AND ewa.status_name = 'Approved'
     GROUP BY 
         ewa.company_id, 
         ewa.unit
@@ -155,6 +158,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewd.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewd.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewd.quarter = ANY(p_quarter))
+      AND ewd.status_name = 'Approved'
     GROUP BY 
         ewd.company_id, 
         ewd.year,
@@ -195,6 +199,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewd.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewd.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewd.quarter = ANY(p_quarter))
+      AND ewd.status_name = 'Approved'
     GROUP BY 
         ewd.company_id, 
         ewd.year,
@@ -233,6 +238,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewd.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewd.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewd.quarter = ANY(p_quarter))
+      AND ewd.status_name = 'Approved'
     GROUP BY 
         ewd.company_id, 
         ewd.unit
@@ -273,6 +279,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewc.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewc.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewc.quarter = ANY(p_quarter))
+      AND ewc.status_name = 'Approved'
     GROUP BY 
         ewc.company_id, 
         ewc.year,
@@ -313,6 +320,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewc.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewc.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewc.quarter = ANY(p_quarter))
+      AND ewc.status_name = 'Approved'
     GROUP BY 
         ewc.company_id, 
         ewc.year,
@@ -351,6 +359,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewc.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewc.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewc.quarter = ANY(p_quarter))
+      AND ewc.status_name = 'Approved'
     GROUP BY 
         ewc.company_id, 
         ewc.unit
@@ -402,6 +411,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewa.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewa.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewa.quarter = ANY(p_quarter))
+      AND ewa.status_name = 'Approved'
     GROUP BY 
         ewa.company_id, 
         ewa.year,
@@ -453,6 +463,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
+      AND edc.status_name = 'Approved'
     GROUP BY 
         edc.company_id, 
 		edc.year,
@@ -507,6 +518,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
+      AND edc.status_name = 'Approved'
     GROUP BY 
         edc.company_id, 
 		edc.year,
@@ -563,6 +575,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
+      AND edc.status_name = 'Approved'
     GROUP BY 
         edc.company_id, 
 		edc.year,
@@ -613,6 +626,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
+      AND edc.status_name = 'Approved'
     GROUP BY 
         edc.company_id, 
         edc.company_property_name,
@@ -657,6 +671,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
+      AND edc.status_name = 'Approved'
     GROUP BY 
         edc.company_id, 
 		edc.company_property_type,
@@ -699,6 +714,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
+      AND edc.status_name = 'Approved'
     GROUP BY 
         edc.company_id, 
 		edc.unit_of_measurement
@@ -740,6 +756,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ec.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
+      AND ec.status_name = 'Approved'
     GROUP BY ec.company_id, ec.year, ec.unit_of_measurement
     ORDER BY ec.company_id;
 END;
@@ -776,6 +793,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ec.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
+      AND ec.status_name = 'Approved'
     GROUP BY ec.company_id, ec.year, ec.quarter, ec.unit_of_measurement
     ORDER BY ec.company_id;
 END;
@@ -809,6 +827,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ec.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
+      AND ec.status_name = 'Approved'
     GROUP BY ec.company_id, ec.consumption_source, ec.unit_of_measurement
     ORDER BY ec.company_id;
 END;
@@ -840,6 +859,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ec.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
+      AND ec.status_name = 'Approved'
     GROUP BY ec.company_id, ec.unit_of_measurement
     ORDER BY ec.company_id;
 END;
@@ -879,6 +899,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
+      AND nhw.status_name = 'Approved'
 	GROUP BY nhw.company_id, nhw.year, nhw.metrics, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
@@ -917,6 +938,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
+      AND nhw.status_name = 'Approved'
 	GROUP BY nhw.company_id, nhw.year, nhw.quarter, nhw.metrics, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
@@ -950,6 +972,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
+      AND nhw.status_name = 'Approved'
 	GROUP BY nhw.company_id, nhw.metrics, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
@@ -982,6 +1005,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
+      AND nhw.status_name = 'Approved'
 	GROUP BY nhw.company_id, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
@@ -1021,6 +1045,7 @@ BEGIN
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
+      AND g.status_name = 'Approved'
     GROUP BY g.company_id, g.year,g.waste_type, g.unit
     ORDER BY g.company_id, g.year;
 END;
@@ -1058,6 +1083,7 @@ BEGIN
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
+      AND g.status_name = 'Approved'
     GROUP BY g.company_id, g.quarter, g.year,g.waste_type, g.unit
     ORDER BY g.company_id;
 END;
@@ -1091,6 +1117,7 @@ BEGIN
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
+      AND g.status_name = 'Approved'
     GROUP BY g.company_id,g.waste_type, g.unit
     ORDER BY g.company_id;
 END;
@@ -1122,6 +1149,7 @@ BEGIN
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
+      AND g.status_name = 'Approved'
     GROUP BY g.company_id, g.unit
     ORDER BY g.company_id;
 END;
@@ -1158,6 +1186,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
+      AND d.status_name = 'Approved'
     GROUP BY d.company_id, d.year, d.waste_type, d.unit
     ORDER BY d.company_id, d.year;
 END;
@@ -1188,6 +1217,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
+      AND d.status_name = 'Approved'
     GROUP BY d.company_id, d.waste_type, d.unit
     ORDER BY d.company_id;
 END;
@@ -1216,6 +1246,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
+      AND d.status_name = 'Approved'
     GROUP BY d.company_id, d.unit
     ORDER BY d.company_id;
 END;
