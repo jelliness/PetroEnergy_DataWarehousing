@@ -754,6 +754,7 @@ BEGIN
         CAST(SUM(ec.consumption) AS NUMERIC(10,2)) AS total_consumption
     FROM gold.vw_environment_electric_consumption ec
     WHERE (p_company_id IS NULL OR ec.company_id = ANY(p_company_id))
+	  AND (p_consumption_source IS NULL OR ec.consumption_source = ANY(p_consumption_source))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
       AND ec.status_name = 'Approved'
@@ -791,6 +792,7 @@ BEGIN
         CAST(SUM(ec.consumption) AS NUMERIC(10,2)) AS total_consumption
     FROM gold.vw_environment_electric_consumption ec
     WHERE (p_company_id IS NULL OR ec.company_id = ANY(p_company_id))
+	  AND (p_consumption_source IS NULL OR ec.consumption_source = ANY(p_consumption_source))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
       AND ec.status_name = 'Approved'
@@ -825,6 +827,7 @@ BEGIN
         CAST(SUM(ec.consumption) AS NUMERIC(10,2)) AS total_consumption
     FROM gold.vw_environment_electric_consumption ec
     WHERE (p_company_id IS NULL OR ec.company_id = ANY(p_company_id))
+	  AND (p_consumption_source IS NULL OR ec.consumption_source = ANY(p_consumption_source))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
       AND ec.status_name = 'Approved'
@@ -857,6 +860,7 @@ BEGIN
         CAST(SUM(ec.consumption) AS NUMERIC(10,2)) AS total_consumption
     FROM gold.vw_environment_electric_consumption ec
     WHERE (p_company_id IS NULL OR ec.company_id = ANY(p_company_id))
+	  AND (p_consumption_source IS NULL OR ec.consumption_source = ANY(p_consumption_source))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
       AND ec.status_name = 'Approved'
