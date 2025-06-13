@@ -881,30 +881,33 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_year(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year SMALLINT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL,
+    p_unit_of_measurement VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
-	year SMALLINT,
-	metrics VARCHAR(20),
-	unit_of_measurement VARCHAR(15),
-	total_waste NUMERIC(10,2)
+    year SMALLINT,
+    metrics VARCHAR(20),
+    unit_of_measurement VARCHAR(15),
+    total_waste NUMERIC(10,2)
 )
 AS $$
 BEGIN
     RETURN QUERY
     SELECT
         nhw.company_id,
-		nhw.year,
-		nhw.metrics,
-		nhw.unit_of_measurement,
-		CAST(SUM(nhw.waste) AS NUMERIC(10,2)) AS total_waste
+        nhw.year,
+        nhw.metrics,
+        nhw.unit_of_measurement,
+        CAST(SUM(nhw.waste) AS NUMERIC(10,2)) AS total_waste
     FROM gold.vw_environment_non_hazard_waste nhw
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
+      AND (p_metrics IS NULL OR nhw.metrics = ANY(p_metrics))
+      AND (p_unit_of_measurement IS NULL OR nhw.unit_of_measurement = ANY(p_unit_of_measurement))
       AND TRIM(LOWER(nhw.status_name)) = 'approved'
-	GROUP BY nhw.company_id, nhw.year, nhw.metrics, nhw.unit_of_measurement
+    GROUP BY nhw.company_id, nhw.year, nhw.metrics, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
 $$ LANGUAGE plpgsql;
@@ -918,32 +921,35 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_quarter(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year SMALLINT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL,
+    p_unit_of_measurement VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
-	year SMALLINT,
+    year SMALLINT,
     quarter VARCHAR(2),
-	metrics VARCHAR(20),
-	unit_of_measurement VARCHAR(15),
-	total_waste NUMERIC(10,2)
+    metrics VARCHAR(20),
+    unit_of_measurement VARCHAR(15),
+    total_waste NUMERIC(10,2)
 )
 AS $$
 BEGIN
     RETURN QUERY
     SELECT
         nhw.company_id,
-		nhw.year,
+        nhw.year,
         nhw.quarter,
-		nhw.metrics,
-		nhw.unit_of_measurement,
-		CAST(SUM(nhw.waste) AS NUMERIC(10,2)) AS total_waste
+        nhw.metrics,
+        nhw.unit_of_measurement,
+        CAST(SUM(nhw.waste) AS NUMERIC(10,2)) AS total_waste
     FROM gold.vw_environment_non_hazard_waste nhw
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
+      AND (p_metrics IS NULL OR nhw.metrics = ANY(p_metrics))
+      AND (p_unit_of_measurement IS NULL OR nhw.unit_of_measurement = ANY(p_unit_of_measurement))
       AND TRIM(LOWER(nhw.status_name)) = 'approved'
-	GROUP BY nhw.company_id, nhw.year, nhw.quarter, nhw.metrics, nhw.unit_of_measurement
+    GROUP BY nhw.company_id, nhw.year, nhw.quarter, nhw.metrics, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
 $$ LANGUAGE plpgsql;
@@ -956,28 +962,31 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_metrics(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year SMALLINT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL,
+    p_unit_of_measurement VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
-	metrics VARCHAR(20),
-	unit_of_measurement VARCHAR(15),
-	total_waste NUMERIC(10,2)
+    metrics VARCHAR(20),
+    unit_of_measurement VARCHAR(15),
+    total_waste NUMERIC(10,2)
 )
 AS $$
 BEGIN
     RETURN QUERY
     SELECT
         nhw.company_id,
-		nhw.metrics,  
-		nhw.unit_of_measurement,
-		CAST(SUM(nhw.waste) AS NUMERIC(10,2)) AS total_waste
+        nhw.metrics,  
+        nhw.unit_of_measurement,
+        CAST(SUM(nhw.waste) AS NUMERIC(10,2)) AS total_waste
     FROM gold.vw_environment_non_hazard_waste nhw
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
+      AND (p_metrics IS NULL OR nhw.metrics = ANY(p_metrics))
+      AND (p_unit_of_measurement IS NULL OR nhw.unit_of_measurement = ANY(p_unit_of_measurement))
       AND TRIM(LOWER(nhw.status_name)) = 'approved'
-	GROUP BY nhw.company_id, nhw.metrics, nhw.unit_of_measurement
+    GROUP BY nhw.company_id, nhw.metrics, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
 $$ LANGUAGE plpgsql;
@@ -991,26 +1000,29 @@ CREATE OR REPLACE FUNCTION gold.func_environment_non_hazard_waste_by_perc_lvl(
     p_company_id VARCHAR(10)[] DEFAULT NULL,
     p_metrics VARCHAR(20)[] DEFAULT NULL,
     p_quarter VARCHAR(2)[] DEFAULT NULL,
-    p_year SMALLINT[] DEFAULT NULL
+    p_year SMALLINT[] DEFAULT NULL,
+    p_unit_of_measurement VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id VARCHAR(10),
-	unit_of_measurement VARCHAR(15),
-	total_waste NUMERIC(10,2)
+    unit_of_measurement VARCHAR(15),
+    total_waste NUMERIC(10,2)
 )
 AS $$
 BEGIN
     RETURN QUERY
     SELECT
         nhw.company_id,
-		nhw.unit_of_measurement,
-		CAST(SUM(nhw.waste) AS NUMERIC(10,2)) AS total_waste
+        nhw.unit_of_measurement,
+        CAST(SUM(nhw.waste) AS NUMERIC(10,2)) AS total_waste
     FROM gold.vw_environment_non_hazard_waste nhw
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
+      AND (p_metrics IS NULL OR nhw.metrics = ANY(p_metrics))
+      AND (p_unit_of_measurement IS NULL OR nhw.unit_of_measurement = ANY(p_unit_of_measurement))
       AND TRIM(LOWER(nhw.status_name)) = 'approved'
-	GROUP BY nhw.company_id, nhw.unit_of_measurement
+    GROUP BY nhw.company_id, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
 $$ LANGUAGE plpgsql;
@@ -1026,7 +1038,8 @@ CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_generated_by_year(
     p_company_id   VARCHAR(10)[] DEFAULT NULL,
     p_year         SMALLINT[] DEFAULT NULL,
     p_quarter      VARCHAR(2)[] DEFAULT NULL,
-    p_waste_type   VARCHAR(15)[] DEFAULT NULL
+    p_waste_type   VARCHAR(15)[] DEFAULT NULL,
+    p_unit         VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id     VARCHAR(10),
@@ -1049,6 +1062,7 @@ BEGIN
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
+      AND (p_unit IS NULL OR g.unit = ANY(p_unit))
       AND TRIM(LOWER(g.status_name)) = 'approved'
     GROUP BY g.company_id, g.year,g.waste_type, g.unit
     ORDER BY g.company_id, g.year;
@@ -1062,12 +1076,13 @@ CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_generated_by_quart
     p_company_id   VARCHAR(10)[] DEFAULT NULL,
     p_year         SMALLINT[] DEFAULT NULL,
     p_quarter      VARCHAR(2)[] DEFAULT NULL,
-    p_waste_type   VARCHAR(15)[] DEFAULT NULL
+    p_waste_type   VARCHAR(15)[] DEFAULT NULL,
+    p_unit         VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id     VARCHAR(10),
     year           SMALLINT,
-	quarter		   VARCHAR(2),
+    quarter        VARCHAR(2),
     waste_type     VARCHAR(15),
     unit           VARCHAR(15),
     total_generate NUMERIC(10,2)
@@ -1078,7 +1093,7 @@ BEGIN
     SELECT
         g.company_id,
         g.year,
-		g.quarter,
+        g.quarter,
         g.waste_type,
         g.unit,
         CAST(SUM(g.waste_generated) AS NUMERIC(10,2)) AS total_generate
@@ -1087,6 +1102,7 @@ BEGIN
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
+      AND (p_unit IS NULL OR g.unit = ANY(p_unit))
       AND TRIM(LOWER(g.status_name)) = 'approved'
     GROUP BY g.company_id, g.quarter, g.year,g.waste_type, g.unit
     ORDER BY g.company_id;
@@ -1100,7 +1116,8 @@ CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_generated_by_waste
     p_company_id   VARCHAR(10)[] DEFAULT NULL,
     p_year         SMALLINT[] DEFAULT NULL,
     p_quarter      VARCHAR(2)[] DEFAULT NULL,
-    p_waste_type   VARCHAR(15)[] DEFAULT NULL
+    p_waste_type   VARCHAR(15)[] DEFAULT NULL,
+    p_unit         VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id     VARCHAR(10),
@@ -1121,6 +1138,7 @@ BEGIN
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
+      AND (p_unit IS NULL OR g.unit = ANY(p_unit))
       AND TRIM(LOWER(g.status_name)) = 'approved'
     GROUP BY g.company_id,g.waste_type, g.unit
     ORDER BY g.company_id;
@@ -1134,7 +1152,8 @@ CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_generated_by_perc_
     p_company_id   VARCHAR(10)[] DEFAULT NULL,
     p_year         SMALLINT[] DEFAULT NULL,
     p_quarter      VARCHAR(2)[] DEFAULT NULL,
-    p_waste_type   VARCHAR(15)[] DEFAULT NULL
+    p_waste_type   VARCHAR(15)[] DEFAULT NULL,
+    p_unit         VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id     VARCHAR(10),
@@ -1153,11 +1172,13 @@ BEGIN
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
+      AND (p_unit IS NULL OR g.unit = ANY(p_unit))
       AND TRIM(LOWER(g.status_name)) = 'approved'
     GROUP BY g.company_id, g.unit
     ORDER BY g.company_id;
 END;
 $$ LANGUAGE plpgsql;
+
 
 -- =============================================================================
 -- Create Function: gold.func_environment_hazard_waste_disposed
@@ -1168,11 +1189,12 @@ DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_disposed_by_year;
 CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_disposed_by_year(
     p_company_id   VARCHAR(10)[] DEFAULT NULL,
     p_year         SMALLINT[] DEFAULT NULL,
-    p_waste_type   VARCHAR(15)[] DEFAULT NULL
+    p_waste_type   VARCHAR(15)[] DEFAULT NULL,
+    p_unit         VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id      VARCHAR(10),
-	year            SMALLINT,
+    year            SMALLINT,
     waste_type      VARCHAR(15),
     unit            VARCHAR(15),
     total_disposed  NUMERIC(10,2)
@@ -1182,7 +1204,7 @@ BEGIN
     RETURN QUERY
     SELECT
         d.company_id,
-		d.year,
+        d.year,
         d.waste_type,
         d.unit,
         CAST(SUM(d.waste_disposed) AS NUMERIC(10,2)) AS total_disposed
@@ -1190,6 +1212,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
+      AND (p_unit IS NULL OR d.unit = ANY(p_unit))
       AND TRIM(LOWER(d.status_name)) = 'approved'
     GROUP BY d.company_id, d.year, d.waste_type, d.unit
     ORDER BY d.company_id, d.year;
@@ -1201,7 +1224,8 @@ DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_disposed_by_waste_typ
 CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_disposed_by_waste_type(
     p_company_id   VARCHAR(10)[] DEFAULT NULL,
     p_year         SMALLINT[] DEFAULT NULL,
-    p_waste_type   VARCHAR(15)[] DEFAULT NULL
+    p_waste_type   VARCHAR(15)[] DEFAULT NULL,
+    p_unit         VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id      VARCHAR(10),
@@ -1221,6 +1245,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
+      AND (p_unit IS NULL OR d.unit = ANY(p_unit))
       AND TRIM(LOWER(d.status_name)) = 'approved'
     GROUP BY d.company_id, d.waste_type, d.unit
     ORDER BY d.company_id;
@@ -1232,7 +1257,8 @@ DROP FUNCTION IF EXISTS gold.func_environment_hazard_waste_disposed_by_perc_lvl;
 CREATE OR REPLACE FUNCTION gold.func_environment_hazard_waste_disposed_by_perc_lvl(
     p_company_id   VARCHAR(10)[] DEFAULT NULL,
     p_year         SMALLINT[] DEFAULT NULL,
-    p_waste_type   VARCHAR(15)[] DEFAULT NULL
+    p_waste_type   VARCHAR(15)[] DEFAULT NULL,
+    p_unit         VARCHAR(15)[] DEFAULT NULL
 )
 RETURNS TABLE (
     company_id      VARCHAR(10),
@@ -1250,12 +1276,12 @@ BEGIN
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
+      AND (p_unit IS NULL OR d.unit = ANY(p_unit))
       AND TRIM(LOWER(d.status_name)) = 'approved'
     GROUP BY d.company_id, d.unit
     ORDER BY d.company_id;
 END;
 $$ LANGUAGE plpgsql;
-
 
 -- =============================================================================
 -- Sample Query: Execute this queries to test the functions
