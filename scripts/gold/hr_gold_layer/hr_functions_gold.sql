@@ -34,7 +34,17 @@ RETURNS TABLE (
     end_date TIMESTAMP
 )
 AS $$
+DECLARE
+    v_min_year INT;
+    v_max_year INT;
 BEGIN
+    -- Use table-qualified column references to avoid ambiguity
+    SELECT 
+        MIN(EXTRACT(YEAR FROM d.start_date))::INT,
+        MAX(EXTRACT(YEAR FROM COALESCE(d.end_date, CURRENT_DATE)))::INT
+    INTO v_min_year, v_max_year
+    FROM gold.dim_employee_descriptions d;
+
 	RETURN QUERY
 		SELECT
 			dd.year,
@@ -47,7 +57,9 @@ BEGIN
 			d.start_date,
 			d.end_date
 		FROM gold.dim_employee_descriptions d
-		JOIN gold.dim_date dd ON dd.date_id BETWEEN d.start_date::date AND COALESCE(d.end_date::date, dd.date_id)
+		JOIN gold.dim_date dd 
+        ON dd.date_id BETWEEN d.start_date::date AND COALESCE(d.end_date::date, dd.date_id)
+        AND dd.year BETWEEN v_min_year AND v_max_year
 		WHERE
 			(p_employee_id IS NULL OR d.employee_id = p_employee_id)
 			AND (p_gender IS NULL OR d.gender = p_gender)
