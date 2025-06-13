@@ -37,7 +37,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewa.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewa.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewa.quarter = ANY(p_quarter))
-      AND ewa.status_name = 'Approved'
+      AND TRIM(LOWER(ewa.status_name)) = 'approved'
     GROUP BY 
         ewa.company_id, 
         ewa.year,
@@ -78,7 +78,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewa.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewa.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewa.quarter = ANY(p_quarter))
-      AND ewa.status_name = 'Approved'
+      AND TRIM(LOWER(ewa.status_name)) = 'approved'
     GROUP BY 
         ewa.company_id, 
         ewa.year,
@@ -117,7 +117,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewa.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewa.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewa.quarter = ANY(p_quarter))
-      AND ewa.status_name = 'Approved'
+      AND TRIM(LOWER(ewa.status_name)) = 'approved'
     GROUP BY 
         ewa.company_id, 
         ewa.unit
@@ -143,7 +143,7 @@ CREATE OR REPLACE FUNCTION gold.func_environment_water_discharge_by_year(
 RETURNS TABLE (
     company_id VARCHAR(10),
     year SMALLINT,
-    total_volume NUMERIC(10,2),  -- updated data type for 2-decimal precision
+    total_volume NUMERIC(10,2),
     unit VARCHAR(15)
 )
 AS $$
@@ -158,7 +158,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewd.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewd.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewd.quarter = ANY(p_quarter))
-      AND ewd.status_name = 'Approved'
+      AND TRIM(LOWER(ewd.status_name)) = 'approved'
     GROUP BY 
         ewd.company_id, 
         ewd.year,
@@ -199,7 +199,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewd.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewd.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewd.quarter = ANY(p_quarter))
-      AND ewd.status_name = 'Approved'
+      AND TRIM(LOWER(ewd.status_name)) = 'approved'
     GROUP BY 
         ewd.company_id, 
         ewd.year,
@@ -238,7 +238,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewd.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewd.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewd.quarter = ANY(p_quarter))
-      AND ewd.status_name = 'Approved'
+      AND TRIM(LOWER(ewd.status_name)) = 'approved'
     GROUP BY 
         ewd.company_id, 
         ewd.unit
@@ -279,7 +279,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewc.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewc.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewc.quarter = ANY(p_quarter))
-      AND ewc.status_name = 'Approved'
+      AND TRIM(LOWER(ewc.status_name)) = 'approved'
     GROUP BY 
         ewc.company_id, 
         ewc.year,
@@ -320,7 +320,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewc.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewc.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewc.quarter = ANY(p_quarter))
-      AND ewc.status_name = 'Approved'
+      AND TRIM(LOWER(ewc.status_name)) = 'approved'
     GROUP BY 
         ewc.company_id, 
         ewc.year,
@@ -359,7 +359,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewc.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewc.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewc.quarter = ANY(p_quarter))
-      AND ewc.status_name = 'Approved'
+      AND TRIM(LOWER(ewc.status_name)) = 'approved'
     GROUP BY 
         ewc.company_id, 
         ewc.unit
@@ -411,7 +411,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR ewa.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR ewa.year = ANY(p_year))
       AND (p_quarter IS NULL OR ewa.quarter = ANY(p_quarter))
-      AND ewa.status_name = 'Approved'
+      AND TRIM(LOWER(ewa.status_name)) = 'approved'
     GROUP BY 
         ewa.company_id, 
         ewa.year,
@@ -463,7 +463,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
-      AND edc.status_name = 'Approved'
+      AND TRIM(LOWER(edc.status_name)) = 'approved'
     GROUP BY 
         edc.company_id, 
 		edc.year,
@@ -518,7 +518,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
-      AND edc.status_name = 'Approved'
+      AND TRIM(LOWER(edc.status_name)) = 'approved'
     GROUP BY 
         edc.company_id, 
 		edc.year,
@@ -575,7 +575,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
-      AND edc.status_name = 'Approved'
+      AND TRIM(LOWER(edc.status_name)) = 'approved'
     GROUP BY 
         edc.company_id, 
 		edc.year,
@@ -626,7 +626,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
-      AND edc.status_name = 'Approved'
+      AND TRIM(LOWER(edc.status_name)) = 'approved'
     GROUP BY 
         edc.company_id, 
         edc.company_property_name,
@@ -671,7 +671,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
-      AND edc.status_name = 'Approved'
+      AND TRIM(LOWER(edc.status_name)) = 'approved'
     GROUP BY 
         edc.company_id, 
 		edc.company_property_type,
@@ -714,7 +714,7 @@ BEGIN
       AND (p_year IS NULL OR edc.year = ANY(p_year))
       AND (p_quarter IS NULL OR edc.quarter = ANY(p_quarter))
       AND (p_month IS NULL OR edc.month = ANY(p_month))
-      AND edc.status_name = 'Approved'
+      AND TRIM(LOWER(edc.status_name)) = 'approved'
     GROUP BY 
         edc.company_id, 
 		edc.unit_of_measurement
@@ -757,7 +757,7 @@ BEGIN
 	  AND (p_consumption_source IS NULL OR ec.consumption_source = ANY(p_consumption_source))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
-      AND ec.status_name = 'Approved'
+      AND TRIM(LOWER(ec.status_name)) = 'approved'
     GROUP BY ec.company_id, ec.year, ec.unit_of_measurement
     ORDER BY ec.company_id;
 END;
@@ -795,7 +795,7 @@ BEGIN
 	  AND (p_consumption_source IS NULL OR ec.consumption_source = ANY(p_consumption_source))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
-      AND ec.status_name = 'Approved'
+      AND TRIM(LOWER(ec.status_name)) = 'approved'
     GROUP BY ec.company_id, ec.year, ec.quarter, ec.unit_of_measurement
     ORDER BY ec.company_id;
 END;
@@ -830,7 +830,7 @@ BEGIN
 	  AND (p_consumption_source IS NULL OR ec.consumption_source = ANY(p_consumption_source))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
-      AND ec.status_name = 'Approved'
+      AND TRIM(LOWER(ec.status_name)) = 'approved'
     GROUP BY ec.company_id, ec.consumption_source, ec.unit_of_measurement
     ORDER BY ec.company_id;
 END;
@@ -863,7 +863,7 @@ BEGIN
 	  AND (p_consumption_source IS NULL OR ec.consumption_source = ANY(p_consumption_source))
       AND (p_year IS NULL OR ec.year = ANY(p_year))
       AND (p_quarter IS NULL OR ec.quarter = ANY(p_quarter))
-      AND ec.status_name = 'Approved'
+      AND TRIM(LOWER(ec.status_name)) = 'approved'
     GROUP BY ec.company_id, ec.unit_of_measurement
     ORDER BY ec.company_id;
 END;
@@ -903,7 +903,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
-      AND nhw.status_name = 'Approved'
+      AND TRIM(LOWER(nhw.status_name)) = 'approved'
 	GROUP BY nhw.company_id, nhw.year, nhw.metrics, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
@@ -942,7 +942,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
-      AND nhw.status_name = 'Approved'
+      AND TRIM(LOWER(nhw.status_name)) = 'approved'
 	GROUP BY nhw.company_id, nhw.year, nhw.quarter, nhw.metrics, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
@@ -976,7 +976,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
-      AND nhw.status_name = 'Approved'
+      AND TRIM(LOWER(nhw.status_name)) = 'approved'
 	GROUP BY nhw.company_id, nhw.metrics, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
@@ -1009,7 +1009,7 @@ BEGIN
     WHERE (p_company_id IS NULL OR nhw.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR nhw.year = ANY(p_year))
       AND (p_quarter IS NULL OR nhw.quarter = ANY(p_quarter))
-      AND nhw.status_name = 'Approved'
+      AND TRIM(LOWER(nhw.status_name)) = 'approved'
 	GROUP BY nhw.company_id, nhw.unit_of_measurement
     ORDER BY nhw.company_id;
 END;
@@ -1043,13 +1043,13 @@ BEGIN
         g.year,
         g.waste_type,
         g.unit,
-        CAST(SUM(g.generate) AS NUMERIC(10,2)) AS total_generate
+        CAST(SUM(g.waste_generated) AS NUMERIC(10,2)) AS total_generate
     FROM gold.vw_environment_hazard_waste_generated g
     WHERE (p_company_id IS NULL OR g.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
-      AND g.status_name = 'Approved'
+      AND TRIM(LOWER(g.status_name)) = 'approved'
     GROUP BY g.company_id, g.year,g.waste_type, g.unit
     ORDER BY g.company_id, g.year;
 END;
@@ -1081,13 +1081,13 @@ BEGIN
 		g.quarter,
         g.waste_type,
         g.unit,
-        CAST(SUM(g.generate) AS NUMERIC(10,2)) AS total_generate
+        CAST(SUM(g.waste_generated) AS NUMERIC(10,2)) AS total_generate
     FROM gold.vw_environment_hazard_waste_generated g
     WHERE (p_company_id IS NULL OR g.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
-      AND g.status_name = 'Approved'
+      AND TRIM(LOWER(g.status_name)) = 'approved'
     GROUP BY g.company_id, g.quarter, g.year,g.waste_type, g.unit
     ORDER BY g.company_id;
 END;
@@ -1115,13 +1115,13 @@ BEGIN
         g.company_id,
         g.waste_type,
         g.unit,
-        CAST(SUM(g.generate) AS NUMERIC(10,2)) AS total_generate
+        CAST(SUM(g.waste_generated) AS NUMERIC(10,2)) AS total_generate
     FROM gold.vw_environment_hazard_waste_generated g
     WHERE (p_company_id IS NULL OR g.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
-      AND g.status_name = 'Approved'
+      AND TRIM(LOWER(g.status_name)) = 'approved'
     GROUP BY g.company_id,g.waste_type, g.unit
     ORDER BY g.company_id;
 END;
@@ -1147,13 +1147,13 @@ BEGIN
     SELECT
         g.company_id,
         g.unit,
-        CAST(SUM(g.generate) AS NUMERIC(10,2)) AS total_generate
+        CAST(SUM(g.waste_generated) AS NUMERIC(10,2)) AS total_generate
     FROM gold.vw_environment_hazard_waste_generated g
     WHERE (p_company_id IS NULL OR g.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR g.year = ANY(p_year))
       AND (p_quarter IS NULL OR g.quarter = ANY(p_quarter))
       AND (p_waste_type IS NULL OR g.waste_type = ANY(p_waste_type))
-      AND g.status_name = 'Approved'
+      AND TRIM(LOWER(g.status_name)) = 'approved'
     GROUP BY g.company_id, g.unit
     ORDER BY g.company_id;
 END;
@@ -1185,12 +1185,12 @@ BEGIN
 		d.year,
         d.waste_type,
         d.unit,
-        CAST(SUM(d.disposed) AS NUMERIC(10,2)) AS total_disposed
+        CAST(SUM(d.waste_disposed) AS NUMERIC(10,2)) AS total_disposed
     FROM gold.vw_environment_hazard_waste_disposed d
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
-      AND d.status_name = 'Approved'
+      AND TRIM(LOWER(d.status_name)) = 'approved'
     GROUP BY d.company_id, d.year, d.waste_type, d.unit
     ORDER BY d.company_id, d.year;
 END;
@@ -1216,12 +1216,12 @@ BEGIN
         d.company_id,
         d.waste_type,
         d.unit,
-        CAST(SUM(d.disposed) AS NUMERIC(10,2)) AS total_disposed
+        CAST(SUM(d.waste_disposed) AS NUMERIC(10,2)) AS total_disposed
     FROM gold.vw_environment_hazard_waste_disposed d
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
-      AND d.status_name = 'Approved'
+      AND TRIM(LOWER(d.status_name)) = 'approved'
     GROUP BY d.company_id, d.waste_type, d.unit
     ORDER BY d.company_id;
 END;
@@ -1245,12 +1245,12 @@ BEGIN
     SELECT
         d.company_id,
         d.unit,
-        CAST(SUM(d.disposed) AS NUMERIC(10,2)) AS total_disposed
+        CAST(SUM(d.waste_disposed) AS NUMERIC(10,2)) AS total_disposed
     FROM gold.vw_environment_hazard_waste_disposed d
     WHERE (p_company_id IS NULL OR d.company_id = ANY(p_company_id))
       AND (p_year IS NULL OR d.year = ANY(p_year))
       AND (p_waste_type IS NULL OR d.waste_type = ANY(p_waste_type))
-      AND d.status_name = 'Approved'
+      AND TRIM(LOWER(d.status_name)) = 'approved'
     GROUP BY d.company_id, d.unit
     ORDER BY d.company_id;
 END;
