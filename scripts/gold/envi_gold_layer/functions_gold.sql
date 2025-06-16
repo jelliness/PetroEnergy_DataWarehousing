@@ -392,34 +392,61 @@ RETURNS TABLE (
 AS $$
 BEGIN
     RETURN QUERY
+    WITH abstraction_summary AS (
+        SELECT 
+            ewa.company_id,
+            ewa.year,
+            ewa.quarter,
+            SUM(ewa.volume) as total_abstracted_volume
+        FROM gold.vw_environment_water_abstraction ewa
+        WHERE TRIM(LOWER(ewa.status_name)) = 'approved'
+        GROUP BY ewa.company_id, ewa.year, ewa.quarter
+    ),
+    discharge_summary AS (
+        SELECT 
+            ewd.company_id,
+            ewd.year,
+            ewd.quarter,
+            SUM(ewd.volume) as total_discharged_volume
+        FROM gold.vw_environment_water_discharge ewd
+        WHERE TRIM(LOWER(ewd.status_name)) = 'approved'
+        GROUP BY ewd.company_id, ewd.year, ewd.quarter
+    ),
+    consumption_summary AS (
+        SELECT 
+            ewc.company_id,
+            ewc.year,
+            ewc.quarter,
+            SUM(ewc.volume) as total_consumption_volume
+        FROM gold.vw_environment_water_consumption ewc
+        WHERE TRIM(LOWER(ewc.status_name)) = 'approved'
+        GROUP BY ewc.company_id, ewc.year, ewc.quarter
+    ),
+    all_combinations AS (
+        SELECT abs_s.company_id, abs_s.year, abs_s.quarter FROM abstraction_summary abs_s
+        UNION
+        SELECT dis_s.company_id, dis_s.year, dis_s.quarter FROM discharge_summary dis_s
+        UNION
+        SELECT con_s.company_id, con_s.year, con_s.quarter FROM consumption_summary con_s
+    )
     SELECT
-        ewa.company_id,
-        ewa.year,
-        ewa.quarter,
-        CAST(SUM(ewa.volume) AS NUMERIC(10,2)) AS total_abstracted_volume,
-        CAST(SUM(ewd.volume) AS NUMERIC(10,2)) AS total_discharged_volume,
-        CAST(SUM(ewc.volume) AS NUMERIC(10,2)) AS total_consumption_volume
-    FROM gold.vw_environment_water_abstraction ewa
-    LEFT JOIN gold.vw_environment_water_discharge ewd 
-        ON ewa.company_id = ewd.company_id 
-       AND ewa.year = ewd.year 
-       AND ewa.quarter = ewd.quarter
-    LEFT JOIN gold.vw_environment_water_consumption ewc 
-        ON ewa.company_id = ewc.company_id 
-       AND ewa.year = ewc.year 
-       AND ewa.quarter = ewc.quarter
-    WHERE (p_company_id IS NULL OR ewa.company_id = ANY(p_company_id))
-      AND (p_year IS NULL OR ewa.year = ANY(p_year))
-      AND (p_quarter IS NULL OR ewa.quarter = ANY(p_quarter))
-      AND TRIM(LOWER(ewa.status_name)) = 'approved'
-    GROUP BY 
-        ewa.company_id, 
-        ewa.year,
-        ewa.quarter
+        ac.company_id,
+        ac.year,
+        ac.quarter,
+        CAST(COALESCE(abs.total_abstracted_volume, 0) AS NUMERIC(10,2)) AS total_abstracted_volume,
+        CAST(COALESCE(dis.total_discharged_volume, 0) AS NUMERIC(10,2)) AS total_discharged_volume,
+        CAST(COALESCE(con.total_consumption_volume, 0) AS NUMERIC(10,2)) AS total_consumption_volume
+    FROM all_combinations ac
+    LEFT JOIN abstraction_summary abs ON abs.company_id = ac.company_id AND abs.year = ac.year AND abs.quarter = ac.quarter
+    LEFT JOIN discharge_summary dis ON dis.company_id = ac.company_id AND dis.year = ac.year AND dis.quarter = ac.quarter
+    LEFT JOIN consumption_summary con ON con.company_id = ac.company_id AND con.year = ac.year AND con.quarter = ac.quarter
+    WHERE (p_company_id IS NULL OR ac.company_id = ANY(p_company_id))
+      AND (p_year IS NULL OR ac.year = ANY(p_year))
+      AND (p_quarter IS NULL OR ac.quarter = ANY(p_quarter))
     ORDER BY 
-        ewa.company_id, 
-        ewa.year,
-        ewa.quarter;
+        ac.company_id, 
+        ac.year,
+        ac.quarter;
 END;
 $$ LANGUAGE plpgsql;
 
