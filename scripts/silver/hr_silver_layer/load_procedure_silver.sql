@@ -77,6 +77,11 @@ BEGIN
 		start_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Inserting Data into silver.hr_parental_leave...';
 
+		IF load_from_sql THEN
+			DELETE FROM silver.hr_parental_leave
+			WHERE employee_id IN (SELECT employee_id FROM bronze.hr_parental_leave);
+		END IF;
+
 		-- Declare and compute latest sequence
 		INSERT INTO silver.hr_parental_leave (
 			parental_leave_id,

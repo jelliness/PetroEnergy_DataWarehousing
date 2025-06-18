@@ -48,7 +48,7 @@ CREATE TABLE silver.hr_demographics (
 );
 
 CREATE TABLE silver.hr_parental_leave (
-    parental_leave_id VARCHAR(20),
+    parental_leave_id VARCHAR(20) PRIMARY KEY,
     employee_id VARCHAR(20),
     type_of_leave VARCHAR(12),
     date TIMESTAMP,
@@ -56,8 +56,7 @@ CREATE TABLE silver.hr_parental_leave (
 	end_date TIMESTAMP, -- DERIVED BY ADDING DAYS TO DATE
 	months_availed INT, -- DERIVED BY CALCULATING MONTHS AVAILED
 	date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	date_updated TIMESTAMP,
-	PRIMARY KEY (parental_leave_id, date, employee_id)
+	date_updated TIMESTAMP
 );
 
 
