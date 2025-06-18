@@ -293,11 +293,13 @@ CREATE OR REPLACE FUNCTION gold.func_fund_alloc(
 )
 RETURNS TABLE (
     month_name TEXT,
+	year SMALLINT,
     power_plant_id  VARCHAR(10),
     company_id VARCHAR(10),
     ff_id VARCHAR(10),
     ff_name TEXT,
     ff_percentage NUMERIC(5,4),
+	ff_category VARCHAR(20),
     power_generated_peso NUMERIC,
     funds_allocated_peso NUMERIC
 )
@@ -306,11 +308,13 @@ BEGIN
     RETURN QUERY
     SELECT 
         dd.month_name,
+		dd.year::SMALLINT,
         pp.power_plant_id,
         pp.company_id,
         ff.ff_id,
         ff.ff_name,
         ff.ff_percentage,
+		ff.ff_category,
         ROUND(SUM(er.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
         ROUND(SUM((er.energy_generated_kwh * 0.01) * ff.ff_percentage), 2) AS funds_allocated_peso
     FROM silver.csv_energy_records er
@@ -326,6 +330,7 @@ BEGIN
     GROUP BY 
         dd.month_name,
         dd.month,
+		dd.year,
         DATE_TRUNC('month', er.date_generated),
         pp.power_plant_id,
         pp.company_id,
@@ -335,6 +340,11 @@ BEGIN
     ORDER BY dd.month DESC;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+
+
 
 
 
