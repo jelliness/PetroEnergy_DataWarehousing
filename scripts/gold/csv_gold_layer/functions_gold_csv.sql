@@ -219,6 +219,7 @@ $$ LANGUAGE plpgsql;
 -- =============================================================================
 -- Create Function for Number of Houses Powered (Total Annual Energy Generated)
 -- =============================================================================
+
 CREATE OR REPLACE FUNCTION gold.func_household_powered(
     p_power_plant_id VARCHAR(10)[] DEFAULT NULL,
     p_company_id VARCHAR(10)[] DEFAULT NULL,
@@ -292,6 +293,7 @@ CREATE OR REPLACE FUNCTION gold.func_fund_alloc(
     p_ff_category VARCHAR(20) DEFAULT NULL
 )
 RETURNS TABLE (
+    month INT,
     month_name TEXT,
 	year SMALLINT,
     power_plant_id  VARCHAR(10),
@@ -307,6 +309,7 @@ AS $$
 BEGIN
     RETURN QUERY
     SELECT 
+        dd.month,
         dd.month_name,
 		dd.year::SMALLINT,
         pp.power_plant_id,

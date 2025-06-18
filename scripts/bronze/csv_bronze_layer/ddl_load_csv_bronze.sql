@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS bronze.csv_energy_records;
 CREATE TABLE bronze.csv_energy_records (
     energy_id VARCHAR(20) PRIMARY KEY,
     power_plant_id VARCHAR(10),                     -- Reference to the power plant
-    datetime TEXT,                                  -- Date and time of energy measurement
+    datetime TIMESTAMP,                                  -- Date and time of energy measurement
     energy_generated NUMERIC,                       -- Amount of energy generated
     unit_of_measurement VARCHAR(10),                -- Unit of measurement (e.g., kWh, MWh)
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp
