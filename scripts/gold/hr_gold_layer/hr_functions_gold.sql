@@ -6,14 +6,6 @@ DROP FUNCTION IF EXISTS gold.func_occupational_safety_health_summary;
 DROP FUNCTION IF EXISTS gold.func_hr_rate_summary;
 DROP FUNCTION IF EXISTS gold.func_parental_leave_summary;
 
-DROP FUNCTION IF EXISTS gold.func_employee_summary_yearly; -- REMOVE THIS
-DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_yearly; -- REMOVE THIS
-DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_yearly; -- REMOVE THIS
-
-DROP FUNCTION IF EXISTS gold.func_employee_summary_monthly; -- REMOVE THIS
-DROP FUNCTION IF EXISTS gold.func_hr_rate_summary_monthly; -- MISSING
-DROP FUNCTION IF EXISTS gold.func_parental_leave_summary_monthly; -- REMOVE THIS (MALI UNG BINIBIGAY NA OUTPUT)
-
 /*
 ===============================================================================
 						HR FUNCTION EMPLOYEE SUMMARY TABLE
