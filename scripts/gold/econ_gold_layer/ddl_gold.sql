@@ -157,4 +157,4 @@ SELECT
     END as percentage_of_total_distribution
 FROM company_totals ct
 JOIN year_totals yt ON ct.year = yt.year
-ORDER BY ct.year, ct.company_id;
+ORDER BY ct.year, ct.company_name;
