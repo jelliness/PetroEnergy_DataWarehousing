@@ -31,12 +31,13 @@ CREATE TABLE silver.csr_projects (
 
 DROP TABLE IF EXISTS silver.csr_activity;
 CREATE TABLE silver.csr_activity (
-    csr_id VARCHAR(10) NOT NULL NOT NULL PRIMARY KEY,
+    csr_id VARCHAR(15) NOT NULL NOT NULL PRIMARY KEY,
     company_id VARCHAR(20) NOT NULL,
     project_id VARCHAR(20) NOT NULL,
     project_year SMALLINT,
     csr_report NUMERIC,
     project_expenses NUMERIC,
+    project_remarks TEXT,
     date_created TIMESTAMP DEFAULT NOW(),
     date_updated TIMESTAMP DEFAULT NOW(),
 	CONSTRAINT fk_company_name 

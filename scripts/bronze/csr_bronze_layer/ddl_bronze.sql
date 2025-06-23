@@ -24,10 +24,11 @@ CREATE TABLE bronze.csr_projects (
 
 DROP TABLE IF EXISTS bronze.csr_activity;
 CREATE TABLE bronze.csr_activity (
-    csr_id VARCHAR(10),
+    csr_id VARCHAR(15),
     company_id VARCHAR(20),
 	project_id VARCHAR(20),
     project_year SMALLINT,
     csr_report NUMERIC,
-	project_expenses NUMERIC
+	project_expenses NUMERIC,
+	project_remarks TEXT
 );

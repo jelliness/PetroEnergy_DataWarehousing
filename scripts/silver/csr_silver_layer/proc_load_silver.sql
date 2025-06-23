@@ -102,6 +102,7 @@ BEGIN
             project_year,
             csr_report,
             project_expenses,
+            project_remarks,
             date_created,
             date_updated
         )
@@ -120,6 +121,10 @@ BEGIN
 			CASE
                 WHEN project_expenses IS NULL THEN NULL
                 ELSE project_expenses
+			END,
+			CASE
+                WHEN project_expenses IS NULL THEN NULL
+                ELSE project_expenses
             END,
             NOW(), NOW()
         FROM bronze.csr_activity
@@ -130,6 +135,7 @@ BEGIN
             project_year = EXCLUDED.project_year,
             csr_report = EXCLUDED.csr_report,
             project_expenses = EXCLUDED.project_expenses,
+            project_remarks = EXCLUDED.project_remarks,
             date_updated = CURRENT_TIMESTAMP;
 
         end_time := CURRENT_TIMESTAMP;
