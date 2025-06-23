@@ -21,6 +21,9 @@ CREATE OR REPLACE FUNCTION gold.func_employee_summary(
 )
 RETURNS TABLE (
     year INT,
+    month_value INT,
+    month_name TEXT,
+    quarter TEXT,
     employee_id VARCHAR(20),
     gender VARCHAR(1),
     position_id VARCHAR(2),
@@ -35,6 +38,9 @@ BEGIN
     RETURN QUERY
     SELECT
         EXTRACT(YEAR FROM e.start_date)::INT AS year,
+        EXTRACT(MONTH FROM e.start_date)::INT AS month_value,
+        TO_CHAR(e.start_date, 'Month')::TEXT AS month_name,
+        CONCAT('Q', EXTRACT(QUARTER FROM e.start_date)::TEXT) AS quarter,
         e.employee_id,
         e.gender,
         e.position_id,
@@ -67,7 +73,7 @@ BEGIN
             (p_end_date IS NOT NULL AND e.end_date > p_end_date)
         )
 
-    ORDER BY year, employee_id;
+    ORDER BY year, month_value, e.employee_id;
 END;
 $$ LANGUAGE plpgsql;
 
