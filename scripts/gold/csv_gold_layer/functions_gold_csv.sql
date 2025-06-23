@@ -50,8 +50,8 @@ BEGIN
         feg.month_name,
         feg.year,
         feg.quarter,
-        CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(10,2)) AS energy_generated_kwh,
-        CAST(SUM(feg.co2_avoidance_tons) AS NUMERIC(10,2)) AS co2_avoidance_tons
+        CAST(SUM(feg.energy_generated_kwh) AS NUMERIC(1000,2)) AS energy_generated_kwh,
+        CAST(SUM(feg.co2_avoidance_tons) AS NUMERIC(1000,2)) AS co2_avoidance_tons
     FROM gold.fact_energy_generated feg
     WHERE (p_power_plant_id IS NULL OR feg.power_plant_id = ANY(p_power_plant_id))
         AND (p_company_id IS NULL OR feg.company_id = ANY(p_company_id))
@@ -77,8 +77,6 @@ BEGIN
 
 END;
 $$ LANGUAGE plpgsql;
-
-
 -- ===================================================================================
 -- Create Functions for gold.func_fact_energy_monthly (monthly)
 -- ===================================================================================
@@ -221,6 +219,7 @@ $$ LANGUAGE plpgsql;
 -- =============================================================================
 -- Create Function for Number of Houses Powered (Total Annual Energy Generated)
 -- =============================================================================
+
 CREATE OR REPLACE FUNCTION gold.func_household_powered(
     p_power_plant_id VARCHAR(10)[] DEFAULT NULL,
     p_company_id VARCHAR(10)[] DEFAULT NULL,
@@ -294,12 +293,15 @@ CREATE OR REPLACE FUNCTION gold.func_fund_alloc(
     p_ff_category VARCHAR(20) DEFAULT NULL
 )
 RETURNS TABLE (
+    month INT,
     month_name TEXT,
+	year SMALLINT,
     power_plant_id  VARCHAR(10),
     company_id VARCHAR(10),
     ff_id VARCHAR(10),
     ff_name TEXT,
     ff_percentage NUMERIC(5,4),
+	ff_category VARCHAR(20),
     power_generated_peso NUMERIC,
     funds_allocated_peso NUMERIC
 )
@@ -307,12 +309,15 @@ AS $$
 BEGIN
     RETURN QUERY
     SELECT 
+        dd.month,
         dd.month_name,
+		dd.year::SMALLINT,
         pp.power_plant_id,
         pp.company_id,
         ff.ff_id,
         ff.ff_name,
         ff.ff_percentage,
+		ff.ff_category,
         ROUND(SUM(er.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
         ROUND(SUM((er.energy_generated_kwh * 0.01) * ff.ff_percentage), 2) AS funds_allocated_peso
     FROM silver.csv_energy_records er
@@ -328,6 +333,7 @@ BEGIN
     GROUP BY 
         dd.month_name,
         dd.month,
+		dd.year,
         DATE_TRUNC('month', er.date_generated),
         pp.power_plant_id,
         pp.company_id,
@@ -337,6 +343,11 @@ BEGIN
     ORDER BY dd.month DESC;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+
+
 
 
 

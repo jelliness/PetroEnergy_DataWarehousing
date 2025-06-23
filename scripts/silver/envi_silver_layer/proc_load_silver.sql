@@ -71,144 +71,193 @@ BEGIN
         END IF;
         
         -- Loading silver.envi_water_abstraction
-        IF load_water_abstraction THEN
-            start_time := CLOCK_TIMESTAMP();
-            RAISE NOTICE '>> Inserting Aggregated Data Into: silver.envi_water_abstraction';
+		IF load_water_abstraction THEN
+			start_time := CLOCK_TIMESTAMP();
+			RAISE NOTICE '>> Inserting Data Into: silver.envi_water_abstraction';
 
-            -- Insert aggregated records where month is NOT NULL
-			RAISE NOTICE '>> Inserting Non-Aggregated Data (month IS NOT NULL)';
-	        FOR r IN
-	            SELECT
-	                company_id,
-	                year,
-	                CASE 
-	                    WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
-	                    WHEN LOWER(TRIM(month)) IN ('april', 'may', 'june') THEN 'Q2'
-	                    WHEN LOWER(TRIM(month)) IN ('july', 'august', 'september') THEN 'Q3'
-	                    WHEN LOWER(TRIM(month)) IN ('october', 'november', 'december') THEN 'Q4'
-	                    ELSE 'Unknown'
-	                END AS quarter,
-	                SUM(CASE WHEN volume < 0 THEN 0 ELSE volume END) AS total_volume,
-	                MAX(unit_of_measurement) AS unit_of_measurement,
-	                -- Collect all bronze wa_ids for mapping
-	                ARRAY_AGG(wa_id) AS bronze_wa_ids
-	            FROM bronze.envi_water_abstraction
-	            WHERE month IS NOT NULL
-	            GROUP BY company_id, year,
-	                    CASE 
-	                        WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
-	                        WHEN LOWER(TRIM(month)) IN ('april', 'may', 'june') THEN 'Q2'
-	                        WHEN LOWER(TRIM(month)) IN ('july', 'august', 'september') THEN 'Q3'
-	                        WHEN LOWER(TRIM(month)) IN ('october', 'november', 'december') THEN 'Q4'
-	                        ELSE 'Unknown'
-	                    END
-	            ORDER BY company_id, year, quarter
-	        LOOP
-	            -- Reset counter for each new company-year
-	            IF r.company_id <> last_company OR r.year <> last_year THEN
-	                last_counter := 1;
-	            ELSE
-	                last_counter := last_counter + 1;
-	            END IF;
-	
-	            -- Generate the silver wa_id
-	            generated_wa_id := 'WA-' || r.company_id || '-' || r.year || '-' || LPAD(last_counter::TEXT, 3, '0');
-	
-	            INSERT INTO silver.envi_water_abstraction (
-	                wa_id,
-	                company_id,
-	                volume,
-	                unit_of_measurement,
-	                quarter,
-	                year
-	            )
-	            VALUES (
-	                generated_wa_id,
-	                r.company_id,
-	                r.total_volume,
-	                r.unit_of_measurement,
-	                r.quarter,
-	                r.year
-	            )
-	            ON CONFLICT (wa_id) DO UPDATE SET
-	                company_id = EXCLUDED.company_id,
-	                volume = CASE WHEN EXCLUDED.volume < 0 THEN 0 ELSE EXCLUDED.volume END,
-	                unit_of_measurement = EXCLUDED.unit_of_measurement,
-	                year = EXCLUDED.year,
-	                quarter = EXCLUDED.quarter,
-	                updated_at = CURRENT_TIMESTAMP;
-	
-	            -- Insert mappings for all bronze wa_ids that contributed to this aggregated record
-	            FOREACH bronze_wa_id IN ARRAY r.bronze_wa_ids
-	            LOOP
-	                INSERT INTO silver.wa_id_mapping (
-	                    wa_id_bronze,
-	                    wa_id_silver
-	                )
-	                VALUES (
-	                    bronze_wa_id,
-	                    generated_wa_id
-	                )
-	                ON CONFLICT (wa_id_bronze, wa_id_silver) DO NOTHING;
-	            END LOOP;
-	
-	            last_company := r.company_id;
-	            last_year := r.year;
-	        END LOOP;
-	
-	        RAISE NOTICE '>> Inserting Non-Aggregated Data (month IS NULL)';
-	
-	        FOR r IN
-	            SELECT
-	                wa_id,
-	                company_id,
-	                year,
-	                quarter,
-	                CASE WHEN volume < 0 THEN 0 ELSE volume END AS volume,
-	                unit_of_measurement
-	            FROM bronze.envi_water_abstraction
-	            WHERE month IS NULL
-	        LOOP
-	            INSERT INTO silver.envi_water_abstraction (
-	                wa_id,
-	                company_id,
-	                volume,
-	                unit_of_measurement,
-	                quarter,
-	                year
-	            )
-	            VALUES (
-	                r.wa_id,
-	                r.company_id,
-	                r.volume,
-	                r.unit_of_measurement,
-	                r.quarter,
-	                r.year
-	            )
-	            ON CONFLICT (wa_id) DO UPDATE SET
-	                company_id = EXCLUDED.company_id,
-	                volume = CASE WHEN EXCLUDED.volume < 0 THEN 0 ELSE EXCLUDED.volume END,
-	                unit_of_measurement = EXCLUDED.unit_of_measurement,
-	                year = EXCLUDED.year,
-	                quarter = EXCLUDED.quarter,
-	                updated_at = CURRENT_TIMESTAMP;
-	
-	            -- For non-aggregated records, create a 1:1 mapping
-	            INSERT INTO silver.wa_id_mapping (
-	                wa_id_bronze,
-	                wa_id_silver
-	            )
-	            VALUES (
-	                r.wa_id,
-	                r.wa_id
-	            )
-	            ON CONFLICT (wa_id_bronze, wa_id_silver) DO NOTHING;
-	        END LOOP;
-            
-            end_time := CLOCK_TIMESTAMP();
-            RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
-            RAISE NOTICE '>> -------------';
-        END IF;
+			-- PART 1: Insert aggregated records where month is NOT NULL and quarter is NULL
+			RAISE NOTICE '>> Inserting Aggregated Data (month IS NOT NULL and quarter IS NULL)';
+			FOR r IN
+				SELECT
+					company_id,
+					year,
+					CASE 
+						WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
+						WHEN LOWER(TRIM(month)) IN ('april', 'may', 'june') THEN 'Q2'
+						WHEN LOWER(TRIM(month)) IN ('july', 'august', 'september') THEN 'Q3'
+						WHEN LOWER(TRIM(month)) IN ('october', 'november', 'december') THEN 'Q4'
+						ELSE 'Unknown'
+					END AS quarter,
+					SUM(CASE WHEN volume < 0 THEN 0 ELSE volume END) AS total_volume,
+					MAX(unit_of_measurement) AS unit_of_measurement,
+					-- Collect all bronze wa_ids for mapping
+					ARRAY_AGG(wa_id) AS bronze_wa_ids
+				FROM bronze.envi_water_abstraction
+				WHERE month IS NOT NULL AND quarter IS NULL
+				GROUP BY company_id, year,
+						CASE 
+							WHEN LOWER(TRIM(month)) IN ('january', 'february', 'march') THEN 'Q1'
+							WHEN LOWER(TRIM(month)) IN ('april', 'may', 'june') THEN 'Q2'
+							WHEN LOWER(TRIM(month)) IN ('july', 'august', 'september') THEN 'Q3'
+							WHEN LOWER(TRIM(month)) IN ('october', 'november', 'december') THEN 'Q4'
+							ELSE 'Unknown'
+						END
+				ORDER BY company_id, year, quarter
+			LOOP
+				-- Reset counter for each new company-year
+				IF r.company_id <> last_company OR r.year <> last_year THEN
+					last_counter := 1;
+				ELSE
+					last_counter := last_counter + 1;
+				END IF;
+
+				-- Generate the silver wa_id
+				generated_wa_id := 'WA-' || r.company_id || '-' || r.year || '-' || LPAD(last_counter::TEXT, 3, '0');
+
+				INSERT INTO silver.envi_water_abstraction (
+					wa_id,
+					company_id,
+					volume,
+					unit_of_measurement,
+					quarter,
+					year
+				)
+				VALUES (
+					generated_wa_id,
+					r.company_id,
+					r.total_volume,
+					r.unit_of_measurement,
+					r.quarter,
+					r.year
+				)
+				ON CONFLICT (wa_id) DO UPDATE SET
+					company_id = EXCLUDED.company_id,
+					volume = CASE WHEN EXCLUDED.volume < 0 THEN 0 ELSE EXCLUDED.volume END,
+					unit_of_measurement = EXCLUDED.unit_of_measurement,
+					year = EXCLUDED.year,
+					quarter = EXCLUDED.quarter,
+					updated_at = CURRENT_TIMESTAMP;
+
+				-- Insert mappings for all bronze wa_ids that contributed to this aggregated record
+				FOREACH bronze_wa_id IN ARRAY r.bronze_wa_ids
+				LOOP
+					INSERT INTO silver.wa_id_mapping (
+						wa_id_bronze,
+						wa_id_silver
+					)
+					VALUES (
+						bronze_wa_id,
+						generated_wa_id
+					)
+					ON CONFLICT (wa_id_bronze, wa_id_silver) DO NOTHING;
+				END LOOP;
+
+				last_company := r.company_id;
+				last_year := r.year;
+			END LOOP;
+
+			-- PART 2: Insert non-aggregated records where month is NULL
+			RAISE NOTICE '>> Inserting Non-Aggregated Data (month IS NULL)';
+			FOR r IN
+				SELECT
+					wa_id,
+					company_id,
+					year,
+					quarter,
+					CASE WHEN volume < 0 THEN 0 ELSE volume END AS volume,
+					unit_of_measurement
+				FROM bronze.envi_water_abstraction
+				WHERE month IS NULL
+			LOOP
+				INSERT INTO silver.envi_water_abstraction (
+					wa_id,
+					company_id,
+					volume,
+					unit_of_measurement,
+					quarter,
+					year
+				)
+				VALUES (
+					r.wa_id,
+					r.company_id,
+					r.volume,
+					r.unit_of_measurement,
+					r.quarter,
+					r.year
+				)
+				ON CONFLICT (wa_id) DO UPDATE SET
+					company_id = EXCLUDED.company_id,
+					volume = CASE WHEN EXCLUDED.volume < 0 THEN 0 ELSE EXCLUDED.volume END,
+					unit_of_measurement = EXCLUDED.unit_of_measurement,
+					year = EXCLUDED.year,
+					quarter = EXCLUDED.quarter,
+					updated_at = CURRENT_TIMESTAMP;
+
+				-- For non-aggregated records, create a 1:1 mapping
+				INSERT INTO silver.wa_id_mapping (
+					wa_id_bronze,
+					wa_id_silver
+				)
+				VALUES (
+					r.wa_id,
+					r.wa_id
+				)
+				ON CONFLICT (wa_id_bronze, wa_id_silver) DO NOTHING;
+			END LOOP;
+
+			-- PART 3: Insert direct records where both month and quarter are NOT NULL
+			RAISE NOTICE '>> Inserting Direct Data (month IS NOT NULL and quarter IS NOT NULL)';
+			FOR r IN
+				SELECT
+					wa_id,
+					company_id,
+					year,
+					TRIM(quarter) AS quarter,
+					CASE WHEN volume < 0 THEN 0 ELSE volume END AS volume,
+					unit_of_measurement
+				FROM bronze.envi_water_abstraction
+				WHERE month IS NOT NULL AND quarter IS NOT NULL
+			LOOP
+				INSERT INTO silver.envi_water_abstraction (
+					wa_id,
+					company_id,
+					volume,
+					unit_of_measurement,
+					quarter,
+					year
+				)
+				VALUES (
+					r.wa_id,
+					r.company_id,
+					r.volume,
+					r.unit_of_measurement,
+					r.quarter,
+					r.year
+				)
+				ON CONFLICT (wa_id) DO UPDATE SET
+					company_id = EXCLUDED.company_id,
+					volume = CASE WHEN EXCLUDED.volume < 0 THEN 0 ELSE EXCLUDED.volume END,
+					unit_of_measurement = EXCLUDED.unit_of_measurement,
+					year = EXCLUDED.year,
+					quarter = EXCLUDED.quarter,
+					updated_at = CURRENT_TIMESTAMP;
+
+				-- For direct records, create a 1:1 mapping
+				INSERT INTO silver.wa_id_mapping (
+					wa_id_bronze,
+					wa_id_silver
+				)
+				VALUES (
+					r.wa_id,
+					r.wa_id
+				)
+				ON CONFLICT (wa_id_bronze, wa_id_silver) DO NOTHING;
+			END LOOP;
+			
+			end_time := CLOCK_TIMESTAMP();
+			RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM (end_time - start_time));
+			RAISE NOTICE '>> -------------';
+		END IF;
 
 		-- Loading silver.envi_water_discharge
         IF load_water_discharge THEN

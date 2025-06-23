@@ -1,193 +1,193 @@
 ﻿company_id,workforce_type,lost_time,date,incident_type,incident_title,incident_count
-PWEI,Company Owned,TRUE,1/31/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,1/31/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,1/31/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,1/31/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,1/31/2025,Property Incident,PD,0
-PWEI,Company Owned,FALSE,1/31/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,1/31/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,1/31/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,2/28/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,2/28/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,2/28/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,2/28/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,2/28/2025,Property Incident,PD,0
-PWEI,Company Owned,FALSE,2/28/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,2/28/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,2/28/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,3/31/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,3/31/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,3/31/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,3/31/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,3/31/2025,Property Incident,PD,1
-PWEI,Company Owned,FALSE,3/31/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,3/31/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,3/31/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,4/30/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,4/30/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,4/30/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,4/30/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,4/30/2025,Property Incident,PD,0
-PWEI,Company Owned,FALSE,4/30/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,4/30/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,4/30/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,5/31/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,5/31/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,5/31/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,5/31/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,5/31/2025,Property Incident,PD,0
-PWEI,Company Owned,FALSE,5/31/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,5/31/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,5/31/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,6/30/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,6/30/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,6/30/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,6/30/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,6/30/2025,Property Incident,PD,0
-PWEI,Company Owned,FALSE,6/30/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,6/30/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,6/30/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,7/31/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,7/31/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,7/31/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,7/31/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,7/31/2025,Property Incident,PD,1
-PWEI,Company Owned,FALSE,7/31/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,7/31/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,7/31/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,8/31/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,8/31/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,8/31/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,8/31/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,8/31/2025,Property Incident,PD,1
-PWEI,Company Owned,FALSE,8/31/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,8/31/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,8/31/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,9/30/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,9/30/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,9/30/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,9/30/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,9/30/2025,Property Incident,PD,1
-PWEI,Company Owned,FALSE,9/30/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,9/30/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,9/30/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,10/31/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,10/31/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,10/31/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,10/31/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,10/31/2025,Property Incident,PD,0
-PWEI,Company Owned,FALSE,10/31/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,10/31/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,10/31/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,11/30/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,11/30/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,11/30/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,11/30/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,11/30/2025,Property Incident,PD,0
-PWEI,Company Owned,FALSE,11/30/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,11/30/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,11/30/2025,Illness,ILLNESS,0
-PWEI,Company Owned,TRUE,12/31/2025,Accident,LTI,0
-PWEI,Company Owned,FALSE,12/31/2025,Accident,RWC,0
-PWEI,Company Owned,FALSE,12/31/2025,Accident,MTC,0
-PWEI,Company Owned,FALSE,12/31/2025,Accident,FAC,0
-PWEI,Company Owned,FALSE,12/31/2025,Property Incident,PD,0
-PWEI,Company Owned,FALSE,12/31/2025,Near Miss,NMC,0
-PWEI,Company Owned,FALSE,12/31/2025,Violation,SV,0
-PWEI,Company Owned,FALSE,12/31/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,1/31/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,1/31/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,1/31/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,1/31/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,1/31/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,1/31/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,1/31/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,1/31/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,2/28/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,2/28/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,2/28/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,2/28/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,2/28/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,2/28/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,2/28/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,2/28/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,3/31/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,3/31/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,3/31/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,3/31/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,3/31/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,3/31/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,3/31/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,3/31/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,4/30/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,4/30/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,4/30/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,4/30/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,4/30/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,4/30/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,4/30/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,4/30/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,5/31/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,5/31/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,5/31/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,5/31/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,5/31/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,5/31/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,5/31/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,5/31/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,6/30/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,6/30/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,6/30/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,6/30/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,6/30/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,6/30/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,6/30/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,6/30/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,7/31/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,7/31/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,7/31/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,7/31/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,7/31/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,7/31/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,7/31/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,7/31/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,8/31/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,8/31/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,8/31/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,8/31/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,8/31/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,8/31/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,8/31/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,8/31/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,9/30/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,9/30/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,9/30/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,9/30/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,9/30/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,9/30/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,9/30/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,9/30/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,10/31/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,10/31/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,10/31/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,10/31/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,10/31/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,10/31/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,10/31/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,10/31/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,11/30/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,11/30/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,11/30/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,11/30/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,11/30/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,11/30/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,11/30/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,11/30/2025,Illness,ILLNESS,0
-PWEI,Other Contractors,TRUE,12/31/2025,Accident,LTI,0
-PWEI,Other Contractors,FALSE,12/31/2025,Accident,RWC,0
-PWEI,Other Contractors,FALSE,12/31/2025,Accident,MTC,0
-PWEI,Other Contractors,FALSE,12/31/2025,Accident,FAC,0
-PWEI,Other Contractors,FALSE,12/31/2025,Property Incident,PD,0
-PWEI,Other Contractors,FALSE,12/31/2025,Near Miss,NMC,0
-PWEI,Other Contractors,FALSE,12/31/2025,Violation,SV,0
-PWEI,Other Contractors,FALSE,12/31/2025,Illness,ILLNESS,0
+PSC,Contractors,FALSE,4/30/2020,Accident,Non Lost-Time Accidents (NLTA),4
+PSC,Contractors,FALSE,4/30/2020,Accident,Non Lost-Time Accidents (NLTA),4
+PSC,Contractors,FALSE,4/30/2020,Accident,Non Lost-Time Accidents (NLTA),4
+PSC,Contractors,FALSE,1/31/2020,Accident,Non Lost-Time Accidents (NLTA),2
+PSC,Contractors,FALSE,3/31/2020,Accident,Non Lost-Time Accidents (NLTA),2
+PSC,Contractors,FALSE,4/30/2020,Accident,Non Lost-Time Accidents (NLTA),4
+PSC,Contractors,FALSE,1/31/2019,Accident,Non Lost-Time Accidents (NLTA),2
+PSC,Contractors,FALSE,3/31/2019,Accident,Non Lost-Time Accidents (NLTA),2
+PSC,Contractors,FALSE,4/30/2019,Accident,Non Lost-Time Accidents (NLTA),4
+PSC,Contractors,FALSE,1/31/2019,Accident,Non Lost-Time Accidents (NLTA),1
+PSC,Contractors,FALSE,4/30/2019,Accident,Non Lost-Time Accidents (NLTA),7
+PSC,Contractors,FALSE,1/31/2019,Accident,Non Lost-Time Accidents (NLTA),1
+PSC,Contractors,FALSE,4/30/2019,Accident,Non Lost-Time Accidents (NLTA),7
+PSC,Contractors,FALSE,1/31/2019,Accident,Non Lost-Time Accidents (NLTA),2
+PSC,Contractors,FALSE,4/30/2019,Accident,Non Lost-Time Accidents (NLTA),6
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,

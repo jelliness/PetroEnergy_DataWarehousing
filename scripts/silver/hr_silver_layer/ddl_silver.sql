@@ -43,21 +43,20 @@ CREATE TABLE silver.hr_demographics (
     p_np VARCHAR(2),
     company_id VARCHAR(6),
 	employment_status VARCHAR(20),
-	date_created TIMESTAMP,
+	date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	date_updated TIMESTAMP
 );
 
 CREATE TABLE silver.hr_parental_leave (
-    parental_leave_id VARCHAR(20),
+    parental_leave_id VARCHAR(20) PRIMARY KEY,
     employee_id VARCHAR(20),
     type_of_leave VARCHAR(12),
     date TIMESTAMP,
     days INT,
 	end_date TIMESTAMP, -- DERIVED BY ADDING DAYS TO DATE
 	months_availed INT, -- DERIVED BY CALCULATING MONTHS AVAILED
-	date_created TIMESTAMP,
-	date_updated TIMESTAMP,
-	PRIMARY KEY (parental_leave_id, date, employee_id)
+	date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	date_updated TIMESTAMP
 );
 
 
@@ -66,38 +65,36 @@ CREATE TABLE silver.hr_tenure (
     start_date TIMESTAMP,
     end_date TIMESTAMP,
 	tenure_length NUMERIC(5,2), -- derived by subtracting end date from start date/ used in gold layer to calculate average tenure
-	date_created TIMESTAMP,
+	date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	date_updated TIMESTAMP,
 	PRIMARY KEY (start_date, employee_id)
 );
 
 CREATE TABLE silver.hr_training (
-    training_id VARCHAR(20),
+    training_id VARCHAR(20) PRIMARY KEY,
     company_id VARCHAR(10),
     training_title TEXT,
     date TIMESTAMP,
     training_hours INT,
     number_of_participants INT,
     total_training_hours INT, -- derived by multiplying training_hours by number_of_participants
-    date_created TIMESTAMP,
-	date_updated TIMESTAMP,
-    PRIMARY KEY (training_id, company_id, date, training_title)
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	date_updated TIMESTAMP
 );
 
 CREATE TABLE silver.hr_safety_workdata (
-    safety_workdata_id VARCHAR(20),
+    safety_workdata_id VARCHAR(20) PRIMARY KEY,
     company_id VARCHAR(10),
     contractor TEXT,
     date TIMESTAMP,
     manpower INT,
     manhours INT,
-    date_created TIMESTAMP,
-	date_updated TIMESTAMP,
-    PRIMARY KEY (safety_workdata_id, company_id, contractor, date)
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	date_updated TIMESTAMP
 );
 
 CREATE TABLE silver.hr_occupational_safety_health (
-    osh_id VARCHAR(20),
+    osh_id VARCHAR(20) PRIMARY KEY,
     company_id VARCHAR(10),
     workforce_type TEXT,
     lost_time BOOLEAN,
@@ -105,9 +102,8 @@ CREATE TABLE silver.hr_occupational_safety_health (
     incident_type TEXT,
     incident_title TEXT,
     incident_count INT,
-    date_created TIMESTAMP,
-	date_updated TIMESTAMP,
-    PRIMARY KEY (osh_id, company_id, workforce_type, lost_time, date, incident_type, incident_title)
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	date_updated TIMESTAMP
 );
 
 ALTER TABLE silver.hr_parental_leave ADD FOREIGN KEY (employee_id) REFERENCES silver.hr_demographics(employee_id);

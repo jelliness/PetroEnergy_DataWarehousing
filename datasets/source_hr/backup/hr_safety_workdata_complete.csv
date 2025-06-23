@@ -1,5 +1,6 @@
 ﻿company_id,contractor,date,manpower,manhours
 PSC,Main Contractors,2/29/2016,49,8679
+PSC,Main Contractors,2/29/2016,0,0
 PSC,Main Contractors,2/29/2016,111,23184
 PSC,Company Owned,2/29/2016,6,1252
 PSC,Company Owned,2/29/2016,12,3912
@@ -9,6 +10,7 @@ PSC,Company Owned,2/29/2016,9,1213
 PSC,Company Owned,2/29/2016,7,1624
 PSC,Company Owned,2/29/2016,7,1624
 PSC,Main Contractors,3/31/2016,261,3224
+PSC,Main Contractors,3/31/2016,0,0
 PSC,Main Contractors,3/31/2016,213,30360
 PSC,Company Owned,3/31/2016,6,1318
 PSC,Company Owned,3/31/2016,10,3720
@@ -26,74 +28,139 @@ PSC,Company Owned,4/30/2016,7,1760
 PSC,Company Owned,4/30/2016,1,40
 PSC,Company Owned,4/30/2016,9,1640
 PSC,Company Owned,4/30/2016,7,1032
+PSC,Company Owned,4/30/2016,0,0
 PSC,Company Owned,4/30/2016,2,490
 PSC,Company Owned,4/30/2016,4,704
 PSC,Main Contractors,5/31/2016,7,1232
 PSC,Main Contractors,5/31/2016,10,168
+PSC,Main Contractors,5/31/2016,0,0
 PSC,Company Owned,5/31/2016,5,904
 PSC,Company Owned,5/31/2016,10,3720
 PSC,Company Owned,5/31/2016,7,1632
+PSC,Company Owned,5/31/2016,0,0
 PSC,Company Owned,5/31/2016,9,1804
 PSC,Company Owned,5/31/2016,7,1456
+PSC,Company Owned,5/31/2016,0,0
+PSC,Company Owned,5/31/2016,0,0
+PSC,Company Owned,5/31/2016,0,0
 PSC,Main Contractors,6/30/2016,7,272
+PSC,Main Contractors,6/30/2016,0,0
 PSC,Main Contractors,6/30/2016,8,208
 PSC,Company Owned,6/30/2016,5,704
 PSC,Company Owned,6/30/2016,10,3600
 PSC,Company Owned,6/30/2016,7,1557
+PSC,Company Owned,6/30/2016,0,0
 PSC,Company Owned,6/30/2016,9,1811
 PSC,Company Owned,6/30/2016,5,360
+PSC,Company Owned,6/30/2016,0,0
+PSC,Company Owned,6/30/2016,0,0
 PSC,Company Owned,6/30/2016,2,240
+PSC,Main Contractors,7/31/2016,0,0
+PSC,Main Contractors,7/31/2016,0,0
 PSC,Main Contractors,7/31/2016,24,2184
 PSC,Company Owned,7/31/2016,6,904
 PSC,Company Owned,7/31/2016,10,3720
 PSC,Company Owned,7/31/2016,7,1580
+PSC,Company Owned,7/31/2016,0,0
 PSC,Company Owned,7/31/2016,9,1617
+PSC,Company Owned,7/31/2016,0,0
+PSC,Company Owned,7/31/2016,0,0
+PSC,Company Owned,7/31/2016,0,0
 PSC,Company Owned,7/31/2016,12,192
 PSC,Company Owned,7/31/2016,2,400
+PSC,Main Contractors,8/31/2016,0,0
+PSC,Main Contractors,8/31/2016,0,0
+PSC,Main Contractors,8/31/2016,0,0
 PSC,Company Owned,8/31/2016,6,856
 PSC,Company Owned,8/31/2016,10,3720
 PSC,Company Owned,8/31/2016,7,1516
+PSC,Company Owned,8/31/2016,0,0
 PSC,Company Owned,8/31/2016,18,3468
+PSC,Company Owned,8/31/2016,0,0
+PSC,Company Owned,8/31/2016,0,0
+PSC,Company Owned,8/31/2016,0,0
 PSC,Company Owned,8/31/2016,12,2016
+PSC,Company Owned,8/31/2016,0,0
+PSC,Main Contractors,9/30/2016,0,0
+PSC,Main Contractors,9/30/2016,0,0
+PSC,Main Contractors,9/30/2016,0,0
 PSC,Company Owned,9/30/2016,6,856
 PSC,Company Owned,9/30/2016,18,3468
 PSC,Company Owned,9/30/2016,10,3600
 PSC,Company Owned,9/30/2016,7,1516
+PSC,Company Owned,9/30/2016,0,0
+PSC,Company Owned,9/30/2016,0,0
+PSC,Company Owned,9/30/2016,0,0
+PSC,Company Owned,9/30/2016,0,0
+PSC,Company Owned,9/30/2016,0,2016
+PSC,Company Owned,9/30/2016,0,0
 PSC,Main Contractors,10/31/2016,32,3568
+PSC,Main Contractors,10/31/2016,0,0
+PSC,Main Contractors,10/31/2016,0,0
 PSC,Company Owned,10/31/2016,6,864
 PSC,Company Owned,10/31/2016,18,1810
 PSC,Company Owned,10/31/2016,10,3720
 PSC,Company Owned,10/31/2016,7,1602
+PSC,Company Owned,10/31/2016,0,0
+PSC,Company Owned,10/31/2016,0,0
+PSC,Company Owned,10/31/2016,0,0
+PSC,Company Owned,10/31/2016,0,0
+PSC,Company Owned,10/31/2016,0,0
 PSC,Company Owned,10/31/2016,13,456
 PSC,Company Owned,10/31/2016,6,96
 PSC,Company Owned,10/31/2016,5,96
 PSC,Company Owned,10/31/2016,4,320
 PSC,Company Owned,10/31/2016,45,6290
 PSC,Main Contractors,11/30/2016,50,8104
+PSC,Main Contractors,11/30/2016,0,0
+PSC,Main Contractors,11/30/2016,0,0
 PSC,Company Owned,11/30/2016,6,724
 PSC,Company Owned,11/30/2016,13,2583
 PSC,Company Owned,11/30/2016,10,3600
 PSC,Company Owned,11/30/2016,7,1625
+PSC,Company Owned,11/30/2016,0,0
+PSC,Company Owned,11/30/2016,0,0
+PSC,Company Owned,11/30/2016,0,0
+PSC,Company Owned,11/30/2016,0,0
+PSC,Company Owned,11/30/2016,0,0
 PSC,Company Owned,11/30/2016,15,1568
 PSC,Company Owned,11/30/2016,9,1656
 PSC,Company Owned,11/30/2016,3,160
+PSC,Company Owned,11/30/2016,0,0
 PSC,Company Owned,11/30/2016,44,8609
 PSC,Main Contractors,12/31/2016,38,6392
+PSC,Main Contractors,12/31/2016,0,0
 PSC,Main Contractors,12/31/2016,9,424
 PSC,Company Owned,12/31/2016,5,688
 PSC,Company Owned,12/31/2016,13,2403
 PSC,Company Owned,12/31/2016,10,3720
 PSC,Company Owned,12/31/2016,7,1706
+PSC,Company Owned,12/31/2016,0,0
+PSC,Company Owned,12/31/2016,0,0
+PSC,Company Owned,12/31/2016,0,0
+PSC,Company Owned,12/31/2016,0,0
+PSC,Company Owned,12/31/2016,0,0
 PSC,Company Owned,12/31/2016,6,944
 PSC,Company Owned,12/31/2016,6,1024
+PSC,Company Owned,12/31/2016,0,0
+PSC,Company Owned,12/31/2016,0,0
 PSC,Company Owned,12/31/2016,29,7394
 PSC,Main Contractors,1/31/2017,29,6392
+PSC,Main Contractors,1/31/2017,0,0
+PSC,Main Contractors,1/31/2017,0,0
 PSC,Company Owned,1/31/2017,5,784
 PSC,Company Owned,1/31/2017,13,1762
 PSC,Company Owned,1/31/2017,10,3720
 PSC,Company Owned,1/31/2017,7,1606
+PSC,Company Owned,1/31/2017,0,0
+PSC,Company Owned,1/31/2017,0,0
+PSC,Company Owned,1/31/2017,0,0
+PSC,Company Owned,1/31/2017,0,0
+PSC,Company Owned,1/31/2017,0,0
 PSC,Company Owned,1/31/2017,2,272
 PSC,Company Owned,1/31/2017,7,1064
+PSC,Company Owned,1/31/2017,0,0
+PSC,Company Owned,1/31/2017,0,0
 PSC,Company Owned,1/31/2017,26,6662
 PSC,Main Contractors,2/28/2017,32,6792
 PSC,Main Contractors,2/28/2017,6,48
@@ -102,178 +169,460 @@ PSC,Company Owned,2/28/2017,6,841
 PSC,Company Owned,2/28/2017,9,1891
 PSC,Company Owned,2/28/2017,10,3360
 PSC,Company Owned,2/28/2017,5,1199
+PSC,Company Owned,2/28/2017,0,0
+PSC,Company Owned,2/28/2017,0,0
+PSC,Company Owned,2/28/2017,0,0
+PSC,Company Owned,2/28/2017,0,0
+PSC,Company Owned,2/28/2017,0,0
 PSC,Company Owned,2/28/2017,2,304
+PSC,Company Owned,2/28/2017,0,0
+PSC,Company Owned,2/28/2017,0,0
+PSC,Company Owned,2/28/2017,0,0
 PSC,Company Owned,2/28/2017,17,4863
 PSC,Main Contractors,3/31/2017,18,4328
+PSC,Main Contractors,3/31/2017,0,0
 PSC,Main Contractors,3/31/2017,11,424
 PSC,Company Owned,3/31/2017,6,987
 PSC,Company Owned,3/31/2017,21,3672
 PSC,Company Owned,3/31/2017,10,3720
 PSC,Company Owned,3/31/2017,7,1775
+PSC,Company Owned,3/31/2017,0,0
+PSC,Company Owned,3/31/2017,0,0
+PSC,Company Owned,3/31/2017,0,0
+PSC,Company Owned,3/31/2017,0,0
+PSC,Company Owned,3/31/2017,0,0
 PSC,Company Owned,3/31/2017,4,496
+PSC,Company Owned,3/31/2017,0,0
+PSC,Company Owned,3/31/2017,0,0
+PSC,Company Owned,3/31/2017,0,0
 PSC,Company Owned,3/31/2017,5,640
 PSC,Company Owned,3/31/2017,26,6631
 PSC,Main Contractors,4/30/2017,11,2280
+PSC,Main Contractors,4/30/2017,0,0
+PSC,Main Contractors,4/30/2017,0,0
 PSC,Company Owned,4/30/2017,6,746
 PSC,Company Owned,4/30/2017,21,2835
 PSC,Company Owned,4/30/2017,18,5328
 PSC,Company Owned,4/30/2017,7,1518
+PSC,Company Owned,4/30/2017,0,0
+PSC,Company Owned,4/30/2017,0,0
+PSC,Company Owned,4/30/2017,0,0
+PSC,Company Owned,4/30/2017,0,0
+PSC,Company Owned,4/30/2017,0,0
 PSC,Company Owned,4/30/2017,4,672
+PSC,Company Owned,4/30/2017,0,0
+PSC,Company Owned,4/30/2017,0,0
+PSC,Company Owned,4/30/2017,0,0
 PSC,Company Owned,4/30/2017,5,144
 PSC,Company Owned,4/30/2017,11,1712
 PSC,Company Owned,4/30/2017,45,9374
 PSC,Main Contractors,5/31/2017,18,2664
+PSC,Main Contractors,5/31/2017,0,0
+PSC,Main Contractors,5/31/2017,0,0
 PSC,Company Owned,5/31/2017,6,896
 PSC,Company Owned,5/31/2017,20,2632
 PSC,Company Owned,5/31/2017,10,3808
 PSC,Company Owned,5/31/2017,7,1697
+PSC,Company Owned,5/31/2017,0,0
+PSC,Company Owned,5/31/2017,0,0
+PSC,Company Owned,5/31/2017,0,0
+PSC,Company Owned,5/31/2017,0,0
+PSC,Company Owned,5/31/2017,0,0
+PSC,Company Owned,5/31/2017,0,0
+PSC,Company Owned,5/31/2017,0,0
+PSC,Company Owned,5/31/2017,0,0
+PSC,Company Owned,5/31/2017,0,0
 PSC,Company Owned,5/31/2017,5,40
 PSC,Company Owned,5/31/2017,13,2144
 PSC,Company Owned,5/31/2017,35,7689
 PSC,Main Contractors,6/30/2017,10,992
+PSC,Main Contractors,6/30/2017,0,0
 PSC,Main Contractors,6/30/2017,3,312
 PSC,Company Owned,6/30/2017,6,898
 PSC,Company Owned,6/30/2017,13,2163
 PSC,Company Owned,6/30/2017,10,3600
 PSC,Company Owned,6/30/2017,7,1641
+PSC,Company Owned,6/30/2017,0,0
+PSC,Company Owned,6/30/2017,0,0
+PSC,Company Owned,6/30/2017,0,0
+PSC,Company Owned,6/30/2017,0,0
+PSC,Company Owned,6/30/2017,0,0
 PSC,Company Owned,6/30/2017,2,176
+PSC,Company Owned,6/30/2017,0,0
+PSC,Company Owned,6/30/2017,0,0
+PSC,Company Owned,6/30/2017,0,0
 PSC,Company Owned,6/30/2017,5,40
 PSC,Company Owned,6/30/2017,5,272
 PSC,Company Owned,6/30/2017,29,5729
 PSC,Main Contractors,7/31/2017,2,32
+PSC,Main Contractors,7/31/2017,0,0
 PSC,Main Contractors,7/31/2017,2,16
 PSC,Company Owned,7/31/2017,6,952
 PSC,Company Owned,7/31/2017,13,2612
 PSC,Company Owned,7/31/2017,10,3720
 PSC,Company Owned,7/31/2017,7,1726
+PSC,Company Owned,7/31/2017,0,0
+PSC,Company Owned,7/31/2017,0,0
+PSC,Company Owned,7/31/2017,0,0
+PSC,Company Owned,7/31/2017,0,0
+PSC,Company Owned,7/31/2017,0,0
 PSC,Company Owned,7/31/2017,2,416
+PSC,Company Owned,7/31/2017,0,0
+PSC,Company Owned,7/31/2017,0,0
+PSC,Company Owned,7/31/2017,0,0
+PSC,Company Owned,7/31/2017,0,0
+PSC,Company Owned,7/31/2017,0,0
 PSC,Company Owned,7/31/2017,19,5862
 PSC,Main Contractors,8/31/2017,5,352
+PSC,Main Contractors,8/31/2017,0,0
+PSC,Main Contractors,8/31/2017,0,0
 PSC,Company Owned,8/31/2017,6,927
 PSC,Company Owned,8/31/2017,13,2754
 PSC,Company Owned,8/31/2017,10,3720
 PSC,Company Owned,8/31/2017,7,1679
+PSC,Company Owned,8/31/2017,0,0
+PSC,Company Owned,8/31/2017,0,0
+PSC,Company Owned,8/31/2017,0,0
+PSC,Company Owned,8/31/2017,0,0
+PSC,Company Owned,8/31/2017,0,0
 PSC,Company Owned,8/31/2017,2,384
+PSC,Company Owned,8/31/2017,0,0
+PSC,Company Owned,8/31/2017,0,0
+PSC,Company Owned,8/31/2017,0,0
+PSC,Company Owned,8/31/2017,0,0
+PSC,Company Owned,8/31/2017,0,0
 PSC,Company Owned,8/31/2017,19,5783
 PSC,Main Contractors,9/30/2017,9,1584
+PSC,Main Contractors,9/30/2017,0,0
+PSC,Main Contractors,9/30/2017,0,0
 PSC,Company Owned,9/30/2017,6,904
 PSC,Company Owned,9/30/2017,13,2595
 PSC,Company Owned,9/30/2017,10,3600
 PSC,Company Owned,9/30/2017,7,1621
+PSC,Company Owned,9/30/2017,0,0
+PSC,Company Owned,9/30/2017,0,0
+PSC,Company Owned,9/30/2017,0,0
+PSC,Company Owned,9/30/2017,0,0
+PSC,Company Owned,9/30/2017,0,0
 PSC,Company Owned,9/30/2017,2,368
+PSC,Company Owned,9/30/2017,0,0
+PSC,Company Owned,9/30/2017,0,0
+PSC,Company Owned,9/30/2017,0,0
+PSC,Company Owned,9/30/2017,0,0
+PSC,Company Owned,9/30/2017,0,0
 PSC,Company Owned,9/30/2017,19,5589
 PSC,Main Contractors,10/31/2017,8,1480
+PSC,Main Contractors,10/31/2017,0,0
+PSC,Main Contractors,10/31/2017,0,0
 PSC,Company Owned,10/31/2017,6,880
 PSC,Company Owned,10/31/2017,13,2502
 PSC,Company Owned,10/31/2017,10,3720
 PSC,Company Owned,10/31/2017,7,1636
+PSC,Company Owned,10/31/2017,0,0
+PSC,Company Owned,10/31/2017,0,0
+PSC,Company Owned,10/31/2017,0,0
+PSC,Company Owned,10/31/2017,0,0
+PSC,Company Owned,10/31/2017,0,0
 PSC,Company Owned,10/31/2017,2,400
+PSC,Company Owned,10/31/2017,0,0
+PSC,Company Owned,10/31/2017,0,0
+PSC,Company Owned,10/31/2017,0,0
+PSC,Company Owned,10/31/2017,0,0
 PSC,Company Owned,10/31/2017,5,344
 PSC,Company Owned,10/31/2017,24,6100
 PSC,Main Contractors,11/30/2017,7,280
+PSC,Main Contractors,11/30/2017,0,0
+PSC,Main Contractors,11/30/2017,0,0
 PSC,Company Owned,11/30/2017,6,760
 PSC,Company Owned,11/30/2017,13,2272
 PSC,Company Owned,11/30/2017,10,3600
 PSC,Company Owned,11/30/2017,7,1519
+PSC,Company Owned,11/30/2017,0,0
+PSC,Company Owned,11/30/2017,0,0
+PSC,Company Owned,11/30/2017,0,0
+PSC,Company Owned,11/30/2017,0,0
+PSC,Company Owned,11/30/2017,0,0
 PSC,Company Owned,11/30/2017,2,320
+PSC,Company Owned,11/30/2017,0,0
+PSC,Company Owned,11/30/2017,0,0
+PSC,Company Owned,11/30/2017,0,0
+PSC,Company Owned,11/30/2017,0,0
 PSC,Company Owned,11/30/2017,8,344
 PSC,Company Owned,11/30/2017,27,5783
+PSC,Main Contractors,12/31/2017,0,0
+PSC,Main Contractors,12/31/2017,0,0
 PSC,Main Contractors,12/31/2017,3,72
 PSC,Company Owned,12/31/2017,6,848
 PSC,Company Owned,12/31/2017,13,2320
 PSC,Company Owned,12/31/2017,10,3720
 PSC,Company Owned,12/31/2017,7,1614
+PSC,Company Owned,12/31/2017,0,0
+PSC,Company Owned,12/31/2017,0,0
+PSC,Company Owned,12/31/2017,0,0
+PSC,Company Owned,12/31/2017,0,0
+PSC,Company Owned,12/31/2017,0,0
 PSC,Company Owned,12/31/2017,2,376
+PSC,Company Owned,12/31/2017,0,0
+PSC,Company Owned,12/31/2017,0,0
+PSC,Company Owned,12/31/2017,0,0
+PSC,Company Owned,12/31/2017,0,0
+PSC,Company Owned,12/31/2017,0,0
 PSC,Company Owned,12/31/2017,19,5710
+PSC,Main Contractors,1/31/2018,0,0
+PSC,Main Contractors,1/31/2018,0,0
+PSC,Main Contractors,1/31/2018,0,0
 PSC,Company Owned,1/31/2018,5,858
 PSC,Company Owned,1/31/2018,13,2504
 PSC,Company Owned,1/31/2018,10,3720
 PSC,Company Owned,1/31/2018,8,1843
+PSC,Company Owned,1/31/2018,0,0
+PSC,Company Owned,1/31/2018,0,0
+PSC,Company Owned,1/31/2018,0,0
+PSC,Company Owned,1/31/2018,0,0
+PSC,Company Owned,1/31/2018,0,0
 PSC,Company Owned,1/31/2018,2,216
+PSC,Company Owned,1/31/2018,0,0
+PSC,Company Owned,1/31/2018,0,0
+PSC,Company Owned,1/31/2018,0,0
+PSC,Company Owned,1/31/2018,0,0
+PSC,Company Owned,1/31/2018,0,0
 PSC,Company Owned,1/31/2018,20,5779
+PSC,Main Contractors,2/28/2018,0,0
+PSC,Main Contractors,2/28/2018,0,0
+PSC,Main Contractors,2/28/2018,0,0
 PSC,Company Owned,2/28/2018,5,778
 PSC,Company Owned,2/28/2018,12,4937
 PSC,Company Owned,2/28/2018,10,3360
 PSC,Company Owned,2/28/2018,8,1694
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
+PSC,Company Owned,2/28/2018,0,0
 PSC,Company Owned,2/28/2018,18,5054
+PSC,Main Contractors,3/31/2018,0,0
+PSC,Main Contractors,3/31/2018,0,0
+PSC,Main Contractors,3/31/2018,0,0
 PSC,Company Owned,3/31/2018,5,830
 PSC,Company Owned,3/31/2018,21,4130
 PSC,Company Owned,3/31/2018,10,3720
 PSC,Company Owned,3/31/2018,8,1938
+PSC,Company Owned,3/31/2018,0,0
+PSC,Company Owned,3/31/2018,0,0
+PSC,Company Owned,3/31/2018,0,0
+PSC,Company Owned,3/31/2018,0,0
+PSC,Company Owned,3/31/2018,0,0
 PSC,Company Owned,3/31/2018,3,416
+PSC,Company Owned,3/31/2018,0,0
+PSC,Company Owned,3/31/2018,0,0
+PSC,Company Owned,3/31/2018,0,0
+PSC,Company Owned,3/31/2018,0,0
+PSC,Company Owned,3/31/2018,0,0
 PSC,Company Owned,3/31/2018,10,1296
 PSC,Company Owned,3/31/2018,31,7370
+PSC,Main Contractors,4/30/2018,0,0
+PSC,Main Contractors,4/30/2018,0,0
+PSC,Main Contractors,4/30/2018,0,0
 PSC,Company Owned,4/30/2018,5,782
 PSC,Company Owned,4/30/2018,22,4044
 PSC,Company Owned,4/30/2018,10,3600
 PSC,Company Owned,4/30/2018,8,1817
+PSC,Company Owned,4/30/2018,0,0
+PSC,Company Owned,4/30/2018,0,0
+PSC,Company Owned,4/30/2018,0,0
+PSC,Company Owned,4/30/2018,0,0
+PSC,Company Owned,4/30/2018,0,0
 PSC,Company Owned,4/30/2018,9,920
 PSC,Company Owned,4/30/2018,5,80
+PSC,Company Owned,4/30/2018,0,0
+PSC,Company Owned,4/30/2018,0,0
+PSC,Company Owned,4/30/2018,0,0
+PSC,Company Owned,4/30/2018,0,0
 PSC,Company Owned,4/30/2018,5,336
 PSC,Company Owned,4/30/2018,4,96
 PSC,Company Owned,4/30/2018,41,6849
+PSC,Main Contractors,5/31/2018,0,0
+PSC,Main Contractors,5/31/2018,0,0
+PSC,Main Contractors,5/31/2018,0,0
 PSC,Company Owned,5/31/2018,5,804
 PSC,Company Owned,5/31/2018,22,2962
 PSC,Company Owned,5/31/2018,10,3720
 PSC,Company Owned,5/31/2018,8,1556
+PSC,Company Owned,5/31/2018,0,0
+PSC,Company Owned,5/31/2018,0,0
+PSC,Company Owned,5/31/2018,0,0
+PSC,Company Owned,5/31/2018,0,0
+PSC,Company Owned,5/31/2018,0,0
 PSC,Company Owned,5/31/2018,6,968
 PSC,Company Owned,5/31/2018,4,88
+PSC,Company Owned,5/31/2018,0,0
+PSC,Company Owned,5/31/2018,0,0
+PSC,Company Owned,5/31/2018,0,0
+PSC,Company Owned,5/31/2018,0,0
 PSC,Company Owned,5/31/2018,5,576
+PSC,Company Owned,5/31/2018,0,0
 PSC,Company Owned,5/31/2018,33,6908
+PSC,Main Contractors,6/30/2018,0,0
+PSC,Main Contractors,6/30/2018,0,0
+PSC,Main Contractors,6/30/2018,0,0
 PSC,Company Owned,6/30/2018,5,728
 PSC,Company Owned,6/30/2018,12,2176
 PSC,Company Owned,6/30/2018,10,3600
 PSC,Company Owned,6/30/2018,8,1789
+PSC,Company Owned,6/30/2018,0,0
+PSC,Company Owned,6/30/2018,0,0
+PSC,Company Owned,6/30/2018,0,0
+PSC,Company Owned,6/30/2018,0,0
+PSC,Company Owned,6/30/2018,0,0
 PSC,Company Owned,6/30/2018,5,744
 PSC,Company Owned,6/30/2018,4,96
+PSC,Company Owned,6/30/2018,0,0
+PSC,Company Owned,6/30/2018,0,0
+PSC,Company Owned,6/30/2018,0,0
+PSC,Company Owned,6/30/2018,0,0
 PSC,Company Owned,6/30/2018,4,576
+PSC,Company Owned,6/30/2018,0,0
 PSC,Company Owned,6/30/2018,31,6805
+PSC,Main Contractors,7/31/2018,0,0
+PSC,Main Contractors,7/31/2018,0,0
+PSC,Main Contractors,7/31/2018,0,0
 PSC,Company Owned,7/31/2018,5,832
 PSC,Company Owned,7/31/2018,12,2352
 PSC,Company Owned,7/31/2018,10,3720
 PSC,Company Owned,7/31/2018,8,1820
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
 PSC,Company Owned,7/31/2018,4,512
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
+PSC,Company Owned,7/31/2018,0,0
 PSC,Company Owned,7/31/2018,22,6052
+PSC,Main Contractors,8/31/2018,0,0
+PSC,Main Contractors,8/31/2018,0,0
+PSC,Main Contractors,8/31/2018,0,0
 PSC,Company Owned,8/31/2018,5,836
 PSC,Company Owned,8/31/2018,12,2424
 PSC,Company Owned,8/31/2018,10,3720
 PSC,Company Owned,8/31/2018,8,1796
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
 PSC,Company Owned,8/31/2018,2,368
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
+PSC,Company Owned,8/31/2018,0,0
 PSC,Company Owned,8/31/2018,20,5884
+PSC,Main Contractors,9/30/2018,0,0
+PSC,Main Contractors,9/30/2018,0,0
+PSC,Main Contractors,9/30/2018,0,0
 PSC,Company Owned,9/30/2018,5,790
 PSC,Company Owned,9/30/2018,25,3480
 PSC,Company Owned,9/30/2018,10,3600
 PSC,Company Owned,9/30/2018,8,1772
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
 PSC,Company Owned,9/30/2018,3,264
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
+PSC,Company Owned,9/30/2018,0,0
 PSC,Company Owned,9/30/2018,5,120
 PSC,Company Owned,9/30/2018,26,5756
 PSC,Main Contractors,10/31/2018,12,1144
+PSC,Main Contractors,10/31/2018,0,0
+PSC,Main Contractors,10/31/2018,0,0
 PSC,Main Contractors,10/31/2018,15,752
 PSC,Company Owned,10/31/2018,5,906
 PSC,Company Owned,10/31/2018,25,4062
 PSC,Company Owned,10/31/2018,12,3864
 PSC,Company Owned,10/31/2018,8,1938
+PSC,Company Owned,10/31/2018,0,0
 PSC,Company Owned,10/31/2018,2,88
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,3,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,0,0
+PSC,Company Owned,10/31/2018,5,0
 PSC,Company Owned,10/31/2018,30,5890
 PSC,Main Contractors,11/30/2018,15,2794
+PSC,Main Contractors,11/30/2018,0,0
+PSC,Main Contractors,11/30/2018,0,0
 PSC,Main Contractors,11/30/2018,31,3392
 PSC,Company Owned,11/30/2018,5,728
 PSC,Company Owned,11/30/2018,13,2300
 PSC,Company Owned,11/30/2018,16,5236
 PSC,Company Owned,11/30/2018,10,2097
+PSC,Company Owned,11/30/2018,0,0
 PSC,Company Owned,11/30/2018,2,320
 PSC,Company Owned,11/30/2018,6,48
 PSC,Company Owned,11/30/2018,4,96
+PSC,Company Owned,11/30/2018,0,0
+PSC,Company Owned,11/30/2018,0,0
+PSC,Company Owned,11/30/2018,0,0
+PSC,Company Owned,11/30/2018,0,0
+PSC,Company Owned,11/30/2018,0,0
+PSC,Company Owned,11/30/2018,0,0
+PSC,Company Owned,11/30/2018,0,0
+PSC,Company Owned,11/30/2018,0,0
+PSC,Company Owned,11/30/2018,0,0
+PSC,Company Owned,11/30/2018,0,0
 PSC,Company Owned,11/30/2018,4,32
 PSC,Company Owned,11/30/2018,42,7829
 PSC,Main Contractors,12/31/2018,10,2410
+PSC,Main Contractors,12/31/2018,0,0
+PSC,Main Contractors,12/31/2018,0,0
 PSC,Main Contractors,12/31/2018,39,6866
 PSC,Company Owned,12/31/2018,5,712
 PSC,Company Owned,12/31/2018,13,2096
 PSC,Company Owned,12/31/2018,16,5664
 PSC,Company Owned,12/31/2018,10,2118
+PSC,Company Owned,12/31/2018,0,0
 PSC,Company Owned,12/31/2018,2,344
+PSC,Company Owned,12/31/2018,0,0
 PSC,Company Owned,12/31/2018,12,648
+PSC,Company Owned,12/31/2018,0,0
+PSC,Company Owned,12/31/2018,0,0
+PSC,Company Owned,12/31/2018,0,0
+PSC,Company Owned,12/31/2018,0,0
+PSC,Company Owned,12/31/2018,0,0
+PSC,Company Owned,12/31/2018,0,0
+PSC,Company Owned,12/31/2018,0,0
+PSC,Company Owned,12/31/2018,0,0
+PSC,Company Owned,12/31/2018,0,0
+PSC,Company Owned,12/31/2018,0,0
 PSC,Company Owned,12/31/2018,5,30
 PSC,Company Owned,12/31/2018,45,8804
 PSC,PetroSolar Corporation (Company Owned),1/31/2019,5,700
@@ -484,3 +833,1364 @@ PWEI,Company Owned,1/31/2025,189,25748
 PWEI,Company Owned,2/28/2025,223,48342
 PWEI,Company Owned,3/31/2025,322,73493
 PWEI,Company Owned,4/30/2025,374,101725
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
