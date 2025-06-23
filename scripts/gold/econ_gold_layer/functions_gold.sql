@@ -213,6 +213,7 @@ CREATE OR REPLACE FUNCTION gold.func_economic_value_distributed_by_company(
 )
 RETURNS TABLE (
     year SMALLINT,
+    company_id VARCHAR(10),
     company_name VARCHAR(255),
     total_government_payments NUMERIC,
     total_local_supplier_spending NUMERIC,
@@ -248,6 +249,7 @@ BEGIN
     )
     SELECT
         fd.year,
+        fd.company_id,
         fd.company_name,
         fd.total_government_payments,
         fd.total_local_supplier_spending,
@@ -282,6 +284,7 @@ CREATE OR REPLACE FUNCTION gold.func_economic_value_distribution_percentage(
 )
 RETURNS TABLE (
     year SMALLINT,
+    company_id VARCHAR(10),
     company_name VARCHAR(255),
     total_economic_value_distributed_by_company NUMERIC,
     percentage_of_total_distribution NUMERIC
@@ -301,6 +304,7 @@ BEGIN
     )
     SELECT
         fd.year,
+        fd.company_id,
         fd.company_name,
         fd.total_economic_value_distributed_by_company,
         fd.percentage_of_total_distribution
