@@ -295,15 +295,16 @@ CREATE OR REPLACE FUNCTION gold.func_fund_alloc(
 RETURNS TABLE (
     month INT,
     month_name TEXT,
-	year SMALLINT,
+    quarter INT,
+    year SMALLINT,
     power_plant_id  VARCHAR(10),
     company_id VARCHAR(10),
     ff_id VARCHAR(10),
     ff_name TEXT,
     ff_percentage NUMERIC(5,4),
-	ff_category VARCHAR(20),
-    power_generated_peso NUMERIC,
-    funds_allocated_peso NUMERIC
+    ff_category VARCHAR(20),
+    power_generated_peso NUMERIC(12,2),
+    funds_allocated_peso NUMERIC(12,2)
 )
 AS $$
 BEGIN
@@ -311,19 +312,28 @@ BEGIN
     SELECT 
         dd.month,
         dd.month_name,
-		dd.year::SMALLINT,
+        dd.quarter,
+        CAST(dd.year AS SMALLINT) AS year,
         pp.power_plant_id,
         pp.company_id,
         ff.ff_id,
         ff.ff_name,
         ff.ff_percentage,
-		ff.ff_category,
-        ROUND(SUM(er.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
-        ROUND(SUM((er.energy_generated_kwh * 0.01) * ff.ff_percentage), 2) AS funds_allocated_peso
-    FROM silver.csv_energy_records er
-    LEFT JOIN ref.ref_power_plants pp ON pp.power_plant_id = er.power_plant_id
-    LEFT JOIN gold.dim_date dd ON dd.date_id = DATE_TRUNC('month', er.date_generated)
-    CROSS JOIN ref.ref_fa_factors ff
+        ff.ff_category,
+        TRUNC(SUM(eg.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
+        TRUNC(
+            SUM(
+                CASE 
+                    WHEN ff.ff_category = 'allocation'
+                        THEN eg.energy_generated_kwh * 0.01 * ff.ff_percentage
+                    ELSE eg.energy_generated_kwh * 0.01 * 0.50 * ff.ff_percentage
+                END
+            ), 
+        2) AS funds_allocated_peso
+    FROM gold.fact_energy_generated eg 
+    CROSS JOIN ref.ref_fa_factors ff 
+    LEFT JOIN gold.dim_date dd ON dd.date_id = eg.date_generated 
+    LEFT JOIN gold.dim_powerplant_profile pp ON eg.power_plant_id = pp.power_plant_id
     WHERE (p_power_plant_id IS NULL OR pp.power_plant_id = ANY(p_power_plant_id))
         AND (p_company_id IS NULL OR pp.company_id = ANY(p_company_id))
         AND (p_ff_id IS NULL OR ff.ff_id = ANY(p_ff_id))
@@ -331,19 +341,19 @@ BEGIN
         AND (p_year IS NULL OR dd.year = ANY(p_year))
         AND (p_ff_category IS NULL OR ff.ff_category = p_ff_category)
     GROUP BY 
-        dd.month_name,
         dd.month,
-		dd.year,
-        DATE_TRUNC('month', er.date_generated),
+        dd.month_name,
+        dd.quarter,
+        dd.year,
         pp.power_plant_id,
         pp.company_id,
         ff.ff_id,
         ff.ff_name,
-        ff.ff_percentage
-    ORDER BY dd.month DESC;
+        ff.ff_percentage,
+        ff.ff_category
+    ORDER BY dd.year, dd.month DESC, dd.quarter;
 END;
 $$ LANGUAGE plpgsql;
-
 
 
 

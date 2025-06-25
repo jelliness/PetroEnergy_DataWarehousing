@@ -85,7 +85,9 @@ SELECT
 
 FROM silver.csv_energy_records er
 LEFT JOIN gold.dim_powerplant_profile pp ON er.power_plant_id = pp.power_plant_id
-LEFT JOIN gold.dim_date dd ON CAST(er.date_generated AS DATE) = dd.date_id;
+LEFT JOIN gold.dim_date dd ON CAST(er.date_generated AS DATE) = dd.date_id
+LEFT JOIN record_status rs ON rs.record_id=er.energy_id
+WHERE rs.status_id = 'APP';
 
 -- =============================================================================
 -- Create Fact: gold.fact_fund_allocation
