@@ -1,14 +1,6 @@
-CREATE OR REPLACE PROCEDURE silver.load_hr_silver(
-	load_demographics BOOLEAN DEFAULT TRUE,
-    load_tenure BOOLEAN DEFAULT TRUE,
-    load_parental_leave BOOLEAN DEFAULT TRUE,
-    load_training BOOLEAN DEFAULT TRUE,
-    load_safety_workdata BOOLEAN DEFAULT TRUE,
-    load_occupational_safety_health BOOLEAN DEFAULT TRUE,
-	load_from_sql BOOLEAN DEFAULT TRUE
-)
-LANGUAGE plpgsql
-AS $$
+CREATE OR REPLACE PROCEDURE silver.load_hr_silver(IN load_demographics boolean DEFAULT true, IN load_tenure boolean DEFAULT true, IN load_parental_leave boolean DEFAULT true, IN load_training boolean DEFAULT true, IN load_safety_workdata boolean DEFAULT true, IN load_occupational_safety_health boolean DEFAULT true, IN load_from_sql boolean DEFAULT true)
+ LANGUAGE plpgsql
+AS $procedure$
 DECLARE
     start_time TIMESTAMP;
     end_time TIMESTAMP;
@@ -182,7 +174,16 @@ BEGIN
 			b.number_of_participants,
 			b.training_hours * b.number_of_participants,
 			CURRENT_TIMESTAMP
-		FROM bronze.hr_training b;
+		FROM bronze.hr_training b
+ON CONFLICT (training_id)
+DO UPDATE SET
+  company_id = EXCLUDED.company_id,
+  training_title = EXCLUDED.training_title,
+  date = EXCLUDED.date,
+  training_hours = EXCLUDED.training_hours,
+  number_of_participants = EXCLUDED.number_of_participants,
+  total_training_hours = EXCLUDED.total_training_hours,
+  date_updated = CURRENT_TIMESTAMP;
 
 		end_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -218,7 +219,16 @@ BEGIN
 			b.manpower, 
 			b.manhours, 
 			CURRENT_TIMESTAMP
-		FROM bronze.hr_safety_workdata b;
+		FROM bronze.hr_safety_workdata b
+  ON CONFLICT (safety_workdata_id)
+  DO UPDATE SET
+    company_id = EXCLUDED.company_id,
+    contractor = EXCLUDED.contractor,
+    date = EXCLUDED.date,
+    manpower = EXCLUDED.manpower,
+    manhours = EXCLUDED.manhours,
+    date_updated = CURRENT_TIMESTAMP;
+
 		
 		end_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -267,7 +277,17 @@ BEGIN
 			b.incident_title,
 			b.incident_count,
 			CURRENT_TIMESTAMP
-		FROM bronze.hr_occupational_safety_health b;
+		FROM bronze.hr_occupational_safety_health b
+ON CONFLICT (osh_id)
+DO UPDATE SET
+  company_id = EXCLUDED.company_id,
+  workforce_type = EXCLUDED.workforce_type,
+  lost_time = EXCLUDED.lost_time,
+  date = EXCLUDED.date,
+  incident_type = EXCLUDED.incident_type,
+  incident_title = EXCLUDED.incident_title,
+  incident_count = EXCLUDED.incident_count,
+  date_updated = CURRENT_TIMESTAMP;
 
 		end_time := CURRENT_TIMESTAMP;
 		RAISE NOTICE '>> Load Duration: % seconds', EXTRACT(EPOCH FROM end_time - start_time);
@@ -288,4 +308,4 @@ EXCEPTION
         RAISE NOTICE 'Error occurred while loading data: %', SQLERRM;
         RAISE NOTICE '================================';
 END;
-$$;
+$procedure$
