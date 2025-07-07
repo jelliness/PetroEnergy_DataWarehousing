@@ -13,7 +13,7 @@ CREATE TABLE public.roles (
 );
 
 -- Table: public.account
-DROP TABLE IF EXISTS public.account CASCADE;
+DROP TABLE IF EXISTS public.account CASCADE
 CREATE TABLE public.account (
     account_id CHAR(26) PRIMARY KEY,
     email VARCHAR(254) NOT NULL,
@@ -21,28 +21,30 @@ CREATE TABLE public.account (
     power_plant_id VARCHAR(10) NOT NULL,
     company_id VARCHAR(10) NOT NULL,
     account_status VARCHAR(10) NOT NULL,
-    date_created TIMESTAMP NOT NULL,
-    date_updated TIMESTAMP NOT NULL,
+    date_created TIMESTAMP NOT NULL DEFAULT NOW(),
+    date_updated TIMESTAMP NOT NULL DEFAULT NOW(),
+    password TEXT NOT NULL,
     CONSTRAINT fk_account_role FOREIGN KEY (account_role) REFERENCES public.roles(role_id)
 );
 
--- Table: public.user_profil
+-- Table: public.user_profile
 DROP TABLE IF EXISTS public.user_profile CASCADE;
 CREATE TABLE public.user_profile (
     emp_id VARCHAR(20),
-    account_id CHAR(26) PRIMARY KEY,  -- also serves as profile_id
+    account_id CHAR(26) PRIMARY KEY,  
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     middle_name VARCHAR(50),
-	suffix VARCHAR(5),
+    suffix VARCHAR(5),
     contact_number VARCHAR(20),
     address TEXT,
     birthdate DATE,
     gender VARCHAR(10),
-    profile_created TIMESTAMP NOT NULL,
-    profile_updated TIMESTAMP NOT NULL,
+    profile_created TIMESTAMP NOT NULL DEFAULT NOW(),
+    profile_updated TIMESTAMP NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_user_account FOREIGN KEY (account_id) REFERENCES public.account(account_id)
 );
+
 
 
 -- Table: public.audit_trail
@@ -72,11 +74,3 @@ CREATE TABLE public.checker_status_log (
     CONSTRAINT fk_checker_account FOREIGN KEY (checker_id) REFERENCES public.account(account_id),
     CONSTRAINT fk_status_log FOREIGN KEY (status_id) REFERENCES public.status(status_id)
 );
-
--- Table: public.attachment
-DROP TABLE IF EXISTS public.attachment CASCADE;
-CREATE TABLE public.attachment (
-    record_id VARCHAR(20) PRIMARY KEY,
-    attachment_file TEXT NOT NULL
-);
-

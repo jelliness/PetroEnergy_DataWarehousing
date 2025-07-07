@@ -89,76 +89,6 @@ LEFT JOIN gold.dim_date dd ON CAST(er.date_generated AS DATE) = dd.date_id
 LEFT JOIN record_status rs ON rs.record_id=er.energy_id
 WHERE rs.status_id = 'APP';
 
--- =============================================================================
--- Create Fact: gold.fact_fund_allocation
--- =============================================================================
-DROP VIEW IF EXISTS gold.fact_fund_allocation CASCADE;
-CREATE OR REPLACE VIEW gold.fact_fund_allocation AS
-SELECT 
-    dd.month_name,
-	dd.month,
-	dd.year,
-    pp.power_plant_id,
-	pp.company_id,
-    ff.ff_id,
-    ff.ff_name,
-    ff.ff_percentage,
-    ROUND(SUM(er.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
-    ROUND(SUM((er.energy_generated_kwh * 0.01) * ff.ff_percentage), 2) AS funds_allocated_peso
-FROM silver.csv_energy_records er
-LEFT JOIN ref.ref_power_plants pp ON pp.power_plant_id = er.power_plant_id
-LEFT JOIN gold.dim_date dd on dd.date_id = DATE_TRUNC('month', er.date_generated)
-CROSS JOIN ref.ref_fa_factors ff
-GROUP BY 
-    dd.month_name,
-    dd.month,
-	dd.year,
-    DATE_TRUNC('month', er.date_generated),
-    pp.power_plant_id,
-    ff.ff_id,
-    ff.ff_name
-ORDER BY dd.month desc;
-
--- select * from gold.fact_fund_allocation;
-
-
--- =============================================================================
--- Create Fact: gold.fact_fund_allocation (yearly)
--- =============================================================================
-DROP VIEW IF EXISTS gold.fact_fund_allocation_yearly CASCADE;
-CREATE OR REPLACE VIEW gold.fact_fund_allocation_yearly AS
-SELECT 
-    dd.year,
-    pp.power_plant_id,
-	pp.company_id,
-    ff.ff_id,
-    ff.ff_name,
-    ff.ff_percentage,
-    ROUND(SUM(er.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
-    ROUND(SUM((er.energy_generated_kwh * 0.01) * ff.ff_percentage), 2) AS funds_allocated_peso
-FROM silver.csv_energy_records er
-LEFT JOIN ref.ref_power_plants pp ON pp.power_plant_id = er.power_plant_id
-LEFT JOIN gold.dim_date dd on dd.date_id = DATE_TRUNC('month', er.date_generated)
-CROSS JOIN ref.ref_fa_factors ff
-GROUP BY 
-    dd.year,
-    pp.power_plant_id,
-    ff.ff_id,
-    ff.ff_name
-ORDER BY dd.year desc;
-
--- select * from gold.fact_fund_allocation_yearly;
-
--- =============================================================================
--- Create Fact: gold.fact_outages_frequency 
--- =============================================================================
-
-DROP VIEW IF EXISTS gold.fact_outages_frequency CASCADE;
-CREATE OR REPLACE VIEW gold.fact_outages_frequency AS
-SELECT power_plant_id, company_id, generation_source,site_name, company_name, city_town, province, year, month, month_name, COUNT(*) 
-FROM gold.fact_energy_generated 
-WHERE energy_generated_kwh = 0
-GROUP BY power_plant_id, company_id, generation_source,site_name, company_name, city_town, province, year, month, month_name
 
 -- =============================================================================
 -- Create Fact: gold.fact_household_powered 
@@ -185,7 +115,10 @@ WITH latest_hec AS (
         fg.quarter,
         SUM(fg.energy_generated_kwh) AS energy_generated,
         lh.hec_value,
-		ROUND((SUM(fg.energy_generated_kwh) / 12) / NULLIF(lh.hec_value, 0), -2) as household_powered
+		CASE
+            WHEN lh.hec_value = 0 THEN 0
+            ELSE TRUNC((SUM(fg.energy_generated_kwh) / 12) / lh.hec_value)
+        END AS household_powered
     FROM gold.fact_energy_generated fg
     CROSS JOIN latest_hec lh
     GROUP BY 
@@ -202,3 +135,46 @@ WITH latest_hec AS (
         lh.hec_id,
         lh.hec_value
     ORDER BY fg.year, lh.hec_id;
+
+-- =============================================================================
+DROP VIEW IF EXISTS gold.fact_fund_allocation CASCADE;
+CREATE OR REPLACE VIEW gold.fact_fund_allocation AS
+SELECT 
+    dd.month AS month,
+    dd.month_name AS month_name,
+    dd.quarter AS quarter,
+    CAST(dd.year AS SMALLINT) AS year,
+    pp.power_plant_id AS power_plant_id,
+    pp.company_id AS company_id,
+    ff.ff_id AS ff_id,
+    ff.ff_name AS ff_name,
+    ff.ff_percentage AS ff_percentage,
+    ff.ff_category AS ff_category,
+    TRUNC(SUM(eg.energy_generated_kwh * 0.01), 2) AS power_generated_peso,
+    TRUNC(
+        SUM(
+            CASE 
+                WHEN ff.ff_category = 'allocation'
+                    THEN eg.energy_generated_kwh * 0.01 * ff.ff_percentage
+                ELSE eg.energy_generated_kwh * 0.01 * 0.50 * ff.ff_percentage
+            END
+        ), 
+    2) AS funds_allocated_peso
+FROM gold.fact_energy_generated eg 
+CROSS JOIN ref.ref_fa_factors ff 
+LEFT JOIN gold.dim_date dd ON dd.date_id = eg.date_generated 
+LEFT JOIN gold.dim_powerplant_profile pp ON eg.power_plant_id = pp.power_plant_id
+GROUP BY 
+    dd.month,
+    dd.month_name,
+    dd.quarter,
+    dd.year,
+    pp.power_plant_id,
+    pp.company_id,
+    ff.ff_id,
+    ff.ff_name,
+    ff.ff_percentage,
+    ff.ff_category;
+
+
+
